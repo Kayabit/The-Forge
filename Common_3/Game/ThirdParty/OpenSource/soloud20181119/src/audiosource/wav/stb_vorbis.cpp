@@ -573,7 +573,7 @@ enum STBVorbisError
 
 #include <limits.h>
 
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 #ifdef __MINGW32__
    // eff you mingw:

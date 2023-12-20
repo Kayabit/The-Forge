@@ -39,7 +39,7 @@ freely, subject to the following restrictions:
 #include <float.h>
 #endif
 
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 
 #if !defined(WITH_SDL2) && !defined(WITH_SDL1) && !defined(WITH_PORTAUDIO) && \

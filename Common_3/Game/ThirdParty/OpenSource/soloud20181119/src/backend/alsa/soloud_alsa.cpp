@@ -43,7 +43,7 @@ namespace SoLoud
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 
 namespace SoLoud

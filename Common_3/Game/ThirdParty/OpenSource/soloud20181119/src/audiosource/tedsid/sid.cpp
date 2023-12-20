@@ -12,7 +12,7 @@
 #include "sid.h"
 //#include "Tedmem.h"
 
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 #define DIGIBLASTER_MULT 14
 

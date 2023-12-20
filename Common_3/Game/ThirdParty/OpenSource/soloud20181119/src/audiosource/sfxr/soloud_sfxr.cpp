@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #include <math.h>
 #include "soloud_sfxr.h"
 #include "soloud_file.h"
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 namespace SoLoud
 {

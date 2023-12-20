@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 #ifndef SOLOUD_THREAD_H
 #define SOLOUD_THREAD_H
 
-#include "../../../../OS/Interfaces/IThread.h"
+#include "../../../../Utilities/Interfaces/IThread.h"
 #include "soloud.h"
 
 namespace SoLoud

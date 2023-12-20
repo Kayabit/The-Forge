@@ -301,7 +301,7 @@ void drmp3_free(void* p);
 #endif
 #endif  // dr_mp3_h
 
-#include "../../../../../../OS/Interfaces/IFileSystem.h"
+#include "../../../../../../Utilities/Interfaces/IFileSystem.h"
 
 
 /////////////////////////////////////////////////////
@@ -2111,8 +2111,8 @@ void drmp3dec_f32_to_s16(const float *in, drmp3_int16 *out, int num_samples)
 #define DR_MP3_DEFAULT_SAMPLE_RATE   44100
 #endif
 
-#include "../../../../OS/Interfaces/ILog.h"
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/ILog.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 // Standard library stuff.
 #ifndef DRMP3_ASSERT

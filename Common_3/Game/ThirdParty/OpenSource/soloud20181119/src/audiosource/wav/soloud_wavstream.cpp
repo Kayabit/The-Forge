@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 #include "soloud_wavstream.h"
 #include "soloud_file.h"
 #include "stb_vorbis.h"
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 namespace SoLoud
 {

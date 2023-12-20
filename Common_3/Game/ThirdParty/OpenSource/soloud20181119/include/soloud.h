@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 #ifndef SOLOUD_H
 #define SOLOUD_H
 
-#include "../../../../OS/Core/Config.h"
+#include "../../../../Application/Config.h"
 
 // Define backends depending on target platform //
 #ifdef _WIN32
@@ -50,7 +50,7 @@ freely, subject to the following restrictions:
 #include <stdlib.h> // rand
 #include <math.h> // sin
 
-#include "../../../../OS/Interfaces/ILog.h"
+#include "../../../../Utilities/Interfaces/ILog.h"
 
 #ifdef SOLOUD_NO_ASSERTS
 #define SOLOUD_ASSERT(x)

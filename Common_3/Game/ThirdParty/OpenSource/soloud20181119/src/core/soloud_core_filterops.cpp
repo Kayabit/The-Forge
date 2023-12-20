@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 */
 
 #include "soloud_internal.h"
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 // Core operations related to filters
 

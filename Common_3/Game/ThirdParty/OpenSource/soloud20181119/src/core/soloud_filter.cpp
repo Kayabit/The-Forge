@@ -23,7 +23,7 @@ freely, subject to the following restrictions:
 */
 
 #include "soloud.h"
-#include "../../../../../OS/Interfaces/IMemory.h"
+#include "../../../../../Utilities/Interfaces/IMemory.h"
 
 namespace SoLoud
 {
