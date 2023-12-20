@@ -5,6 +5,12 @@ project(The-Forge LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+include(TheForgeUtils)
+add_shaders(UIShaders ${CMAKE_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl)
+add_shaders(FontShaders ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl)
+
 set(CPP_SRC
     Common_3/Application/CameraController.cpp
     Common_3/Application/Fonts/FontSystem.cpp
@@ -486,10 +492,11 @@ endif()
 if (ANDROID)
 endif()
 
+add_dependencies(The-Forge UIShaders FontShaders)
+
 add_subdirectory(Examples_3/Unit_Tests/src)
 
 include(GNUInstallDirs)
 install(TARGETS The-Forge
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-
