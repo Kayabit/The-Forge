@@ -1,1 +1,3 @@
-add_subdirectory(01_Transformations)
+tf_add_example(01_Transformations)
+tf_add_example(03_MultiThread)
+#tf_add_example(04_ExecuteIndirect)

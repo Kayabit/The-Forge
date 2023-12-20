@@ -1,7 +1,7 @@
 find_package(Python COMPONENTS Interpreter REQUIRED)
-function(add_shaders TARGET_NAME SHADER_LIST)
+function(tf_add_shaders TARGET_NAME SHADER_LIST)
     get_filename_component(FILE_NAME ${SHADER_LIST} NAME)
-    set(OUTPUT_FILE "${CMAKE_BINARY_DIR}/CompiledShaders/${FILE_NAME}")
+    set(OUTPUT_FILE "${CMAKE_BINARY_DIR}/CompiledShaders/${TARGET_NAME}-${FILE_NAME}")
 
     add_custom_command(
         OUTPUT ${OUTPUT_FILE}
@@ -16,13 +16,31 @@ function(add_shaders TARGET_NAME SHADER_LIST)
         DEPENDS ${OUTPUT_FILE}
         COMMENT "Building all FSL shaders"
     )
-endfunction(add_shaders)
+endfunction(tf_add_shaders)
 
-function(install_theforge_resources TARGET_NAME)
+function(tf_install_resources TARGET_NAME)
     add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../../UnitTestResources/Textures ${CMAKE_CURRENT_BINARY_DIR}/Textures
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../../UnitTestResources/Fonts ${CMAKE_CURRENT_BINARY_DIR}/Fonts
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../../UnitTestResources/GPUCfg ${CMAKE_CURRENT_BINARY_DIR}/GPUCfg
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/CompiledShaders ${CMAKE_CURRENT_BINARY_DIR}/CompiledShaders
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Textures
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Fonts ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Fonts
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/GPUCfg ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/GPUCfg
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/CompiledShaders ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/CompiledShaders
     )
-endfunction(install_theforge_resources)
+endfunction(tf_install_resources)
+
+function(tf_add_example EXAMPLE_DIR)
+    message(STATUS "Shaders: ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_DIR}/Shaders/FSL/ShaderList.fsl")
+    tf_add_shaders(${EXAMPLE_DIR}Shaders ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_DIR}/Shaders/FSL/ShaderList.fsl)
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${EXAMPLE_DIR}")
+
+    add_executable(${EXAMPLE_DIR}
+        ${EXAMPLE_DIR}/${EXAMPLE_DIR}.cpp
+    )
+
+    target_link_libraries(${EXAMPLE_DIR}
+        The-Forge
+    )
+
+    add_dependencies(${EXAMPLE_DIR} ${EXAMPLE_DIR}Shaders)
+    tf_install_resources(${EXAMPLE_DIR})
+endfunction(tf_add_example)
