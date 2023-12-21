@@ -87,7 +87,7 @@ endfunction(tf_install_example_resources)
 function(tf_add_example EXAMPLE_DIR SOURCES)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${EXAMPLE_DIR}")
 
-    add_executable(${EXAMPLE_DIR} ${SOURCES})
+    add_executable(${EXAMPLE_DIR} MACOSX_BUNDLE ${SOURCES})
     tf_add_shaders(${EXAMPLE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_DIR}/Shaders/FSL/ShaderList.fsl TRUE)
     target_link_libraries(${EXAMPLE_DIR} The-Forge)
 

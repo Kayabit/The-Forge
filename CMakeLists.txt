@@ -574,8 +574,9 @@ set (SRC ${CPP_SRC} ${C_SRC} ${OBJCPP_SRC} ${OBJC_SRC})
 add_library(The-Forge STATIC ${SRC})
 
 # Suppress compiler warnings
-target_compile_options(The-Forge PRIVATE
-    "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread>"
+target_compile_options(The-Forge PUBLIC
+    "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread;>"
+    "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-deprecated-declarations;-Wno-deprecated-builtins;-Wno-unqualified-std-cast-call;-Wno-int-to-pointer-cast;>"
 )
 set_property(
     SOURCE ${C_SRC} ${OBJC_SRC}
