@@ -23,8 +23,6 @@
 */
 #pragma once
 
-#define AUTOMATED_TESTING
-
 //Support external config file override
 #if defined(EXTERNAL_CONFIG_FILEPATH)
 	#include EXTERNAL_CONFIG_FILEPATH
