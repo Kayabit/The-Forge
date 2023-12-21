@@ -573,6 +573,15 @@ set (SRC ${CPP_SRC} ${C_SRC} ${OBJCPP_SRC} ${OBJC_SRC})
 
 add_library(The-Forge STATIC ${SRC})
 
+# Suppress compiler warnings
+target_compile_options(The-Forge PRIVATE
+    "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread>"
+)
+set_property(
+    SOURCE ${C_SRC} ${OBJC_SRC}
+    PROPERTY COMPILE_OPTIONS -Wno-implicit-function-declaration
+)
+
 target_include_directories(The-Forge
     PUBLIC
     ${CMAKE_SOURCE_DIR}/
