@@ -3,16 +3,16 @@ function(tf_add_shaders TARGET_NAME SHADER_LIST IS_EXAMPLE)
     if(EXISTS ${SHADER_LIST})
         get_filename_component(FILE_NAME ${SHADER_LIST} NAME)
         if(IS_EXAMPLE)
-            set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/)
+            set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME})
         else()
-            set(OUTPUT_DIR ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/)
+            set(OUTPUT_DIR ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources)
         endif()
         set(OUTPUT_FILE "${OUTPUT_DIR}/${FILE_NAME}")
 
         add_custom_command(
             OUTPUT ${OUTPUT_FILE}
             COMMAND ${CMAKE_COMMAND} -E echo "Building FSL shaders for ${SHADER_LIST}"
-            COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l VULKAN -d ${OUTPUT_DIR}/Shaders --verbose -b ${OUTPUT_DIR}/CompiledShaders/ --incremental --compile ${SHADER_LIST} > /dev/null 2>&1
+            COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${FSL_LANGUAGE} -d ${OUTPUT_DIR}/Shaders --verbose -b ${OUTPUT_DIR}/CompiledShaders/ --incremental --compile ${SHADER_LIST} > /dev/null 2>&1
             DEPENDS ${SHADER_LIST}
         )
 
@@ -90,4 +90,11 @@ function(tf_add_example EXAMPLE_DIR SOURCES)
     add_executable(${EXAMPLE_DIR} ${SOURCES})
     tf_add_shaders(${EXAMPLE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_DIR}/Shaders/FSL/ShaderList.fsl TRUE)
     target_link_libraries(${EXAMPLE_DIR} The-Forge)
+
+    if (APPLE)
+        set_source_files_properties(
+            ${SOURCES}
+            PROPERTIES COMPILE_FLAGS "-x objective-c++"
+        )
+    endif()
 endfunction(tf_add_example)

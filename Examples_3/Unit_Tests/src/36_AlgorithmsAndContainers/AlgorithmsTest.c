@@ -27,6 +27,10 @@
 #include "../../../../Common_3/Utilities/Math/Algorithms.h"
 #include "../../../../Common_3/Utilities/Interfaces/ILog.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //-V:TEST_STABLE_SORT:736
 #define TEST_STABLE_SORT(arr, expected, comp) (\
 	checkassert(sizeof(arr) == sizeof(expected) && &arr[0] != &expected[0]), \
@@ -166,3 +170,7 @@ int testStableSort(void)
 
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

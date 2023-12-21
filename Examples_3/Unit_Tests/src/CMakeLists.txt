@@ -38,7 +38,10 @@ tf_add_example(15a_VisibilityBufferOIT "${15a_VisibilityBufferOIT_SRC}")
 
 tf_add_example(16_Raytracing 16_Raytracing/16_Raytracing.cpp)
 tf_add_example(17_EntityComponentSystem 17_EntityComponentSystem/17_EntityComponentSystem.cpp)
-tf_add_example(18_VirtualTexture 18_VirtualTexture/18_VirtualTexture.cpp)
+
+if(NOT APPLE)
+    tf_add_example(18_VirtualTexture 18_VirtualTexture/18_VirtualTexture.cpp)
+endif()
 
 set(19_CodeHotReload_SRC
     19_CodeHotReload/19_CodeHotReload_Game.cpp
@@ -48,14 +51,21 @@ tf_add_example(19_CodeHotReload "${19_CodeHotReload_SRC}")
 
 tf_add_example(21_Animations 21_Animations/21_Animations.cpp)
 tf_add_example(28_Skinning 28_Skinning/28_Skinning.cpp)
-tf_add_example(33_YUV 33_YUV/33_YUV.cpp)
+
+if(LINUX)
+    tf_add_example(33_YUV 33_YUV/33_YUV.cpp)
+endif()
+
 tf_add_example(34_Input 34_Input/34_Input.cpp)
-tf_add_example(35_VariableRateShading 35_VariableRateShading/35_VariableRateShading.cpp)
+if(NOT APPLE)
+    tf_add_example(35_VariableRateShading 35_VariableRateShading/35_VariableRateShading.cpp)
+endif()
 
 set(36_AlgorithmsAndContainers_SRC
     36_AlgorithmsAndContainers/36_AlgorithmsAndContainers.cpp
     36_AlgorithmsAndContainers/AlgorithmsTest.c
 )
+set_source_files_properties(36_AlgorithmsAndContainers/AlgorithmsTest.c PROPERTIES LANGUAGE CXX)
 tf_add_example(36_AlgorithmsAndContainers "${36_AlgorithmsAndContainers_SRC}")
 
 tf_add_example(37_PrecomputedVolumeDLUT 37_PrecomputedVolumeDLUT/37_PrecomputedVolumeDLUT.cpp)
