@@ -5,6 +5,12 @@ project(The-Forge LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/Art)
+    message(STATUS "Downloading art assets, please grab a cup of coffee and wait a few minutes. This will be executed only once!")
+    file(CHMOD ${CMAKE_SOURCE_DIR}/PRE_BUILD.command PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
+    execute_process(COMMAND ${CMAKE_SOURCE_DIR}/PRE_BUILD.command)
+endif()
+
 option(BUILD_EXAMPLES "Build The-Forge's example programs" ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -487,6 +493,14 @@ set (SRC ${CPP_SRC} ${C_SRC} ${OBJCPP_SRC} ${OBJC_SRC})
 
 add_library(The-Forge STATIC ${SRC})
 
+target_compile_options(The-Forge PRIVATE
+    "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread>"
+)
+set_property(
+    SOURCE ${C_SRC} ${OBJC_SRC}
+    PROPERTY COMPILE_OPTIONS -Wno-implicit-function-declaration
+)
+
 target_include_directories(The-Forge
     PUBLIC
     ${CMAKE_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/
@@ -531,7 +545,7 @@ tf_add_shaders(UI ${CMAKE_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_Sha
 tf_add_shaders(Font ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
 tf_add_shaders(PaniniProjection ${CMAKE_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
 
-# add_dependencies(The-Forge UIShaders FontShaders PaniniProjectionShaders)
+add_dependencies(The-Forge UIShaders FontShaders PaniniProjectionShaders)
 
 if(BUILD_EXAMPLES)
     tf_install_unit_tests_resources()

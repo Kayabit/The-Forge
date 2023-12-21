@@ -2,26 +2,24 @@ find_package(Python COMPONENTS Interpreter REQUIRED)
 function(tf_add_shaders TARGET_NAME SHADER_LIST IS_EXAMPLE)
     if(EXISTS ${SHADER_LIST})
         get_filename_component(FILE_NAME ${SHADER_LIST} NAME)
-        set(OUTPUT_FILE "${CMAKE_BINARY_DIR}/CompiledShaders/${TARGET_NAME}-${FILE_NAME}")
         if(IS_EXAMPLE)
             set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/)
         else()
             set(OUTPUT_DIR ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/)
         endif()
-        message(STATUS "output dir: ${OUTPUT_DIR}")
+        set(OUTPUT_FILE "${OUTPUT_DIR}/${FILE_NAME}")
 
         add_custom_command(
             OUTPUT ${OUTPUT_FILE}
-            COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l VULKAN -d ${OUTPUT_DIR}/Shaders --verbose -b ${OUTPUT_DIR}/CompiledShaders/ --incremental --compile ${SHADER_LIST}
+            COMMAND ${CMAKE_COMMAND} -E echo "Building FSL shaders for ${SHADER_LIST}"
+            COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l VULKAN -d ${OUTPUT_DIR}/Shaders --verbose -b ${OUTPUT_DIR}/CompiledShaders/ --incremental --compile ${SHADER_LIST} > /dev/null 2>&1
             DEPENDS ${SHADER_LIST}
-            COMMENT "Processing ${SHADER_LIST}"
         )
 
         add_custom_target(
             ${TARGET_NAME}Shaders
             ALL
             DEPENDS ${OUTPUT_FILE}
-            COMMENT "Building all FSL shaders"
         )
     if(IS_EXAMPLE)
         add_dependencies(${TARGET_NAME} ${TARGET_NAME}Shaders)
@@ -52,6 +50,8 @@ function(tf_install_unit_tests_resources)
 endfunction(tf_install_unit_tests_resources)
 
 function(tf_install_example_resources TARGET_NAME)
+    message(STATUS "Configuring building for example ${TARGET_NAME}")
+
     if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/GPUCfg})
         set(GPUCfgDir ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/GPUCfg)
     else()
