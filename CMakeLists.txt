@@ -10,8 +10,10 @@ option(BUILD_EXAMPLES "Build The-Forge's example programs" ON)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 include(TheForgeUtils)
-tf_add_shaders(UIShaders ${CMAKE_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl)
-tf_add_shaders(FontShaders ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl)
+
+tf_add_shaders(UI ${CMAKE_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl FALSE)
+tf_add_shaders(Font ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
+tf_add_shaders(PaniniProjection ${CMAKE_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
 
 set(CPP_SRC
     Common_3/Application/CameraController.cpp
@@ -146,6 +148,7 @@ set(CPP_SRC
     Common_3/Graphics/Vulkan/Vulkan.cpp
     Common_3/Graphics/Vulkan/VulkanRaytracing.cpp
     Common_3/Graphics/Vulkan/VulkanShaderReflection.cpp
+    Middleware_3/PaniniProjection/Panini.cpp
     Common_3/OS/CPUConfig.cpp
     Common_3/OS/WindowSystem/WindowSystem.cpp
     Common_3/Resources/AnimationSystem/Animation/AnimatedObject.cpp
@@ -236,7 +239,7 @@ set(CPP_SRC
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/assert.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/EAStdC/EAMemory.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/EAStdC/EASprintf.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/eastl.cpp
+    #Common_3/Utilities/ThirdParty/OpenSource/EASTL/eastl.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/fixed_pool.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/hashtable.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/intrusive_list.cpp
@@ -494,7 +497,7 @@ endif()
 if (ANDROID)
 endif()
 
-add_dependencies(The-Forge UIShaders FontShaders)
+add_dependencies(The-Forge UIShaders FontShaders PaniniProjectionShaders)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(Examples_3/Unit_Tests/src)
