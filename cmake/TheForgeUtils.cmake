@@ -87,14 +87,20 @@ endfunction(tf_install_example_resources)
 function(tf_add_example EXAMPLE_DIR SOURCES)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${EXAMPLE_DIR}")
 
-    add_executable(${EXAMPLE_DIR} MACOSX_BUNDLE ${SOURCES})
-    tf_add_shaders(${EXAMPLE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_DIR}/Shaders/FSL/ShaderList.fsl TRUE)
-    target_link_libraries(${EXAMPLE_DIR} The-Forge)
-
     if (APPLE)
+        # Link against the application's delegate class since it's not visible if built inside libThe-Forge.a
         set_source_files_properties(
             ${SOURCES}
             PROPERTIES COMPILE_FLAGS "-x objective-c++"
         )
+        list(APPEND SOURCES ${CMAKE_SOURCE_DIR}/Common_3/OS/Darwin/macOSAppDelegate.m)
+        set_source_files_properties(
+            ${CMAKE_SOURCE_DIR}/Common_3/OS/Darwin/macOSAppDelegate.m
+            PROPERTIES COMPILE_FLAGS "-fobjc-arc"
+        )
     endif()
+    add_executable(${EXAMPLE_DIR} MACOSX_BUNDLE ${SOURCES})
+
+    tf_add_shaders(${EXAMPLE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${EXAMPLE_DIR}/Shaders/FSL/ShaderList.fsl TRUE)
+    target_link_libraries(${EXAMPLE_DIR} The-Forge)
 endfunction(tf_add_example)

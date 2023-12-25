@@ -518,9 +518,6 @@ if (APPLE)
             Middleware_3/PaniniProjection/Panini.cpp
             Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
         )
-        set(OBJC_SRC
-            Common_3/OS/Darwin/macOSAppDelegate.m
-        )
         list(APPEND CPP_SRC
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboardMac.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp
@@ -534,12 +531,10 @@ if (APPLE)
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_macos.c
         )
-        set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++")
-        set_source_files_properties(
-            Common_3/OS/Darwin/macOSAppDelegate.m
-            Common_3/OS/Darwin/macOSWindow.mm
-            PROPERTIES COMPILE_FLAGS "-fobjc-arc"
-        )
+        # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
+        set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
+        # Except GainputMac.mm
+        set_source_files_properties(Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputMac.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
         set_source_files_properties(
             Common_3/Utilities/ThirdParty/OpenSource/rmem/3rd/lz4-r191/lz4.c
             PROPERTIES COMPILE_FLAGS "-Wno-implicit-function-declaration"
