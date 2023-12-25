@@ -632,7 +632,7 @@ tf_add_shaders(Font ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/F
 tf_add_shaders(PaniniProjection ${CMAKE_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
 tf_add_shaders(UI ${CMAKE_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl FALSE)
 
-add_dependencies(The-Forge UIShaders FontShaders PaniniProjectionShaders)
+add_dependencies(The-Forge FontShaders PaniniProjectionShaders UIShaders)
 
 if(BUILD_EXAMPLES)
     tf_install_unit_tests_resources()

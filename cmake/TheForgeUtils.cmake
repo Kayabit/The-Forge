@@ -3,7 +3,12 @@ function(tf_add_shaders TARGET_NAME SHADER_LIST IS_EXAMPLE)
     if(EXISTS ${SHADER_LIST})
         get_filename_component(FILE_NAME ${SHADER_LIST} NAME)
         if(IS_EXAMPLE)
-            set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME})
+            if (LINUX)
+                set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME})
+            endif()
+            if (APPLE)
+                set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/${TARGET_NAME}.app/Contents/Resources)
+            endif()
         else()
             set(OUTPUT_DIR ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources)
         endif()
@@ -46,6 +51,7 @@ function(tf_install_unit_tests_resources)
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Art/Sponza/Meshes/*.bin ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Meshes/
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Art/SparseTextures/*.svt ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/DLUT/dlut.ktx ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/dlut.ktx
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/input/*.dds ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/
     )
 endfunction(tf_install_unit_tests_resources)
 
@@ -58,30 +64,43 @@ function(tf_install_example_resources TARGET_NAME)
         set(GPUCfgDir ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/GPUCfg)
     endif()
 
+    if (LINUX)
+        set(RESOURCES_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME})
+    endif()
+    if (APPLE)
+        set(RESOURCES_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/${TARGET_NAME}.app/Contents/Resources)
+    endif()
+
     # Copy example scripts if they exist
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}/Scripts)
         add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}/Scripts ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Scripts
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_NAME}/Scripts ${RESOURCES_DIR}/Scripts
         )
     endif()
 
     add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
         # Copy core shaders from UnitTestResources
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/CompiledShaders ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/CompiledShaders
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/CompiledShaders ${RESOURCES_DIR}/CompiledShaders
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Shaders ${RESOURCES_DIR}/Shaders
         # Link from UnitTestResources
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Textures
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures/input/*.dds ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures/
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Fonts ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Fonts
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${GPUCfgDir} ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/GPUCfg
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Meshes ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Meshes
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Animation ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Animation
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/ZipFiles ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/ZipFiles
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/cameraPath.bin ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/cameraPath.bin
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Scripts ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Scripts
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Animation/stormtrooper ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/Meshes/stormtrooper
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures ${RESOURCES_DIR}/Textures
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Fonts ${RESOURCES_DIR}/Fonts
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${GPUCfgDir} ${RESOURCES_DIR}/GPUCfg
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Meshes ${RESOURCES_DIR}/Meshes
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Animation ${RESOURCES_DIR}/Animation
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/ZipFiles ${RESOURCES_DIR}/ZipFiles
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/cameraPath.bin ${RESOURCES_DIR}/cameraPath.bin
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Scripts ${RESOURCES_DIR}/Scripts
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Animation/stormtrooper ${RESOURCES_DIR}/Meshes/stormtrooper
         # Link stuff from Art directory
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/Art/SDF ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}/SDF
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/Art/SDF ${RESOURCES_DIR}/SDF
     )
+
+    if(APPLE AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../macOS Xcode/${TARGET_NAME}/${TARGET_NAME}/Base.lproj/MainMenu.xib")
+        add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
+            COMMAND xcrun ibtool --compile "${RESOURCES_DIR}/Base.lproj/MainMenu.nib" "${CMAKE_CURRENT_SOURCE_DIR}/../macOS Xcode/${TARGET_NAME}/${TARGET_NAME}/Base.lproj/MainMenu.xib"
+        )
+    endif()
 endfunction(tf_install_example_resources)
 
 function(tf_add_example EXAMPLE_DIR SOURCES)
@@ -89,14 +108,10 @@ function(tf_add_example EXAMPLE_DIR SOURCES)
 
     if (APPLE)
         # Link against the application's delegate class since it's not visible if built inside libThe-Forge.a
-        set_source_files_properties(
-            ${SOURCES}
-            PROPERTIES COMPILE_FLAGS "-x objective-c++"
-        )
         list(APPEND SOURCES ${CMAKE_SOURCE_DIR}/Common_3/OS/Darwin/macOSAppDelegate.m)
         set_source_files_properties(
-            ${CMAKE_SOURCE_DIR}/Common_3/OS/Darwin/macOSAppDelegate.m
-            PROPERTIES COMPILE_FLAGS "-fobjc-arc"
+            ${SOURCES}
+            PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc"
         )
     endif()
     add_executable(${EXAMPLE_DIR} MACOSX_BUNDLE ${SOURCES})

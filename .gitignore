@@ -59,6 +59,5 @@ Art/
 Tools/ShaderBuildCommand/packages/
 **/ThirdParty/OpenSource/hlslparser/Ext/ShaderTranslator/packages/
 
-Examples_3/Unit_Tests/UnitTestResources
 Common_3/Tools/ForgeShadingLanguage/*/*.pyc
 Common_3/Tools/ForgeShadingLanguage/*/*/*.pyc
