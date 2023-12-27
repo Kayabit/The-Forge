@@ -7,14 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT EXISTS ${CMAKE_SOURCE_DIR}/Art)
     message(STATUS "Downloading art assets, please grab a cup of coffee and wait a few minutes. This will be executed only once!")
-    execute_process(COMMAND chmod +x ${CMAKE_SOURCE_DIR}/PRE_BUILD.command)
-    execute_process(COMMAND ${CMAKE_SOURCE_DIR}/PRE_BUILD.command)
+    if (WIN32)
+        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/PRE_BUILD.bat)
+    else()
+        execute_process(COMMAND chmod +x ${CMAKE_SOURCE_DIR}/PRE_BUILD.command)
+        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/PRE_BUILD.command)
+    endif()
 endif()
 
 option(BUILD_EXAMPLES "Build The-Forge's example programs" ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-list(APPEND CMAKE_MODULE_PATH "C:/VulkanSDK/1.3.268.0/")
 
 include(TheForgeUtils)
 
@@ -522,45 +525,38 @@ target_include_directories(
            ${CMAKE_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/
 )
 
-if(WIN32)
-    target_include_directories(The-Forge PUBLIC $ENV{VULKAN_SDK}/Include)
-    target_link_libraries(
-        The-Forge
-        PUBLIC $ENV{VULKAN_SDK}/Lib/vulkan-1.lib
-               Xinput
-               ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib
-               ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.lib
-               ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/nvapi/amd64/nvapi64.lib
-               ${CMAKE_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.lib
-    )
-endif()
+# Common include directories
+target_include_directories(The-Forge PUBLIC
+    $<$<PLATFORM_ID:Windows>:$ENV{VULKAN_SDK}/Include>
+    $<$<PLATFORM_ID:Linux>:${GTK3_INCLUDE_DIRS}>
+)
 
-if(LINUX)
-    target_include_directories(The-Forge PUBLIC ${GTK3_INCLUDE_DIRS})
-    target_link_libraries(The-Forge PUBLIC ${GTK3_LIBRARIES} ${LIBUDEV_LIBRARIES} ${X11_LIBRARIES} ${XRANDR_LIBRARIES})
-endif()
+# Link libraries for Windows, Linux, and macOS
+target_link_libraries(The-Forge PUBLIC
+    # Windows-specific libraries
+    $<$<PLATFORM_ID:Windows>:$ENV{VULKAN_SDK}/Lib/vulkan-1.lib>
+    $<$<PLATFORM_ID:Windows>:Xinput>
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib>
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.lib>
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/nvapi/amd64/nvapi64.lib>
+    $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.lib>
 
-if(APPLE)
-    if(IOS)
+    # Linux-specific libraries
+    $<$<PLATFORM_ID:Linux>:${GTK3_LIBRARIES}>
+    $<$<PLATFORM_ID:Linux>:${LIBUDEV_LIBRARIES}>
+    $<$<PLATFORM_ID:Linux>:${X11_LIBRARIES}>
+    $<$<PLATFORM_ID:Linux>:${XRANDR_LIBRARIES}>
 
-    else()
-        target_link_libraries(
-            The-Forge
-            PUBLIC ${APPKIT_LIBRARY}
-                   ${COREFOUNDATION_LIBRARY}
-                   ${COREGRAPHICS_LIBRARY}
-                   ${COREVIDEO_LIBRARY}
-                   ${IOKIT_LIBRARY}
-                   ${METAL_LIBRARY}
-                   ${MPS_LIBRARY}
-                   ${QUARTZCORE_LIBRARY}
-        )
-    endif()
-endif()
-
-if(ANDROID)
-
-endif()
+    # macOS-specific libraries (excluding iOS)
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${APPKIT_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREFOUNDATION_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREGRAPHICS_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREVIDEO_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${IOKIT_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${METAL_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${MPS_LIBRARY}>
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${QUARTZCORE_LIBRARY}>
+)
 
 tf_add_shaders(Font ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
 tf_add_shaders(PaniniProjection ${CMAKE_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)

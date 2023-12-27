@@ -13,7 +13,7 @@ function(tf_add_shaders target_name shader_list_file is_unit_test)
                 set(output_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name})
             endif()
             if(WIN32)
-                set(output_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name}/${CMAKE_BUILD_TYPE})
+                set(output_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name}/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>)
             endif()
             if(APPLE)
                 set(output_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name}/${target_name}.app/Contents/Resources)
@@ -23,11 +23,14 @@ function(tf_add_shaders target_name shader_list_file is_unit_test)
         endif()
         set(output_file "${output_dir}/${FILE_NAME}")
 
-        set(shader_targets "")
+        add_custom_target(
+            ${target_name}Shaders
+            COMMENT "Custom target for ${target_name} shaders"
+        )
         foreach(fsl_language IN LISTS FSL_LANGUAGES)
-            list(APPEND shader_targets ${output_file}-${fsl_language})
             add_custom_command(
-                OUTPUT ${output_file}-${fsl_language}
+                TARGET ${target_name}Shaders
+                POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E echo "Building FSL shaders for ${shader_list_file}"
                 COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${fsl_language} -d ${output_dir}/Shaders --verbose -b
                         ${output_dir}/CompiledShaders/ --incremental --compile ${shader_list_file}
@@ -35,12 +38,6 @@ function(tf_add_shaders target_name shader_list_file is_unit_test)
                 COMMENT "Compiling FSL shader list file ${shader_list_file}"
             )
         endforeach()
-
-        add_custom_target(
-            ${target_name}Shaders
-            DEPENDS ${shader_targets}
-            COMMENT "Custom target for ${target_name} shaders"
-        )
         if(is_unit_test)
             add_dependencies(${target_name} ${target_name}Shaders)
         endif()
@@ -89,7 +86,7 @@ function(tf_install_unit_test_resources target_name)
         set(resources_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name})
     endif()
     if(WIN32)
-        set(resources_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name}/${CMAKE_BUILD_TYPE})
+        set(resources_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name}/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>)
     endif()
     if(APPLE)
         set(resources_dir ${CMAKE_CURRENT_BINARY_DIR}/${target_name}/${target_name}.app/Contents/Resources)
@@ -132,7 +129,6 @@ function(tf_install_unit_test_resources target_name)
         COMMENT "Installing unit test resources"
     )
 
-    message(STATUS "Target name 1: ${target_name}")
     if(APPLE AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../macOS Xcode/${target_name}/${target_name}/Base.lproj/MainMenu.xib")
         add_custom_command(
             TARGET ${target_name}
@@ -143,7 +139,6 @@ function(tf_install_unit_test_resources target_name)
     endif()
 
     if(WIN32)
-        message(STATUS "Target name 2: ${target_name}")
         add_custom_command(
             TARGET ${target_name}
             POST_BUILD
