@@ -29,7 +29,7 @@ function(tf_add_shaders target_name shader_list_file is_unit_test)
                 TARGET ${target_name}Shaders
                 POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E echo "Building FSL shaders for ${shader_list_file}"
-                COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${fsl_language} -d ${output_dir}/Shaders --verbose -b
+                COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${fsl_language} -d ${output_dir}/Shaders --verbose -b
                         ${output_dir}/CompiledShaders/ --incremental --compile ${shader_list_file} DEPENDS ${shader_list_file}
                 COMMENT "Compiling FSL shader list file ${shader_list_file}"
             )
