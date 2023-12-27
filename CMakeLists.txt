@@ -557,13 +557,13 @@ target_link_libraries(
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${QUARTZCORE_LIBRARY}>
 )
 
-tf_add_shaders(Font ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
-tf_add_shaders(PaniniProjection ${CMAKE_CURRENT_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
-tf_add_shaders(UI ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl FALSE)
-
-add_dependencies(The-Forge FontShaders PaniniProjectionShaders UIShaders)
-
 if(BUILD_EXAMPLES)
+    tf_add_shaders(Font ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
+    tf_add_shaders(PaniniProjection ${CMAKE_CURRENT_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
+    tf_add_shaders(UI ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl FALSE)
+
+    add_dependencies(The-Forge FontShaders PaniniProjectionShaders UIShaders)
+
     tf_install_unit_tests_resources()
     add_subdirectory(Examples_3/Unit_Tests/src)
 endif()
