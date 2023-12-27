@@ -23,18 +23,14 @@ function(tf_add_shaders target_name shader_list_file is_unit_test)
         endif()
         set(output_file "${output_dir}/${FILE_NAME}")
 
-        add_custom_target(
-            ${target_name}Shaders
-            COMMENT "Custom target for ${target_name} shaders"
-        )
+        add_custom_target(${target_name}Shaders COMMENT "Custom target for ${target_name} shaders")
         foreach(fsl_language IN LISTS FSL_LANGUAGES)
             add_custom_command(
                 TARGET ${target_name}Shaders
                 POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E echo "Building FSL shaders for ${shader_list_file}"
                 COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${fsl_language} -d ${output_dir}/Shaders --verbose -b
-                        ${output_dir}/CompiledShaders/ --incremental --compile ${shader_list_file}
-                DEPENDS ${shader_list_file}
+                        ${output_dir}/CompiledShaders/ --incremental --compile ${shader_list_file} DEPENDS ${shader_list_file}
                 COMMENT "Compiling FSL shader list file ${shader_list_file}"
             )
         endforeach()
