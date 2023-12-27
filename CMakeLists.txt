@@ -322,7 +322,7 @@ set(C_SRC
 
 if(WIN32)
     set(FSL_LANGUAGES "DIRECT3D12" "DIRECT3D11" "VULKAN")
-    if (NOT DEFINED ENV{VULKAN_SDK})
+    if(NOT DEFINED ENV{VULKAN_SDK})
         message(FATAL_ERROR "Please install Vulkan SDK!")
     endif()
     list(
@@ -455,8 +455,7 @@ if(APPLE)
             Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
         )
         list(APPEND CPP_SRC Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboardMac.cpp
-             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp
-             Common_3/Utilities/FileSystem/UnixFileSystem.cpp
+             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp Common_3/Utilities/FileSystem/UnixFileSystem.cpp
         )
         list(
             APPEND
@@ -525,7 +524,8 @@ target_include_directories(
 
 if(WIN32)
     target_include_directories(The-Forge PUBLIC $ENV{VULKAN_SDK}/Include)
-    target_link_libraries(The-Forge
+    target_link_libraries(
+        The-Forge
         PUBLIC $ENV{VULKAN_SDK}/Lib/vulkan-1.lib
                Xinput
                ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib

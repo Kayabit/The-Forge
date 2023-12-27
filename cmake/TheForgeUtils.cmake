@@ -24,12 +24,12 @@ function(tf_add_shaders target_name shader_list_file is_unit_test)
         set(output_file "${output_dir}/${FILE_NAME}")
 
         set(shader_targets "")
-        foreach(FSL_LANGUAGE IN LISTS FSL_LANGUAGES)
-            list(APPEND shader_targets ${output_file}-${FSL_LANGUAGE})
+        foreach(fsl_language IN LISTS FSL_LANGUAGES)
+            list(APPEND shader_targets ${output_file}-${fsl_language})
             add_custom_command(
-                OUTPUT ${output_file}-${FSL_LANGUAGE}
+                OUTPUT ${output_file}-${fsl_language}
                 COMMAND ${CMAKE_COMMAND} -E echo "Building FSL shaders for ${shader_list_file}"
-                COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${FSL_LANGUAGE} -d ${output_dir}/Shaders --verbose -b
+                COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Common_3/Tools/ForgeShadingLanguage/fsl.py -l ${fsl_language} -d ${output_dir}/Shaders --verbose -b
                         ${output_dir}/CompiledShaders/ --incremental --compile ${shader_list_file}
                 DEPENDS ${shader_list_file}
                 COMMENT "Compiling FSL shader list file ${shader_list_file}"
@@ -53,26 +53,17 @@ function(tf_install_unit_tests_resources)
         TARGET The-Forge
         POST_BUILD
         # Copy to UnitTestResources
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_SOURCE_DIR}/Art/PBR ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/PBR
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_SOURCE_DIR}/Art/Hair ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Meshes/Hair
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_SOURCE_DIR}/Art/PBR
+                ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/PBR
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_SOURCE_DIR}/Art/Hair
+                ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Meshes/Hair
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Art/SanMiguel_3/Meshes ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Meshes
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Art/SanMiguel_3/Textures ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_SOURCE_DIR}/Art/Sponza/Textures/SponzaPBR_Textures
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_SOURCE_DIR}/Art/Sponza/Textures/SponzaPBR_Textures
                 ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/SponzaPBR_Textures
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Art/Sponza/Textures/SponzaPBR_Textures/Lion ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_SOURCE_DIR}/Art/Sponza/Textures/lion ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/lion
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_SOURCE_DIR}/Art/Sponza/Textures/lion
+                ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures/lion
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Art/Sponza/Meshes ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Meshes
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Art/Sponza/Meshes ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Meshes
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Art/SparseTextures ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Textures
@@ -121,41 +112,23 @@ function(tf_install_unit_test_resources target_name)
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/CompiledShaders ${resources_dir}/CompiledShaders
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Shaders ${resources_dir}/Shaders
         # Link from UnitTestResources
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures ${resources_dir}/Textures
-        COMMAND ${CMAKE_COMMAND} -E
-        $<$<PLATFORM_ID:Windows>:copy_directory>
-        $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-        ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Fonts ${resources_dir}/Fonts
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${gpu_config_dir} ${resources_dir}/GPUCfg
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Meshes ${resources_dir}/Meshes
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Animation ${resources_dir}/Animation
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/ZipFiles ${resources_dir}/ZipFiles
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/cameraPath.bin ${resources_dir}/cameraPath.bin
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Textures
+                ${resources_dir}/Textures
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Fonts
+                ${resources_dir}/Fonts
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${gpu_config_dir} ${resources_dir}/GPUCfg
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Meshes
+                ${resources_dir}/Meshes
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/Animation
+                ${resources_dir}/Animation
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/ZipFiles
+                ${resources_dir}/ZipFiles
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_CURRENT_SOURCE_DIR}/../UnitTestResources/cameraPath.bin
+                ${resources_dir}/cameraPath.bin
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Scripts ${resources_dir}/Scripts
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Examples_3/Unit_Tests/UnitTestResources/Animation/stormtrooper ${resources_dir}/Meshes/stormtrooper
         # Link stuff from Art directory
-        COMMAND ${CMAKE_COMMAND} -E
-            $<$<PLATFORM_ID:Windows>:copy_directory>
-            $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink>
-            ${CMAKE_SOURCE_DIR}/Art/SDF ${resources_dir}/SDF
+        COMMAND ${CMAKE_COMMAND} -E $<$<PLATFORM_ID:Windows>:copy_directory> $<$<NOT:$<PLATFORM_ID:Windows>>:create_symlink> ${CMAKE_SOURCE_DIR}/Art/SDF ${resources_dir}/SDF
         COMMENT "Installing unit test resources"
     )
 
@@ -174,10 +147,8 @@ function(tf_install_unit_test_resources target_name)
         add_custom_command(
             TARGET ${target_name}
             POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.dll
-                ${CMAKE_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.dll
-                ${resources_dir}/
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.dll
+                    ${CMAKE_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.dll ${resources_dir}/
             COMMENT "Copying Windows dependencies"
         )
     endif()
