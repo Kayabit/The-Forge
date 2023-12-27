@@ -17,7 +17,7 @@ if(BUILD_EXAMPLES AND NOT EXISTS ${CMAKE_SOURCE_DIR}/Art)
     endif()
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(TheForgeUtils)
 
@@ -514,18 +514,18 @@ endif()
 
 target_include_directories(
     The-Forge
-    PUBLIC ${CMAKE_SOURCE_DIR}/
-           ${CMAKE_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/Fontstash/src/
-           ${CMAKE_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/include/
-           ${CMAKE_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/
-           ${CMAKE_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/
-           ${CMAKE_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/include/
-           ${CMAKE_SOURCE_DIR}/Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/include/ozz/geometry/
-           ${CMAKE_SOURCE_DIR}/Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/
-           ${CMAKE_SOURCE_DIR}/Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/
-           ${CMAKE_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/
-           ${CMAKE_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Include/
-           ${CMAKE_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/Fontstash/src/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/include/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/include/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/include/ozz/geometry/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Include/
+           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/
 )
 
 # Common include directories
@@ -557,9 +557,9 @@ target_link_libraries(
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${QUARTZCORE_LIBRARY}>
 )
 
-tf_add_shaders(Font ${CMAKE_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
-tf_add_shaders(PaniniProjection ${CMAKE_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
-tf_add_shaders(UI ${CMAKE_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl FALSE)
+tf_add_shaders(Font ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/Fonts/Shaders/FSL/Fonts_ShaderList.fsl FALSE)
+tf_add_shaders(PaniniProjection ${CMAKE_CURRENT_SOURCE_DIR}/Middleware_3/PaniniProjection/Shaders/FSL/Panini_ShaderList.fsl FALSE)
+tf_add_shaders(UI ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/UI/Shaders/FSL/UI_ShaderList.fsl FALSE)
 
 add_dependencies(The-Forge FontShaders PaniniProjectionShaders UIShaders)
 
