@@ -56,7 +56,7 @@ namespace SoLoud
    printf( _msg )
 #endif
 
-#include "../../../../OS/Interfaces/IMemory.h"
+#include "../../../../Utilities/Interfaces/IMemory.h"
 
 #define NUM_BUFFERS 2
 

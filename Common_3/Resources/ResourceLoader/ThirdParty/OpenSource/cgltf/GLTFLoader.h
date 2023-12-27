@@ -6,7 +6,7 @@
 #include "../../../Renderer/IRenderer.h"
 
 #define IMEMORY_FROM_HEADER
-#include "../../../OS/Interfaces/IMemory.h"
+#include "../../../Utilities/Interfaces/IMemory.h"
 
 // MARK: - Materials
 

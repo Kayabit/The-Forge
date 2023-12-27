@@ -40,11 +40,12 @@ tf_add_unit_test(19_CodeHotReload "${19_CodeHotReload_SRC}")
 tf_add_unit_test(21_Animations 21_Animations/21_Animations.cpp)
 tf_add_unit_test(28_Skinning 28_Skinning/28_Skinning.cpp)
 
-if(LINUX)
+if(NOT APPLE)
     tf_add_unit_test(33_YUV 33_YUV/33_YUV.cpp)
 endif()
 
 tf_add_unit_test(34_Input 34_Input/34_Input.cpp)
+
 if(NOT APPLE)
     tf_add_unit_test(35_VariableRateShading 35_VariableRateShading/35_VariableRateShading.cpp)
 endif()

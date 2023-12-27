@@ -14,6 +14,7 @@ endif()
 option(BUILD_EXAMPLES "Build The-Forge's example programs" ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH "C:/VulkanSDK/1.3.268.0/")
 
 include(TheForgeUtils)
 
@@ -119,9 +120,6 @@ set(CPP_SRC
     Common_3/Graphics/DependencyTracking.cpp
     Common_3/Graphics/GPUConfig.cpp
     Common_3/Graphics/Graphics.cpp
-    Common_3/Graphics/OpenGLES/EGLContextCreator.cpp
-    Common_3/Graphics/OpenGLES/GLES.cpp
-    Common_3/Graphics/OpenGLES/GLESShaderReflection.cpp
     Common_3/Graphics/Quest/VrApiHooks.cpp
     Common_3/Graphics/ThirdParty/OpenSource/SPIRV_Cross/SpirvTools.cpp
     Common_3/Graphics/ThirdParty/OpenSource/SPIRV_Cross/spirv_cfg.cpp
@@ -172,11 +170,9 @@ set(CPP_SRC
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/io/archive.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/maths/math_archive.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/maths/simd_math_archive.cc
-    Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/maths/soa_math_archive.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/memory/allocator.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/platform.cc
     Common_3/Resources/ResourceLoader/ResourceLoader.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/TinyEXR/tinyexr.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_averages_and_directions.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_block_sizes.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_color_quantize.cpp
@@ -202,15 +198,9 @@ set(CPP_SRC
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_weight_quant_xfer_tables.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_error_metrics.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image_external.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image_load_store.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_platform_dependents.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_toplevel.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_toplevel_help.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Utils/Example/astc_api_example.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Utils/astc_rgbm_codec.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Utils/astc_test_autoextract.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Utils/astc_test_autoextract_hdr.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/allocator.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/clusterizer.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/indexcodec.cpp
@@ -226,11 +216,8 @@ set(CPP_SRC
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vertexfilter.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vfetchanalyzer.cpp
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vfetchoptimizer.cpp
-    Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
-    Common_3/Tools/AssetPipeline/src/AssetPipelineCmd.cpp
     Common_3/Utilities/FileSystem/FileSystem.cpp
     Common_3/Utilities/FileSystem/SystemRun.cpp
-    Common_3/Utilities/FileSystem/UnixFileSystem.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/EAStdC/EAMemory.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/EAStdC/EASprintf.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/allocator_eastl.cpp
@@ -260,8 +247,6 @@ set(CPP_SRC
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_resample_filters.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_resampler.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_ssim.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_tool.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/contrib/previewers/lib/basisu_transcoder.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/lodepng.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/basisu_transcoder.cpp
     Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_os.cpp
@@ -304,7 +289,6 @@ set(C_SRC
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lua.c
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
@@ -318,7 +302,6 @@ set(C_SRC
     Common_3/Utilities/Math/Algorithms.c
     Common_3/Utilities/Math/StbDs.c
     Common_3/Utilities/MemoryTracking/MemoryTracking.c
-    Common_3/Utilities/ThirdParty/OpenSource/FluidStudios/MemoryManager/mmgr.c
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.c
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/utf8util.c
     Common_3/Utilities/ThirdParty/OpenSource/cJSON/cJSON.c
@@ -334,12 +317,14 @@ set(C_SRC
     Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_wzaes.c
     Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_zlib.c
     Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_zip.c
-    Common_3/Utilities/ThirdParty/OpenSource/rmem/3rd/lz4-r191/lz4.c
     Common_3/Utilities/Timer.c
 )
 
 if(WIN32)
-    set(FSL_LANGUAGE "DIRECT3D12")
+    set(FSL_LANGUAGES "DIRECT3D12" "DIRECT3D11" "VULKAN")
+    if (NOT DEFINED ENV{VULKAN_SDK})
+        message(FATAL_ERROR "Please install Vulkan SDK!")
+    endif()
     list(
         APPEND
         CPP_SRC
@@ -350,7 +335,9 @@ if(WIN32)
         Common_3/Graphics/Direct3D12/Direct3D12Hooks.cpp
         Common_3/Graphics/Direct3D12/Direct3D12Raytracing.cpp
         Common_3/Graphics/Direct3D12/Direct3D12ShaderReflection.cpp
-        Common_3/Graphics/ThirdParty/OpenSource/ags/ags_sample/src/AGSSample.cpp
+        Common_3/Graphics/Vulkan/Vulkan.cpp
+        Common_3/Graphics/Vulkan/VulkanRaytracing.cpp
+        Common_3/Graphics/Vulkan/VulkanShaderReflection.cpp
         Common_3/OS/Windows/WindowsBase.cpp
         Common_3/OS/Windows/WindowsFileSystem.cpp
         Common_3/OS/Windows/WindowsStackTraceDump.cpp
@@ -373,7 +360,7 @@ if(WIN32)
 endif()
 
 if(LINUX)
-    set(FSL_LANGUAGE "VULKAN")
+    set(FSL_LANGUAGES "VULKAN")
     find_package(PkgConfig REQUIRED)
     find_package(X11 REQUIRED)
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
@@ -383,6 +370,9 @@ if(LINUX)
     list(
         APPEND
         CPP_SRC
+        Common_3/Graphics/OpenGLES/GLES.cpp
+        Common_3/Graphics/OpenGLES/EGLContextCreator.cpp
+        Common_3/Graphics/OpenGLES/GLESShaderReflection.cpp
         Common_3/Graphics/Vulkan/Vulkan.cpp
         Common_3/Graphics/Vulkan/VulkanRaytracing.cpp
         Common_3/Graphics/Vulkan/VulkanShaderReflection.cpp
@@ -390,6 +380,7 @@ if(LINUX)
         Common_3/OS/Linux/LinuxFileSystem.cpp
         Common_3/OS/Linux/LinuxToolsFileSystem.cpp
         Common_3/OS/Linux/LinuxWindow.cpp
+        Common_3/Utilities/FileSystem/UnixFileSystem.cpp
     )
     list(
         APPEND
@@ -409,7 +400,7 @@ endif()
 
 if(APPLE)
     if(IOS)
-        set(FSL_LANGUAGE "IOS")
+        set(FSL_LANGUAGES "IOS")
         set(OBJCPP_SRC
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputIos.mm
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/builtin/GainputInputDeviceBuiltInIos.mm
@@ -430,7 +421,7 @@ if(APPLE)
         find_library(MPS_LIBRARY MetalPerformanceShaders)
         find_library(QUARTZCORE_LIBRARY QuartzCore)
 
-        set(FSL_LANGUAGE "MACOS")
+        set(FSL_LANGUAGES "MACOS")
         set(OBJCPP_SRC
             Common_3/Application/Fonts/FontSystem.cpp
             Common_3/Application/InputSystem.cpp
@@ -465,6 +456,7 @@ if(APPLE)
         )
         list(APPEND CPP_SRC Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboardMac.cpp
              Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp
+             Common_3/Utilities/FileSystem/UnixFileSystem.cpp
         )
         list(
             APPEND
@@ -484,7 +476,7 @@ if(APPLE)
 endif()
 
 if(ANDROID)
-    set(FSL_LANGUAGE "ANDROID")
+    set(FSL_LANGUAGES "ANDROID")
     list(
         APPEND
         CPP_SRC
@@ -512,8 +504,8 @@ target_compile_options(
     PUBLIC
         "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread;>"
         "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-deprecated-declarations;-Wno-deprecated-builtins;-Wno-unqualified-std-cast-call;-Wno-int-to-pointer-cast;>"
+        "$<$<CXX_COMPILER_ID:MSVC>:/wd4005;/wd4244;/D_CRT_SECURE_NO_WARNINGS>"
 )
-set_property(SOURCE ${C_SRC} ${OBJC_SRC} PROPERTY COMPILE_OPTIONS -Wno-implicit-function-declaration)
 
 target_include_directories(
     The-Forge
@@ -532,7 +524,15 @@ target_include_directories(
 )
 
 if(WIN32)
-
+    target_include_directories(The-Forge PUBLIC $ENV{VULKAN_SDK}/Include)
+    target_link_libraries(The-Forge
+        PUBLIC $ENV{VULKAN_SDK}/Lib/vulkan-1.lib
+               Xinput
+               ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib
+               ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.lib
+               ${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/nvapi/amd64/nvapi64.lib
+               ${CMAKE_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.lib
+    )
 endif()
 
 if(LINUX)
