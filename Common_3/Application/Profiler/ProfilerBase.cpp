@@ -1795,8 +1795,10 @@ void initProfiler(ProfilerDesc* pDesc)
 	//store active gpu settings
 	ProfileGet()->pGpuSettings = pDesc->pRenderer->pActiveGpuSettings;
 
+#ifdef ENABLE_FORGE_FONTS
 	snprintf(gGpuProfileTitleText, sizeof(gGpuProfileTitleText), "%s \t\t\t\t Driver: %s", pDesc->pRenderer->pActiveGpuSettings->mGpuVendorPreset.mGpuName,
 		pDesc->pRenderer->pActiveGpuSettings->mGpuVendorPreset.mGpuDriverVersion);
+#endif
 #endif
 
 	// PROFILER UI

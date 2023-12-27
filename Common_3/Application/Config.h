@@ -243,7 +243,7 @@ COMPILE_ASSERT(sizeof(ssize_t) == sizeof(int64_t));
 //////////////////////////////////////////////
 #define ENABLE_FORGE_SCRIPTING
 #define ENABLE_FORGE_UI
-#define ENABLE_FORGE_FONTS
+//#define ENABLE_FORGE_FONTS
 #define ENABLE_FORGE_INPUT
 #define ENABLE_FORGE_ANIMATION_DEBUG
 #define ENABLE_ZIP_FILESYSTEM
