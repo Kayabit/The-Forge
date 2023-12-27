@@ -5,7 +5,9 @@ project(The-Forge LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(NOT EXISTS ${CMAKE_SOURCE_DIR}/Art)
+option(BUILD_EXAMPLES "Build The-Forge's example programs" OFF)
+
+if(BUILD_EXAMPLES AND NOT EXISTS ${CMAKE_SOURCE_DIR}/Art)
     message(STATUS "Downloading art assets, please grab a cup of coffee and wait a few minutes. This will be executed only once!")
     if(WIN32)
         execute_process(COMMAND ${CMAKE_SOURCE_DIR}/PRE_BUILD.bat)
@@ -14,8 +16,6 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/Art)
         execute_process(COMMAND ${CMAKE_SOURCE_DIR}/PRE_BUILD.command)
     endif()
 endif()
-
-option(BUILD_EXAMPLES "Build The-Forge's example programs" ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
