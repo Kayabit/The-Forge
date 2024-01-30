@@ -641,6 +641,8 @@ int2 fntGetFontAtlasSize()
 	FONScontext* fs = gFontstash.pContext;
 	fonsGetAtlasSize(fs, &size.x, &size.y);
 	return size;
+#else
+	return {0,0};
 #endif
 }
 

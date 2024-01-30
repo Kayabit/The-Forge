@@ -537,10 +537,10 @@ target_link_libraries(
     PUBLIC # Windows-specific libraries
            $<$<PLATFORM_ID:Windows>:$ENV{VULKAN_SDK}/Lib/vulkan-1.lib>
            $<$<PLATFORM_ID:Windows>:Xinput>
-           $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib>
-           $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.lib>
-           $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/nvapi/amd64/nvapi64.lib>
-           $<$<PLATFORM_ID:Windows>:${CMAKE_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.lib>
+           $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib>
+           $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.lib>
+           $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/nvapi/amd64/nvapi64.lib>
+           $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/Common_3/OS/ThirdParty/OpenSource/winpixeventruntime/bin/WinPixEventRuntime.lib>
            # Linux-specific libraries
            $<$<PLATFORM_ID:Linux>:${GTK3_LIBRARIES}>
            $<$<PLATFORM_ID:Linux>:${LIBUDEV_LIBRARIES}>
