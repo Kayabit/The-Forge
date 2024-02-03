@@ -28,7 +28,8 @@
 #error "VulkanConfig should be included from RendererConfig only"
 #endif
 
-#define VULKAN
+// Makarand, Feb24. Leaving this defined causes the code to assume we're using Vulkan.
+//#define VULKAN
 
 #if defined(_WINDOWS) || defined(XBOX)
 #define VK_USE_PLATFORM_WIN32_KHR

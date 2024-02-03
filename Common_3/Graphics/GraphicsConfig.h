@@ -35,9 +35,12 @@
 
 // Comment/uncomment includes to disable/enable rendering APIs
 #if defined(_WINDOWS)
-#ifndef _WINDOWS7
-#include "Direct3D12/Direct3D12Config.h"
-#endif
+
+// Makarand, Feb24: Needs to be commented to ensure that both 11 and 12 are not included.
+//#ifndef _WINDOWS7
+//#include "Direct3D12/Direct3D12Config.h"
+//#endif
+
 #include "Direct3D11/Direct3D11Config.h"
 #include "Vulkan/VulkanConfig.h"
 #elif defined(XBOX)
