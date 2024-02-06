@@ -328,6 +328,11 @@ if(WIN32)
     if(NOT DEFINED ENV{VULKAN_SDK})
         message(FATAL_ERROR "Please install Vulkan SDK!")
     endif()
+
+    # need to find vulkan headers
+    message(STATUS "Vulkan SDK found at $ENV{VULKAN_SDK}, adding include directories... $ENV{VULKAN_SDK}/include")
+    include_directories($ENV{VULKAN_SDK}/include)
+
     list(
         APPEND
         CPP_SRC
