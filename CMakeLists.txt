@@ -529,7 +529,17 @@ endif()
 
 set(SRC ${CPP_SRC} ${C_SRC} ${OBJCPP_SRC} ${OBJC_SRC})
 
-add_library(The-Forge STATIC ${SRC})
+add_library(${PROJECT_NAME} STATIC ${SRC})
+
+if(GENERATE_DEBUG_SYMBOLS)
+    message(STATUS "Generating debug symbols for ${PROJECT_NAME}")
+    if(MSVC)
+        target_compile_options(${PROJECT_NAME} PRIVATE /Zi)
+        target_link_options(${PROJECT_NAME} PRIVATE /DEBUG)
+    else()
+        target_link_options(${PROJECT_NAME} PRIVATE -g)
+    endif()
+endif()
 
 # apply conan settings for build type, mac universal, etc.
 # if we ever migrate the Forge dependencies into conan that should work too but would take a lot of typing
