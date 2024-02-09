@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 #set (CMAKE_OSX_DEPLOYMENT_TARGET, "11.0")
 
+# extra ../../cmake in case we're run from a build subdir under The-Forge folder
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cmake" ${CMAKE_MODULE_PATH})
+
+# have to do some conan setup that usually happens in the root cmakelists
+include(BuildboxConan)
+setup_conan()
+
+# we want conan here so we can have standardized configurations; it's not used for its usual dependency management purposes
+include_conan()
+
 project(The-Forge LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -505,6 +515,12 @@ endif()
 set(SRC ${CPP_SRC} ${C_SRC} ${OBJCPP_SRC} ${OBJC_SRC})
 
 add_library(The-Forge STATIC ${SRC})
+
+# apply conan settings for build type, mac universal, etc.
+# if we ever migrate the Forge dependencies into conan that should work too but would take a lot of typing
+# to update apply_conan()
+# since each dependency has to be individually handled in BuildboxConan.cmake as of writing
+apply_conan_toolchain(${PROJECT_NAME})
 
 # Suppress compiler warnings
 target_compile_options(
