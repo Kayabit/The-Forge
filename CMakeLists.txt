@@ -4,6 +4,20 @@ cmake_minimum_required(VERSION 3.5)
 # extra ../../cmake in case we're run from a build subdir under The-Forge folder
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cmake" ${CMAKE_MODULE_PATH})
 
+OPTION(GENERATE_DEBUG_SYMBOLS "Always generate dSYM and pdb files, even if making a release build" OFF)
+if(GENERATE_DEBUG_SYMBOLS)
+    if(APPLE)
+        set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
+        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -g")
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g")
+    endif()
+    if(WIN32)
+        set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Zi")
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
+        set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
+    endif()
+endif()
+
 # have to do some conan setup that usually happens in the root cmakelists
 include(BuildboxConan)
 setup_conan()
