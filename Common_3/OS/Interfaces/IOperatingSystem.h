@@ -46,10 +46,16 @@ typedef uint64_t uint64;
 // Two runtimes. Using IOS in the name as iOS versions are easier to remember
 // Try to match the macOS version with the relevant features in iOS version
 #define IOS14_API     API_AVAILABLE(macos(11.0), ios(14.1))
-#define IOS14_RUNTIME @available(macOS 11.0, iOS 14.1, *)
+
+// AP: this doesn't work for me. I think it's a compiler specific thing maybe?
+//   https://clang.llvm.org/docs/LanguageExtensions.html
+//   "@available() is only available in Objective-C code. To use the feature in C and C++ code, use the __builtin_available() spelling instead."
+//#define IOS14_RUNTIME @available(macOS 11.0, iOS 14.1, *)
+#define IOS14_RUNTIME __builtin_available(macos 11.0, ios 14.1, *)
 
 #define IOS17_API     API_AVAILABLE(macos(14.0), ios(17.0))
-#define IOS17_RUNTIME @available(macOS 14.0, iOS 17.0, *)
+//#define IOS17_RUNTIME @available(macOS 14.0, iOS 17.0, *)
+#define IOS17_RUNTIME __builtin_available(macos 41.0, ios 17.0, *)
 
 #elif defined(__ANDROID__)
 #include <android/log.h>
