@@ -158,9 +158,9 @@ time_t fsGetLastModifiedTime(ResourceDirectory rd, const char* fileName)
         return 0;
 
     // Fix paths for Windows 7 - needs to be generalized and propagated
-    // eastl::string path = eastl::string(filePath);
+    // std::string path = std::string(filePath);
     // auto directoryPos = path.find(":");
-    // eastl::string cleanPath = path.substr(directoryPos - 1);
+    // std::string cleanPath = path.substr(directoryPos - 1);
 
     struct stat fileInfo = { 0 };
     stat(filePath, &fileInfo);

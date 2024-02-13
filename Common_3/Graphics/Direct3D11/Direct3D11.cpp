@@ -1574,7 +1574,7 @@ void d3d11_addQueue(Renderer* pRenderer, QueueDesc* pDesc, Queue** ppQueue)
     pQueue->mNodeIndex = pDesc->mNodeIndex;
     pQueue->mType = pDesc->mType;
     pQueue->mDx11.pDevice = pRenderer->mDx11.pDevice;
-    // eastl::string queueType = "DUMMY QUEUE FOR DX11 BACKEND";
+    // std::string queueType = "DUMMY QUEUE FOR DX11 BACKEND";
 
     *ppQueue = pQueue;
 }
