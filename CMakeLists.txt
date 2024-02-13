@@ -295,8 +295,12 @@ if(WIN32)
     list(
         APPEND
         CPP_SRC
+        # FORGE154 MERGETODO feels like these gainput guys probably already were somewhere else in this file
+        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
+        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputInputManager.cpp
         Common_3/Graphics/Direct3D11/Direct3D11.cpp
-        Common_3/Graphics/Direct3D11/Direct3D11Raytracing.cpp
+        # FORGE154 D3D11 raytracing seemingly no longer exists, hope that's ok
+        #Common_3/Graphics/Direct3D11/Direct3D11Raytracing.cpp
         Common_3/Graphics/Direct3D11/Direct3D11ShaderReflection.cpp
         Common_3/Graphics/Direct3D12/Direct3D12.cpp
         Common_3/Graphics/Direct3D12/Direct3D12Hooks.cpp
