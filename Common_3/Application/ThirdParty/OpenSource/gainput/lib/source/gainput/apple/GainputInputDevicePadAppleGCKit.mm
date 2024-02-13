@@ -53,7 +53,7 @@ namespace
 {
 static GCController* getGcController(void* c)
 {
-
+    // FORGE154 MERGETODO actually maybe now that I found the cmake linker thing I can un-edit this file? worth a shot?
     //return static_cast<GCController*>(c);
     return (__bridge GCController *)c;
 }
