@@ -2039,12 +2039,11 @@ void uiCreateComponent(const char* pTitle, const UIComponentDesc* pDesc, UICompo
     pComponent->mFlags |= GUI_COMPONENT_FLAGS_START_COLLAPSED;
 #endif
 
+    bool useDefaultFallbackFont = false;
 #ifdef ENABLE_FORGE_FONTS
     // Functions not accessible via normal interface header
     extern void*    fntGetRawFontData(uint32_t fontID);
     extern uint32_t fntGetRawFontDataSize(uint32_t fontID);
-
-    bool useDefaultFallbackFont = false;
 
     // Use Requested Forge Font
     void*    pFontBuffer = fntGetRawFontData(pDesc->mFontID);

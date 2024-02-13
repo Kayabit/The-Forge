@@ -26,7 +26,9 @@
 
 #include "../../Application/Interfaces/IApp.h"
 #include "../../Application/Interfaces/IInput.h"
-#include "../../Application/Interfaces/IScreenshot.h"
+// AP: was dragging in some macos/metal stuff that seemed to ref a really old macos sdk and have errors
+//     didn't get to the bottom of it since it seemed unused in this file anyway... ?
+//#include "../../Application/Interfaces/IScreenshot.h"
 #include "../../Application/Interfaces/IUI.h"
 #include "../../Game/Interfaces/IScripting.h"
 #include "../../OS/Interfaces/IOperatingSystem.h"
