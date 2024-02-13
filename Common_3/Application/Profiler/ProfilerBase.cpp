@@ -1927,15 +1927,10 @@ void initProfiler(ProfilerDesc* pDesc)
 // MERGETODO: which side?
 //<<<<<<< HEAD
 #ifdef ENABLE_FORGE_FONTS
-//    snprintf(gGpuProfileTitleText, sizeof(gGpuProfileTitleText), "%s \t\t\t\t Driver: %s", 
-//             pDesc->pRenderer->pActiveGpuSettings->mGpuVendorPreset.mGpuName,
-//	     pDesc->pRenderer->pActiveGpuSettings->mGpuVendorPreset.mGpuDriverVersion);
-//=======
     // gpu profiler title text
     snprintf(gGpuProfileTitleText, sizeof(gGpuProfileTitleText), "%s \t\t\t\t Driver: %s",
              pDesc->pRenderer->pGpu->mSettings.mGpuVendorPreset.mGpuName,
              pDesc->pRenderer->pGpu->mSettings.mGpuVendorPreset.mGpuDriverVersion);
-//>>>>>>> 1d895a500c5cf78e42e8f5a97f054348ca662b40
 #endif
 #endif
 
