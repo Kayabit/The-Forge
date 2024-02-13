@@ -41,6 +41,7 @@ set(CPP_SRC
     Common_3/Application/InputSystem.cpp
     Common_3/Application/Profiler/GpuProfiler.cpp
     Common_3/Application/Profiler/ProfilerBase.cpp
+    Common_3/Application/RemoteControl.cpp
     Common_3/Application/Screenshot.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputAllocator.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputInputDeltaState.cpp
@@ -67,9 +68,10 @@ set(CPP_SRC
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHIDWhitelist.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserPS4Controller.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserPS5Controller.cpp
+    Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserSwitchController.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboard.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
-    Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
+    #Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputPlayer.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecorder.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecording.cpp
@@ -134,6 +136,7 @@ set(CPP_SRC
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/filter/soloud_waveshaperfilter.cpp
     Common_3/Graphics/CommonShaderReflection.cpp
     Common_3/Graphics/GPUConfig.cpp
+    Common_3/Graphics/PickRenderingAPI.cpp
     Common_3/Graphics/Quest/VrApiHooks.cpp
     Common_3/Graphics/ThirdParty/OpenSource/SPIRV_Cross/SpirvTools.cpp
     Common_3/Graphics/ThirdParty/OpenSource/SPIRV_Cross/spirv_cfg.cpp
@@ -187,6 +190,7 @@ set(CPP_SRC
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/memory/allocator.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/platform.cc
     Common_3/Resources/ResourceLoader/ResourceLoader.cpp
+    Common_3/Tools/ReloadServer/ReloadClient.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
@@ -237,8 +241,10 @@ set(C_SRC
     Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt_dll.c
     Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_freebsd.c
+    Common_3/Tools/Network/Network.c
     Common_3/Utilities/FileSystem/FileSystem.c
     Common_3/Utilities/FileSystem/SystemRun.c
+    Common_3/Utilities/FileSystem/ToolFileSystem.c
     Common_3/Utilities/Log/Log.c
     Common_3/Utilities/Math/Algorithms.c
     Common_3/Utilities/Math/StbDs.c
@@ -246,8 +252,34 @@ set(C_SRC
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.c
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/utf8util.c
     Common_3/Utilities/ThirdParty/OpenSource/cJSON/cJSON.c
+    Common_3/Utilities/ThirdParty/OpenSource/lz4/lz4.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/debug.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/entropy_common.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/error_private.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/fse_decompress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/pool.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/threading.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/xxhash.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/zstd_common.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/fse_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/huf_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress_literals.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress_sequences.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress_superblock.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_double_fast.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_fast.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_lazy.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_ldm.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_opt.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstdmt_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/huf_decompress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_decompress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_decompress_block.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_ddict.c
     Common_3/Utilities/Timer.c
     Common_3/Utilities/Threading/ThreadSystem.c
+    
 )
 
 if(WIN32)
@@ -352,6 +384,8 @@ if(APPLE)
         find_library(METAL_LIBRARY Metal)
         find_library(MPS_LIBRARY MetalPerformanceShaders)
         find_library(QUARTZCORE_LIBRARY QuartzCore)
+        find_library(GAMEKIT_LIBRARY GameKit)
+        find_library(GAMECONTROLLER_LIBRARY GameController)
 
         set(FSL_LANGUAGES "MACOS")
         set(OBJCPP_SRC
@@ -359,15 +393,19 @@ if(APPLE)
             Common_3/Application/InputSystem.cpp
             Common_3/Application/Profiler/GpuProfiler.cpp
             Common_3/Application/Profiler/ProfilerBase.cpp
+            Common_3/Application/RemoteControl.cpp
             Common_3/Application/Screenshot.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputMac.mm
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceMouseMac.mm
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceMouseMacRaw.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadAppleGCKit.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
             Common_3/Application/UI/UI.cpp
             Common_3/Game/Scripting/LuaSystem.cpp
             Common_3/Graphics/CommonShaderReflection.cpp
             Common_3/Graphics/GPUConfig.cpp
+            Common_3/Graphics/PickRenderingAPI.cpp
             Common_3/Graphics/Metal/MetalRaytracing.mm
             Common_3/Graphics/Metal/MetalRenderer.mm
             Common_3/Graphics/Metal/MetalShaderReflection.mm
@@ -387,6 +425,7 @@ if(APPLE)
         list(APPEND CPP_SRC 
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceKeyboardMac.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadMac.cpp 
+            #Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
         )
         list(
             APPEND
@@ -500,6 +539,8 @@ target_link_libraries(
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${METAL_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${MPS_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${QUARTZCORE_LIBRARY}>
+           $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${GAMEKIT_LIBRARY}>
+           $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${GAMECONTROLLER_LIBRARY}>
 )
 
 if(BUILD_EXAMPLES)

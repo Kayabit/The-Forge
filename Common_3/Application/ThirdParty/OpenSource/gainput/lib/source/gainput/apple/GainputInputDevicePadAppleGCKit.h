@@ -68,8 +68,11 @@ private:
     InputState& previousState_;
 	InputDevice::DeviceState deviceState_;
 	InputDeltaState* deltaState_;
-	void* deviceConnectedObserver;
-	void* deviceDisconnectedObserver;
+    // FORGE154 again, weird place to be making edits...
+    //void* deviceConnectedObserver;
+    //void* deviceDisconnectedObserver;
+    id deviceConnectedObserver;
+    id deviceDisconnectedObserver;
     DeviceChangeCB deviceChangeCb;
 
     bool isMicro_;

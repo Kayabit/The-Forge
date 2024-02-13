@@ -28,9 +28,6 @@
 #define METAL
 #endif
 
-//#import <MetalKit/MetalKit.h>
-#import <AppKit/AppKit.h>
-#import <Metal/Metal.h>
-#import <QuartzCore/CAMetalLayer.h>
+#import <MetalKit/MetalKit.h>
 
 #include "MetalAvailabilityMacros.h"

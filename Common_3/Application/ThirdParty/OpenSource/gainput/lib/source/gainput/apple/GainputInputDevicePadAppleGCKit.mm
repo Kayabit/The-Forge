@@ -34,12 +34,16 @@
 #include "../../../include/gainput/apple/GainputGCKit.h"
 
 #import <GameKit/GameKit.h>
+#import <GameController/GameController.h>
 
 #if defined(GAINPUT_PLATFORM_MAC)
 #import <CoreFoundation/CoreFoundation.h>
 #else
 #include "../../../include/gainput/apple/GainputIos.h"
 #endif
+
+// FORGE154 something seems wrong here, this doesn't feel like a file I'd need to be editing. but here we go...
+//   there are a lot of C-style or __bridge casts I had to add
 
 namespace gainput
 {
@@ -49,7 +53,9 @@ namespace
 {
 static GCController* getGcController(void* c)
 {
-    return static_cast<GCController*>(c);
+
+    //return static_cast<GCController*>(c);
+    return (__bridge GCController *)c;
 }
 
 static bool IsValidHardwareController(GCController const * controller)
@@ -81,7 +87,8 @@ static void CleanDisconnectedControllersFromMapping()
 	InputDevicePadImplGCKit::GlobalControllerList& mapping = *InputDevicePadImplGCKit::mappedControllers_;
     for (InputDevicePadImplGCKit::GlobalControllerList::iterator it = mapping.begin(); it != mapping.end(); )
     {
-        GCController const* controller = static_cast<GCController*>(*it);
+        //GCController const* controller = static_cast<GCController*>(*it);
+        GCController const *controller = (__bridge GCController *)(*it);
         if (!IsValidHardwareController(controller))
         {
             it = mapping.erase(it);
@@ -104,7 +111,8 @@ static bool IsMapped(GCController* controller)
 	InputDevicePadImplGCKit::GlobalControllerList& mapping = *InputDevicePadImplGCKit::mappedControllers_;
     for(std::size_t index = 0; index < mapping.size(); ++index)
     {
-        GCController const* mapped_controller = static_cast<GCController*>(mapping[index]);
+        //GCController const* mapped_controller = static_cast<GCController*>(mapping[index]);
+        GCController const* mapped_controller = (__bridge GCController *)(mapping[index]);
         if (controller == mapped_controller)
         {
             return true;
@@ -173,46 +181,46 @@ InputDevicePadImplGCKit::InputDevicePadImplGCKit(InputManager& manager, InputDev
         mappedControllers_ = manager.GetAllocator().New<GlobalControllerList>(manager.GetAllocator());
     }
 
-	__block InputDevicePadImplGCKit*devPad = this;
-	deviceConnectedObserver = [[NSNotificationCenter defaultCenter]
-									addObserverForName:GCControllerDidConnectNotification
-									object:nil
-									queue: [NSOperationQueue mainQueue]
-									usingBlock:^(NSNotification *note)
-									{
-										devPad->SetupController();
-									}
-								];
+    __block InputDevicePadImplGCKit*devPad = this;
+    deviceConnectedObserver = [[NSNotificationCenter defaultCenter]
+                                    addObserverForName:GCControllerDidConnectNotification
+                                    object:nil
+                                    queue: [NSOperationQueue mainQueue]
+                                    usingBlock:^(NSNotification *note)
+                                    {
+                                        devPad->SetupController();
+                                    }
+                                ];
 
-	deviceDisconnectedObserver= [[NSNotificationCenter defaultCenter]
-									addObserverForName:GCControllerDidDisconnectNotification
-									object:nil
-									queue: [NSOperationQueue mainQueue]
-									usingBlock:^(NSNotification *note)
-									{
-										if(note.object)
-										{
-											if(note.object == gcController_)
-											{
-												devPad->deviceState_ = InputDevice::DS_UNAVAILABLE;
-												devPad->gcController_ = NULL;
-												devPad->manager_.RemoveDevice(devPad->device_.GetDeviceId());
-												devPad->controllerName_ = "";
-												devPad->device_.OverrideDeviceId(-1);
+    deviceDisconnectedObserver= [[NSNotificationCenter defaultCenter]
+                                    addObserverForName:GCControllerDidDisconnectNotification
+                                    object:nil
+                                    queue: [NSOperationQueue mainQueue]
+                                    usingBlock:^(NSNotification *note)
+                                    {
+                                        if(note.object)
+                                        {
+                                            if(note.object == gcController_)
+                                            {
+                                                devPad->deviceState_ = InputDevice::DS_UNAVAILABLE;
+                                                devPad->gcController_ = NULL;
+                                                devPad->manager_.RemoveDevice(devPad->device_.GetDeviceId());
+                                                devPad->controllerName_ = "";
+                                                devPad->device_.OverrideDeviceId(-1);
 #ifdef GAINPUT_GC_HAPTICS
-												GainputGCHapticMotor* leftMotorDevice = (GainputGCHapticMotor*)devPad->hapticMotorLeft;
-												GainputGCHapticMotor* rightMotorDevice = (GainputGCHapticMotor*)devPad->hapticMotorRight;
-												if(leftMotorDevice)
-													[leftMotorDevice cleanup];
-												if(rightMotorDevice)
-													[rightMotorDevice cleanup];
-												devPad->hapticMotorLeft = nil;
-												devPad->hapticMotorRight = nil;
+                                                GainputGCHapticMotor* leftMotorDevice = (GainputGCHapticMotor*)devPad->hapticMotorLeft;
+                                                GainputGCHapticMotor* rightMotorDevice = (GainputGCHapticMotor*)devPad->hapticMotorRight;
+                                                if(leftMotorDevice)
+                                                    [leftMotorDevice cleanup];
+                                                if(rightMotorDevice)
+                                                    [rightMotorDevice cleanup];
+                                                devPad->hapticMotorLeft = nil;
+                                                devPad->hapticMotorRight = nil;
 #endif
-											}
-										}
-									}
-								];
+                                            }
+                                        }
+                                    }
+                                ];
 }
 
 
@@ -233,10 +241,10 @@ InputDevicePadImplGCKit::~InputDevicePadImplGCKit()
 		manager_.GetAllocator().Delete(mappedControllers_);
 		mappedControllers_ = NULL;
 	}
-	id<NSObject> connectObserver =(id<NSObject>)deviceConnectedObserver;
+    id<NSObject> connectObserver = deviceConnectedObserver;
 	[[NSNotificationCenter defaultCenter] removeObserver:connectObserver];
 
-	id<NSObject> disconnectObserver = (id<NSObject>)deviceDisconnectedObserver;
+    id<NSObject> disconnectObserver = deviceDisconnectedObserver;
 	[[NSNotificationCenter defaultCenter] removeObserver:disconnectObserver];
 }
 
@@ -304,7 +312,7 @@ void InputDevicePadImplGCKit::SetupController()
 	}
 	if(!gcController_)
 	{
-		gcController_ = (void*)newIncController;
+        gcController_ = (__bridge void*)newIncController;
 	}
 	GCController* controller = getGcController(gcController_);
 	// check if we need to replace current controller with this one.
@@ -317,7 +325,7 @@ void InputDevicePadImplGCKit::SetupController()
 		}
 
 		CleanDisconnectedControllersFromMapping();
-		gcController_ = (void*) newIncController;
+        gcController_ = (__bridge void*) newIncController;
 		controller = newIncController;
 	}
 
