@@ -115,6 +115,8 @@ int AssetPipelineCmd(int argc, char** argv)
     char fileName[FS_MAX_PATH] = { 0 };
     char iext[FS_MAX_PATH] = { 0 };
 
+    bool useAbsolutePaths = false;
+
     for (int i = 2; i < argc; ++i)
     {
         const char* arg = argv[i];
@@ -168,6 +170,9 @@ int AssetPipelineCmd(int argc, char** argv)
         {
             params.mSettings.force = true;
         }
+        else if (STRCMP(arg, "--absolute-paths")) {
+            useAbsolutePaths = true;
+        }
         else
         {
             params.mFlags[params.mFlagsCount++] = argv[i];
@@ -187,9 +192,16 @@ int AssetPipelineCmd(int argc, char** argv)
         return 1;
     }
 
-    fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, params.mRDInput, input);
-    fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, params.mRDOutput, output);
+    if(!useAbsolutePaths) {
+        fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, params.mRDInput, input);
+        fsSetPathForResourceDir(pSystemFileIO, RM_CONTENT, params.mRDOutput, output);
+    }
+    else {
+        fsSetPathForResourceDir(pSystemFileIO, RM_EMPTY, params.mRDInput, input);
+        fsSetPathForResourceDir(pSystemFileIO, RM_EMPTY, params.mRDOutput, output);
+    }
     fsSetPathForResourceDir(pSystemFileIO, RM_DEBUG, RD_LOG, "");
+    
 
     LogLevel logLevel = params.mSettings.quiet ? eWARNING : DEFAULT_LOG_LEVEL;
     initLog(gApplicationName, logLevel);
