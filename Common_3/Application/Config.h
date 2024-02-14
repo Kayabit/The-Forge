@@ -317,7 +317,8 @@ COMPILE_ASSERT(sizeof(ssize_t) == sizeof(int64_t));
 #endif
 // Uncomment this to enable empty mounts
 // used for absolute paths
-// #define ENABLE_FS_EMPTY_MOUNT
+// FORGE154 BUILDBOX: enabled this for use with the assetpipelinecmd utility during buildbox runtime
+#define ENABLE_FS_EMPTY_MOUNT
 
 #ifdef ENABLE_PROFILER
 // Enable this if you want to have the profiler through a web browser, see PROFILE_WEBSERVER_PORT for server location

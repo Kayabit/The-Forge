@@ -190,6 +190,7 @@ set(CPP_SRC
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/memory/allocator.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/platform.cc
     Common_3/Resources/ResourceLoader/ResourceLoader.cpp
+    #Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
     Common_3/Tools/ReloadServer/ReloadClient.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
@@ -422,7 +423,7 @@ if(APPLE)
             Common_3/OS/Darwin/macOSWindow.mm
             Common_3/Resources/AnimationSystem/Animation/SkeletonBatcher.cpp
             Common_3/Resources/ResourceLoader/ResourceLoader.cpp
-            Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
+            #Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
             Middleware_3/PaniniProjection/Panini.cpp
             Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
         )

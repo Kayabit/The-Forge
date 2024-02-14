@@ -981,6 +981,14 @@ bool ProcessTextures(AssetPipelineParams* assetParams, ProcessTexturesParams* te
     //  - Cubemaps
     //  - HDR texture support
 
+    // LOGF(eINFO, 
+    // "ProcessTextures with assetpipelineinfo infilepath %s inext %s indir %s outdir %s outsubdir %s mpathmode %d rdinput %d rdoutput %d",
+    // assetParams->mInFilePath, assetParams->mInExt, assetParams->mInDir, assetParams->mOutDir, assetParams->mOutSubdir,
+    // assetParams->mPathMode, assetParams->mRDInput, assetParams->mRDOutput);
+    // LOGF(eINFO,
+    // "ProcessTextures with textureparams mInExt %s",
+    // texturesParams->mInExt);
+
     bool     error = false;
     // Get all image files
     bstring* inputImgFileNames = NULL;
