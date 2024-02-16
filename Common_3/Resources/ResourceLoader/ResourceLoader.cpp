@@ -1833,6 +1833,16 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
         }
 
         const uint32_t srcFormatSize = (uint32_t)geomData->pShadow->mVertexStrides[attr->mSemantic]; //-V522
+        // FORGE154 AP desperate guess here, seems like we're having trouble with obj's that don't have UVs (?)
+        //  I could make a new vertexLayout and find each place it would need to be used
+        //  or I could try skipping missing attributes here?
+        //  Seems the new forge assetpipeline sets source size = 0 when there is no data
+        //  which can trigger the ASSERT at the end of this loop
+        //  but will "skipping" steps confuse/crash something somewhere else?
+        if(srcFormatSize == 0) {
+            LOGF(eWARNING, "Source format size 0 for vertexlayout attribute %i", i);
+            continue;
+        }
 
         uint32_t binding =
             pDesc->pGeometryBufferLayoutDesc ? pDesc->pGeometryBufferLayoutDesc->mSemanticBindings[attr->mSemantic] : attr->mBinding;
@@ -1915,6 +1925,7 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
 
     *pDesc->ppGeometry = geom;
 
+    // FORGE154 why is this an if check where ppGeometry isn't? is it the correct check?
     if (pDesc->ppGeometryData)
         *pDesc->ppGeometryData = geomData;
     else
