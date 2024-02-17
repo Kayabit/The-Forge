@@ -31,7 +31,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -56,6 +56,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-pgltf --input-file /Users/adampiechowicz/Library/Preferences/com.eightcell.buildbox4/04559c4c-d999-4586-a1fd-f4ce1763b38f/meshes/PTModelMesh_ID1832.glb --output /Users/adampiechowicz/Library/Preferences/com.eightcell.buildbox4/04559c4c-d999-4586-a1fd-f4ce1763b38f/meshes --absolute-paths --force"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-pt --input ../../../../../../Examples_3/Unit_Tests/UnitTestResources/Textures --output ../../../../../../Examples_3/Unit_Tests/UnitTestResources/ProcessedFiles/Textures --in-all --out-png"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -68,6 +72,38 @@
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
+      <AdditionalOptions>
+         <AdditionalOption
+            key = "MallocStackLogging"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "DYLD_INSERT_LIBRARIES"
+            value = "/usr/lib/libgmalloc.dylib"
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "PrefersMallocStackLoggingLite"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "NSZombieEnabled"
+            value = "YES"
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "MallocGuardEdges"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "MallocScribble"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

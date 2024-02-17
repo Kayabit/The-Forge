@@ -1892,12 +1892,6 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     break;
                 }
             }
-
-            // FORGE154 BUILDBOX: if the model has no uv map, make dummy data for it
-            if(!texCoordsSet) {
-                vertexPacking[] = util_pack_float2_to_half2;
-            }
-
         }
 
         uint32_t shadowSize = 0;
@@ -1913,6 +1907,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             shadowSize += vertexAttrStrides[s] * vertexAttribCount[s];
         }
 
+        // AP: there's a bug in this enormous thing somewhere doing an array overrun or other memory error from this alloc on at least one GLB file we have for "barbara the bee"
         geomData->pShadow = (GeometryData::ShadowData*)tf_calloc(1, shadowSize);
         geomData->pShadow->pIndices = geomData->pShadow + 1;
 
