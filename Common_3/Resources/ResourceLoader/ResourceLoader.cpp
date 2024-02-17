@@ -63,6 +63,7 @@
 
 #include "../../Tools/ReloadServer/ReloadClient.h"
 
+// FORGE154 enabled verbose here but it didn't compile
 // If facing strange gfx issues, corruption, GPU hangs, enable this for verbose logging of resource loading
 #define RESOURCE_LOADER_VERBOSE 0
 #if RESOURCE_LOADER_VERBOSE
@@ -1814,6 +1815,7 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
         vertexOffsets[i] = UINT_MAX;
 
     uint32_t defaultTexcoordSemantic = SEMANTIC_UNDEFINED;
+    uint32_t defaultTexcoordStride = 0;
 
     // Determine vertex stride for each binding
     for (uint32_t i = 0; i < pDesc->pVertexLayout->mAttribCount; ++i)
@@ -1822,6 +1824,13 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
 
         const uint32_t dstFormatSize = TinyImageFormat_BitSizeOfBlock(attr->mFormat) / 8;
 
+        uint32_t binding;
+        if(pDesc->pGeometryBufferLayoutDesc) {
+            binding = pDesc->pGeometryBufferLayoutDesc->mSemanticBindings[attr->mSemantic];
+        } else {
+            binding = attr->mBinding;
+        }
+
         if (defaultTexcoordSemantic == SEMANTIC_UNDEFINED) // #nocheckin Revisit this if statement
         {
             if (attr->mSemantic >= SEMANTIC_TEXCOORD0 && attr->mSemantic <= SEMANTIC_TEXCOORD9)
@@ -1829,6 +1838,23 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
                 // Make sure there are only 1 set of default texcoords
                 ASSERT(defaultTexcoordSemantic == SEMANTIC_UNDEFINED);
                 defaultTexcoordSemantic = attr->mSemantic;
+
+                // FORGE 154 brought this "default" behavior back from previous version of ResourceLoader
+                //  while the assert/comment below about AssetPipeline converting does apply,
+                //  AssetPipeline does additional new optimizations that can drop the texcoord settings
+                //  from assets that don't actually HAVE texcoords
+                //  which sounds like a sensible thing to do, but we have so many untextured models
+                //  (starting usually from camera.obj) and I don't have a good strategy to tell
+                //  the textured from untextured ones. so I'm bringing back this "default texcoords" behavior
+                //  as a result some code has been moved around inside this loop
+                //  NB: the default format is no longer float[2] but rather "half2" (two half floats packed into 4 bytes)
+                defaultTexcoordStride = dstFormatSize ? dstFormatSize : 2 * sizeof(half);
+                geom->mVertexStrides[binding] += defaultTexcoordStride;
+				vertexOffsets[defaultTexcoordSemantic] = attr->mOffset;
+				vertexBindings[defaultTexcoordSemantic] = attr->mBinding;
+				++vertexAttribCount[attr->mBinding];
+
+				continue;                
             }
         }
 
@@ -1841,11 +1867,9 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
         //  but will "skipping" steps confuse/crash something somewhere else?
         if(srcFormatSize == 0) {
             LOGF(eWARNING, "Source format size 0 for vertexlayout attribute %i", i);
-            continue;
+            // I mean obviously this isn't a GOOD idea so I'm trying to resolve it. will keep the warning for now...
+            //continue;
         }
-
-        uint32_t binding =
-            pDesc->pGeometryBufferLayoutDesc ? pDesc->pGeometryBufferLayoutDesc->mSemanticBindings[attr->mSemantic] : attr->mBinding;
 
         geom->mVertexStrides[binding] += dstFormatSize ? dstFormatSize : srcFormatSize;
         vertexOffsets[attr->mSemantic] = attr->mOffset;
@@ -3367,6 +3391,8 @@ void addResource(TextureLoadDesc* pTextureDesc, SyncToken* token)
     }
     else
     {
+        LOGF(eINFO, "Will convert to addResource for %s", pTextureDesc->pFileName);
+
         TextureLoadDescInternal loadDesc = {};
         loadDesc.ppTexture = pTextureDesc->ppTexture;
         loadDesc.mContainer = pTextureDesc->mContainer;

@@ -1810,6 +1810,12 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             glTFParams->pWriteExtrasCallback(&userDataSize, pUserData, glTFParams->pCallbackUserData);
         }
 
+        LOGF(eDEBUG, "Vertex count: %u", vertexCount);
+        LOGF(eDEBUG, "Index count: %u", indexCount);
+        LOGF(eDEBUG, "Draw count: %u", drawCount);
+        LOGF(eDEBUG, "Joint count: %u", jointCount);
+        LOGF(eDEBUG, "vertex layout attribute count: %u", pVertexLayout->mAttribCount);
+
         // Determine vertex stride for each binding
         for (uint32_t attrIdx = 0; attrIdx < pVertexLayout->mAttribCount; ++attrIdx)
         {
@@ -1818,8 +1824,10 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
             if (!cgltfAttr)
             {
-                if (glTFParams->mIgnoreMissingAttributes)
+                if (glTFParams->mIgnoreMissingAttributes) {
+                    LOGF(eINFO, "Missing attribute at index %u of pVertexLayout; ignoring and continuing", attrIdx);
                     continue; // This attribute is not in the GLTF file, just ignore it
+                }
                 else
                 {
                     LOGF(eERROR, "Missing attribute at index %u of pVertexLayout", attrIdx);
@@ -1830,6 +1838,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
             const uint32_t dstFormatSize = TinyImageFormat_BitSizeOfBlock(attr->mFormat) >> 3;
             const uint32_t srcFormatSize = (uint32_t)cgltfAttr->data->stride; //-V522
+            LOGF(eDEBUG, "Attribute %u: %s, dstFormatSize: %u, srcFormatSize: %u", attrIdx, cgltfAttr->name, dstFormatSize, srcFormatSize);
 
             const uint32_t thisAttrStride = dstFormatSize ? dstFormatSize : srcFormatSize;
             ASSERT(vertexAttrStrides[attr->mSemantic] == 0);
@@ -1850,9 +1859,13 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 {
                 case cgltf_attribute_type_texcoord:
                 {
-                    if (sizeof(uint32_t) == dstFormatSize && sizeof(float[2]) == srcFormatSize)
+                    if (sizeof(uint32_t) == dstFormatSize && sizeof(float[2]) == srcFormatSize) {
                         vertexPacking[attr->mSemantic] = util_pack_float2_to_half2;
-                    // #TODO: Add more variations if needed
+                    }
+                    else {
+                        // #TODO: Add more variations if needed
+                        LOGF(eERROR, "Unsupported format size combination %u => %u for texcoord", srcFormatSize, dstFormatSize);
+                    }
                     break;
                 }
                 case cgltf_attribute_type_normal:
