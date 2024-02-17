@@ -1851,7 +1851,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             // Position - No packing yet
             const TinyImageFormat srcFormat = util_cgltf_type_to_image_format(cgltfAttr->data->type, cgltfAttr->data->component_type);
             const TinyImageFormat dstFormat = attr->mFormat == TinyImageFormat_UNDEFINED ? srcFormat : attr->mFormat;
-
+            bool texCoordsSet = false;
             if (dstFormat != srcFormat)
             {
                 // Select appropriate packing function which will be used when filling the vertex buffer
@@ -1861,6 +1861,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 {
                     if (sizeof(uint32_t) == dstFormatSize && sizeof(float[2]) == srcFormatSize) {
                         vertexPacking[attr->mSemantic] = util_pack_float2_to_half2;
+                        texCoordsSet = true;
                     }
                     else {
                         // #TODO: Add more variations if needed
@@ -1891,6 +1892,12 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     break;
                 }
             }
+
+            // FORGE154 BUILDBOX: if the model has no uv map, make dummy data for it
+            if(!texCoordsSet) {
+                vertexPacking[] = util_pack_float2_to_half2;
+            }
+
         }
 
         uint32_t shadowSize = 0;
