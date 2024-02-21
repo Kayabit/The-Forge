@@ -648,7 +648,7 @@ void platformReloadClientAddReloadShadersButton(UIComponent* pReloadShaderCompon
 {
 #if !defined(ENABLE_FORGE_UI)
     return;
-#endif
+#else
 
     if (!gClient.mDidInit)
     {
@@ -668,4 +668,5 @@ void platformReloadClientAddReloadShadersButton(UIComponent* pReloadShaderCompon
                                        return true;
                                    } };
     addInputAction(&actionDesc);
+#endif // !ENABLE_FORGE_UI
 }

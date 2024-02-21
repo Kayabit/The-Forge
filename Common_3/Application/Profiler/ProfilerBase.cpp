@@ -1248,7 +1248,7 @@ void drawGpuProfileRecursive(Cmd* pCmd, const GpuProfiler* pGpuProfiler, const F
 {
 #if !defined(ENABLE_FORGE_FONTS)
     return;
-#endif
+#else
     GpuTimer* pRoot = &pGpuProfiler->pGpuTimerPool[index];
     ASSERT(pRoot);
     uint32_t nTimerIndex = ProfileGetTimerIndex(pRoot->mMicroProfileToken);
@@ -1300,6 +1300,7 @@ void drawGpuProfileRecursive(Cmd* pCmd, const GpuProfiler* pGpuProfiler, const F
         }
     }
 #endif
+#endif // !ENABLE_FORGE_FONTS
 }
 
 float2 cmdDrawGpuProfile(Cmd* pCmd, float2 screenCoordsInPx, ProfileToken nProfileToken, FontDrawDesc* pDrawDesc)
