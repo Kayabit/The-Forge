@@ -552,7 +552,9 @@ void platformReloadClientRequestShaderRecompile()
         return;
     }
 
+#if defined(ENABLE_FORGE_UI)
     uiSetComponentActive(gClient.pReloadShaderComponent, false);
+#endif
 
     ThreadDesc desc = { requestRecompileThreadFunc, nullptr, "ShaderRecompile" };
     if (!initThread(&desc, &gClient.mThread))
@@ -625,7 +627,9 @@ bool platformReloadClientShouldQuit(void)
         joinThread(gClient.mThread);
         gClient.mThread = INVALID_THREAD_ID;
         tfrg_atomic32_store_release(&gClient.mIsReloading, 0);
+#if defined(ENABLE_FORGE_UI)
         uiSetComponentActive(gClient.pReloadShaderComponent, true);
+#endif
     }
 
     if (tfrg_atomic32_store_release(&gClient.mDidReload, 0) == 1)
@@ -642,6 +646,10 @@ bool platformReloadClientShouldQuit(void)
 
 void platformReloadClientAddReloadShadersButton(UIComponent* pReloadShaderComponent)
 {
+#if !defined(ENABLE_FORGE_UI)
+    return;
+#endif
+
     if (!gClient.mDidInit)
     {
         return;

@@ -291,8 +291,11 @@ COMPILE_ASSERT(sizeof(ssize_t) == sizeof(int64_t));
 //// General options
 //////////////////////////////////////////////
 // #define ENABLE_MATH_CHECKS // Enables low level math library debug checks like SIMD variable alignment checks
-#define ENABLE_FORGE_SCRIPTING
-#define ENABLE_FORGE_UI
+//#define ENABLE_FORGE_SCRIPTING
+//#define ENABLE_FORGE_UI
+// FORGE154; we used to have forge_fonts enabled, but they crash on launch for me now
+//  failing to detect my monitor count for some reason.
+//  I don't think we USE forge fonts for anything, so I've disabled them like forge scripting and UI
 //#define ENABLE_FORGE_FONTS
 #define ENABLE_FORGE_INPUT
 #define ENABLE_FORGE_ANIMATION_DEBUG

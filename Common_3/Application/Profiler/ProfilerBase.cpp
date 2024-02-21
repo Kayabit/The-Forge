@@ -1246,6 +1246,9 @@ void resetProfilerUI()
 void drawGpuProfileRecursive(Cmd* pCmd, const GpuProfiler* pGpuProfiler, const FontDrawDesc* pDrawDesc, float2& origin,
                              const uint32_t index, float2& curTotalTxtSizePx)
 {
+#if !defined(ENABLE_FORGE_FONTS)
+    return;
+#endif
     GpuTimer* pRoot = &pGpuProfiler->pGpuTimerPool[index];
     ASSERT(pRoot);
     uint32_t nTimerIndex = ProfileGetTimerIndex(pRoot->mMicroProfileToken);

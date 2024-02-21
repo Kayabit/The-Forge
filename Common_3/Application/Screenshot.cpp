@@ -60,7 +60,9 @@ char gScreenshotName[FS_MAX_PATH] = "";
 void updateUIVisibility()
 {
     bool shouldShowUI = !gCaptureFlag;
+#if defined(ENABLE_FORGE_UI)
     uiToggleRendering(shouldShowUI);
+#endif
     toggleProfilerDrawing(shouldShowUI);
 }
 

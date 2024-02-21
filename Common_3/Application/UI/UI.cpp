@@ -2283,7 +2283,7 @@ void uiSetWidgetOnDeactivatedAfterEditCallback(UIWidget* pWidget, void* pUserDat
 
 void uiNewFrame()
 {
-#if defined(ENABLE_FORGE_REMOTE_UI)
+#if defined(ENABLE_FORGE_UI) && defined(ENABLE_FORGE_REMOTE_UI)
     if (pUserInterface->mEnableRemoteUI && remoteAppIsConnected())
     {
         remoteAppReceiveInputData();

@@ -36,8 +36,8 @@ include(TheForgeUtils)
 
 set(CPP_SRC
     Common_3/Application/CameraController.cpp
-    Common_3/Application/Fonts/FontSystem.cpp
-    Common_3/Application/Fonts/stbtt.cpp
+    #Common_3/Application/Fonts/FontSystem.cpp
+    #Common_3/Application/Fonts/stbtt.cpp
     Common_3/Application/InputSystem.cpp
     Common_3/Application/Profiler/GpuProfiler.cpp
     Common_3/Application/Profiler/ProfilerBase.cpp
@@ -76,15 +76,15 @@ set(CPP_SRC
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecorder.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecording.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/touch/GainputInputDeviceTouch.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_demo.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_draw.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_tables.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_widgets.cpp
-    Common_3/Application/UI/UI.cpp
-    Common_3/Game/Scripting/LuaManager.cpp
-    Common_3/Game/Scripting/LuaManagerImpl.cpp
-    Common_3/Game/Scripting/LuaSystem.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_demo.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_draw.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_tables.cpp
+    ##Common_3/Application/ThirdParty/OpenSource/imgui/imgui_widgets.cpp
+    #Common_3/Application/UI/UI.cpp
+    #Common_3/Game/Scripting/LuaManager.cpp
+    #Common_3/Game/Scripting/LuaManagerImpl.cpp
+    #Common_3/Game/Scripting/LuaSystem.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/monotone/soloud_monotone.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/sfxr/soloud_sfxr.cpp
@@ -191,7 +191,7 @@ set(CPP_SRC
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/platform.cc
     Common_3/Resources/ResourceLoader/ResourceLoader.cpp
     #Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
-    Common_3/Tools/ReloadServer/ReloadClient.cpp
+    Common_3/Tools/ReloadServer/ReloadClient.cpp # requires ENABLE_FORGE_UI or some modifications to respect it
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
@@ -206,40 +206,40 @@ set(CPP_SRC
 
 set(C_SRC
     Common_3/Game/ThirdParty/OpenSource/flecs/flecs.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lapi.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lauxlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbaselib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbitlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcode.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcorolib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lctype.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldblib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldebug.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldo.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldump.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lfunc.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lgc.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/linit.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/liolib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/llex.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmathlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmem.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loadlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lobject.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lopcodes.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loslib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lparser.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstate.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstring.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstrlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lvm.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lapi.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lauxlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbaselib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbitlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcode.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcorolib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lctype.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldblib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldebug.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldo.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldump.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lfunc.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lgc.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/linit.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/liolib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/llex.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmathlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmem.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loadlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lobject.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lopcodes.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loslib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lparser.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstate.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstring.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstrlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lvm.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt_dll.c
     Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_freebsd.c
     Common_3/Tools/Network/Network.c
@@ -394,7 +394,7 @@ if(APPLE)
 
         set(FSL_LANGUAGES "MACOS")
         set(OBJCPP_SRC
-            Common_3/Application/Fonts/FontSystem.cpp
+            #Common_3/Application/Fonts/FontSystem.cpp
             Common_3/Application/InputSystem.cpp
             Common_3/Application/Profiler/GpuProfiler.cpp
             Common_3/Application/Profiler/ProfilerBase.cpp
@@ -406,8 +406,8 @@ if(APPLE)
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadAppleGCKit.mm
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
-            Common_3/Application/UI/UI.cpp
-            Common_3/Game/Scripting/LuaSystem.cpp
+            #Common_3/Application/UI/UI.cpp
+            #Common_3/Game/Scripting/LuaSystem.cpp
             Common_3/Graphics/CommonShaderReflection.cpp
             Common_3/Graphics/GPUConfig.cpp
             Common_3/Graphics/PickRenderingAPI.cpp
@@ -505,7 +505,7 @@ endif()
 target_include_directories(
     The-Forge
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/
-           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/Fontstash/src/
+           #${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/Fontstash/src/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/include/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/

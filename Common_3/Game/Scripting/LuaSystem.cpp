@@ -604,12 +604,14 @@ static void RegisterDefaultLuaFunctions(LuaManager* pManager)
                               return 0;
                           });
 
+#if defined(ENABLE_FORGE_SCRIPTING)
     pManager->SetFunction("SetCounter",
                           [](ILuaStateWrap* state) -> int
                           {
                               sLuaScriptIntervalCounter = (int32_t)state->GetIntegerArg(1);
                               return 0;
                           });
+#endif
 
     pManager->SetFunction("GetDefaultAutomationFrameCount",
                           [](ILuaStateWrap* state) -> int
