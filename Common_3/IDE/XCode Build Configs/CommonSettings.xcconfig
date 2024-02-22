@@ -35,7 +35,7 @@ GCC_SYMBOLS_PRIVATE_EXTERN = NO
 GCC_GENERATE_DEBUGGING_SYMBOLS = YES
 
 // treat warnings as errors
-//GCC_TREAT_WARNINGS_AS_ERRORS = YES
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
 // objective-c selectors if undeclared can cause runtime crash
 // good warning
 GCC_WARN_UNDECLARED_SELECTOR = YES
