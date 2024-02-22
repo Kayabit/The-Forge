@@ -56,7 +56,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-pgltf --input-file /Users/adampiechowicz/Library/Preferences/com.eightcell.buildbox4/04559c4c-d999-4586-a1fd-f4ce1763b38f/meshes/PTModelMesh_ID1832.glb --output /Users/adampiechowicz/Library/Preferences/com.eightcell.buildbox4/04559c4c-d999-4586-a1fd-f4ce1763b38f/meshes --absolute-paths --force"
+            argument = "-pgltf --input-file /Users/adampiechowicz/PTModelMesh_ID1832.glb --output /Users/adampiechowicz/ --absolute-paths --force"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

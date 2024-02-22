@@ -1889,6 +1889,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     break;
                 }
                 default:
+                    LOGF(eERROR, "Source and dest packing sizes don't match but no packing function was configured for type %i", cgltfAttr->type);
+                    ASSERT(false);
                     break;
                 }
             }
@@ -1942,6 +1944,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         indexCount = 0;
         vertexCount = 0;
+        uint32_t attribCount[MAX_SEMANTICS] = {};
         drawCount = 0;
 
         // Load the remap joint indices generated in the offline process
@@ -2030,7 +2033,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
                         const uint8_t* src =
                             (uint8_t*)attr->data->buffer_view->buffer->data + attr->data->offset + attr->data->buffer_view->offset;
-                        uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + (uint64_t)vertexCount * stride;
+                        // in the case of assets that have meshes/primitives with different attributes, we have to track vertexCount per attribute
+                        uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + (uint64_t)attribCount[semanticIdx] * stride;
 
                         // For now we just copy attributes to it's own buffer, in case of interleaved attributes we pack them in the
                         // ResourceLoader during load
@@ -2045,6 +2049,9 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                             vertexPacking[semanticIdx]((uint32_t)attr->data->count, (uint32_t)attr->data->stride, stride, 0, src, dst);
                         else
                             memcpy(dst, src, attr->data->count * attr->data->stride);
+                        
+                        // track the data offset within this attribute in the case of multiple meshes/primitives with different attribute subsets
+                        attribCount[semanticIdx] += (uint64_t)attr->data->count;
                     }
                 }
 
@@ -2054,6 +2061,9 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 uint32_t optimizedVertexCount = (uint32_t)prim->attributes[0].data->count;
                 if (glTFParams->mOptimizationFlags != MESH_OPTIMIZATION_FLAG_OFF)
                 {
+                    // TODO: what was vertexCount's role here? it was buggy in the loop above but could be fine here
+                    //  if so take care that attribCount was updated above near where it changed
+                    //  whereas vertexCount stays at its previous value until the very end of the loop(s)
                     geomOptimize(geomData, MESH_OPTIMIZATION_FLAG_ALL, (IndexType)geom->mIndexType, indexCount,
                                  (uint32_t)(prim->indices->count), vertexCount, &optimizedVertexCount);
 
@@ -2094,6 +2104,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                         break;
                     }
 
+                    // TODO: same as above for mesh optimization - what is vertexCount's role here? should it be updated to the per-attr tracking?
                     float3* positions =
                         (float3*)((uint8_t*)geomData->pShadow->pAttributes[SEMANTIC_POSITION] + vertexCount * pos_attr->data->stride);
 
@@ -2115,6 +2126,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     arrsetlen(geom->meshlets.mVertices, geom->meshlets.mVertexCount + arrlenu(meshletVertices));
                     for (uint64_t index_id = 0; index_id < arrlenu(meshletVertices); ++index_id)
                     {
+                        // TODO: again, what vertexCount is this? current attr, I suppose?
                         geom->meshlets.mVertices[geom->meshlets.mVertexCount + index_id] = meshletVertices[index_id] + vertexCount;
                     }
 
@@ -2148,6 +2160,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     arrfree(meshletTriangles);
                 }
 
+                // TODO: more vertexcount; again, current attr? or not, since it looks like some interleaving thing just for indices?
                 for (uint32_t idx = 0; idx < prim->indices->count; ++idx)
                     ((uint32_t*)geomData->pShadow->pIndices)[indexCount + idx] += vertexCount;
 
