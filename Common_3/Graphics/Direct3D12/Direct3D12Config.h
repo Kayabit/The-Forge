@@ -29,7 +29,7 @@
 #endif
 
 // Makarand, Feb24: 12 has problems, so we're working with 11.
-//#define DIRECT3D12
+#define DIRECT3D12
 
 #ifdef XBOX
 #include "../../../Xbox/Common_3/Graphics/Direct3D12/Direct3D12X.h"
