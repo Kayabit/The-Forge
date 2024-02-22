@@ -1944,7 +1944,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         indexCount = 0;
         vertexCount = 0;
-        uint32_t attribCount[MAX_SEMANTICS] = {};
+        uint64_t attribCount[MAX_SEMANTICS] = {};
         drawCount = 0;
 
         // Load the remap joint indices generated in the offline process
@@ -2034,7 +2034,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                         const uint8_t* src =
                             (uint8_t*)attr->data->buffer_view->buffer->data + attr->data->offset + attr->data->buffer_view->offset;
                         // in the case of assets that have meshes/primitives with different attributes, we have to track vertexCount per attribute
-                        uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + (uint64_t)attribCount[semanticIdx] * stride;
+                        uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + attribCount[semanticIdx] * stride;
 
                         // For now we just copy attributes to it's own buffer, in case of interleaved attributes we pack them in the
                         // ResourceLoader during load
@@ -2051,7 +2051,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                             memcpy(dst, src, attr->data->count * attr->data->stride);
                         
                         // track the data offset within this attribute in the case of multiple meshes/primitives with different attribute subsets
-                        attribCount[semanticIdx] += (uint64_t)attr->data->count;
+                        attribCount[semanticIdx] += attr->data->count;
                     }
                 }
 
