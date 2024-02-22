@@ -1769,7 +1769,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         for (uint32_t i = 0; i < data->skins_count; ++i)
             jointCount += (uint32_t)data->skins[i].joints_count;
-        
+
         // Determine index stride
         // This depends on vertex count rather than the stride specified in gltf
         // since gltf assumes we have index buffer per primitive which is non optimal
@@ -2126,7 +2126,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     arrsetlen(geom->meshlets.mVertices, geom->meshlets.mVertexCount + arrlenu(meshletVertices));
                     for (uint64_t index_id = 0; index_id < arrlenu(meshletVertices); ++index_id)
                     {
-                        // again, what vertexCount is this? current attr, I suppose?
+                        // TODO: again, what vertexCount is this? current attr, I suppose?
                         geom->meshlets.mVertices[geom->meshlets.mVertexCount + index_id] = meshletVertices[index_id] + vertexCount;
                     }
 
@@ -2160,7 +2160,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     arrfree(meshletTriangles);
                 }
 
-                // more vertexcount; again, current attr? or is this actually more directly the source of the bug since it will increment indices that were skipped?
+                // TODO: more vertexcount; again, current attr? or not, since it looks like some interleaving thing just for indices?
                 for (uint32_t idx = 0; idx < prim->indices->count; ++idx)
                     ((uint32_t*)geomData->pShadow->pIndices)[indexCount + idx] += vertexCount;
 
