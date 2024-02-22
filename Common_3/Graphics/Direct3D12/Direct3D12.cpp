@@ -5342,7 +5342,9 @@ void addGraphicsPipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pip
     // Make sure there's attributes
     if (pVertexLayout != NULL)
     {
-        ASSERT(pVertexLayout->mAttribCount && pVertexLayout->mBindingCount);
+        // FORGE154 Buildbox uses "resolve" pipelines with no attribs or bindings; not sure what to do about it
+        //  chat gpt says that might be a reasonable thing to do so for now I'll remove this ASSERT
+        //ASSERT(pVertexLayout->mAttribCount && pVertexLayout->mBindingCount);
 
         for (uint32_t attrib_index = 0; attrib_index < pVertexLayout->mAttribCount; ++attrib_index)
         {
