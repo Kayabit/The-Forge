@@ -68,7 +68,10 @@
 
 #include "../../../Resources/ResourceLoader/TextureContainers.h"
 
-#include "../../../Utilities/Interfaces/IMemory.h" //NOTE: this should be the last include in a .cpp
+//#include "../../../Utilities/Interfaces/IMemory.h" //NOTE: this should be the last include in a .cpp
+
+#include <stdlib.h>
+#include <stdio.h>
 
 extern "C"
 {
@@ -139,7 +142,7 @@ void DirectorySearch(ResourceDirectory resourceDir, const char* subDir, const ch
 
     if (filesInDirectory != NULL) //-V595
     {
-        tf_free(filesInDirectory);
+        free(filesInDirectory);
     }
 
     if (recursive)
@@ -158,7 +161,7 @@ void DirectorySearch(ResourceDirectory resourceDir, const char* subDir, const ch
 
         if (subDirectories != NULL) //-V595
         {
-            tf_free(subDirectories);
+            free(subDirectories);
         }
     }
 }
@@ -198,21 +201,21 @@ cgltf_result cgltf_parse_and_load(ResourceDirectory resourceDir, const char* ske
     }
 
     ssize_t fileSize = fsGetStreamFileSize(&file);
-    void*   fileData = tf_malloc(fileSize);
+    void*   fileData = malloc(fileSize);
 
     fsReadFromStream(&file, fileData, fileSize);
 
     cgltf_data*   data = NULL;
     cgltf_options options = {};
-    options.memory_alloc = [](void* user, cgltf_size size) { return tf_malloc(size); };
-    options.memory_free = [](void* user, void* ptr) { tf_free(ptr); };
+    options.memory_alloc = [](void* user, cgltf_size size) { return malloc(size); };
+    options.memory_free = [](void* user, void* ptr) { free(ptr); };
     options.rd = resourceDir;
     cgltf_result result = cgltf_parse(&options, fileData, fileSize, &data);
     fsCloseStream(&file);
 
     if (!VERIFYMSG(cgltf_result_success == result, "Failed to parse gltf file %s with error %u", skeletonAsset, (uint32_t)result))
     {
-        tf_free(fileData);
+        free(fileData);
         return result;
     }
 
@@ -242,7 +245,7 @@ cgltf_result cgltf_parse_and_load(ResourceDirectory resourceDir, const char* ske
             if (fsOpenStreamFromPath(resourceDir, path, FM_READ, &fs))
             {
                 ASSERT(fsGetStreamFileSize(&fs) >= (ssize_t)data->buffers[i].size);
-                data->buffers[i].data = tf_malloc(data->buffers[i].size);
+                data->buffers[i].data = malloc(data->buffers[i].size);
                 fsReadFromStream(&fs, data->buffers[i].data, data->buffers[i].size);
                 fsCloseStream(&fs);
             }
@@ -253,7 +256,7 @@ cgltf_result cgltf_parse_and_load(ResourceDirectory resourceDir, const char* ske
     if (!VERIFYMSG(cgltf_result_success == result, "Failed to load buffers from gltf file %s with error %u", skeletonAsset,
                    (uint32_t)result))
     {
-        tf_free(fileData);
+        free(fileData);
         return result;
     }
 
@@ -266,11 +269,11 @@ cgltf_result cgltf_parse_and_load(ResourceDirectory resourceDir, const char* ske
 cgltf_result cgltf_write(ResourceDirectory resourceDir, const char* skeletonAsset, cgltf_data* data)
 {
     cgltf_options options = {};
-    options.memory_alloc = [](void* user, cgltf_size size) { return tf_malloc(size); };
-    options.memory_free = [](void* user, void* ptr) { tf_free(ptr); };
+    options.memory_alloc = [](void* user, cgltf_size size) { return malloc(size); };
+    options.memory_free = [](void* user, void* ptr) { free(ptr); };
     options.rd = resourceDir;
     cgltf_size expected = cgltf_write(&options, NULL, 0, data);
-    char*      writeBuffer = (char*)tf_malloc(expected);
+    char*      writeBuffer = (char*)malloc(expected);
     cgltf_size actual = cgltf_write(&options, writeBuffer, expected, data);
     if (expected != actual)
     {
@@ -281,13 +284,13 @@ cgltf_result cgltf_write(ResourceDirectory resourceDir, const char* skeletonAsse
     FileStream file = {};
     if (!fsOpenStreamFromPath(resourceDir, skeletonAsset, FM_WRITE, &file))
     {
-        tf_free(writeBuffer);
+        free(writeBuffer);
         return cgltf_result_io_error;
     }
 
     fsWriteToStream(&file, writeBuffer, actual - 1);
     fsCloseStream(&file);
-    tf_free(writeBuffer);
+    free(writeBuffer);
 
     return cgltf_result_success;
 }
@@ -330,13 +333,13 @@ static void DiscoverExtraAnimationsForMesh(ResourceDirectory resourceDirInput, c
 
                         LOGF(eINFO, "Found extra animation file '%s'", (const char*)anim.mInputAnim.data);
                     }
-                    tf_free(animationFiles);
+                    free(animationFiles);
                 }
                 break;
             }
         }
 
-        tf_free(assetSubDirectories);
+        free(assetSubDirectories);
     }
 }
 
@@ -483,7 +486,7 @@ bool ProcessTFX(AssetPipelineParams* assetParams, ProcessTressFXParams* tfxParam
     }
     else
     {
-        tfxFiles = (char**)tf_malloc(sizeof(char**));
+        tfxFiles = (char**)malloc(sizeof(char**));
         tfxFiles[0] = (char*)assetParams->mInFilePath;
         tfxFileCount = 1;
     }
@@ -661,7 +664,7 @@ bool ProcessTFX(AssetPipelineParams* assetParams, ProcessTressFXParams* tfxParam
 
     if (tfxFiles)
     {
-        tf_free(tfxFiles);
+        free(tfxFiles);
     }
 
     return result != cgltf_result_success;
@@ -1178,7 +1181,7 @@ bool CreateRuntimeAnimations(ResourceDirectory resourceDirInput, const char* ani
     {
         LOGF(LogLevel::eWARNING, "Animation asset %s contains no animations.", animationInputFile);
 
-        tf_free(srcFileData);
+        free(srcFileData);
         cgltf_free(data);
         return true;
     }
@@ -1211,7 +1214,7 @@ bool CreateRuntimeAnimations(ResourceDirectory resourceDirInput, const char* ani
             error = true;
     }
 
-    tf_free(srcFileData);
+    free(srcFileData);
     cgltf_free(data);
 
     return error;
@@ -1361,14 +1364,14 @@ void CheckIfGltfHasAnimations(ResourceDirectory resourceDirInput, const char* gl
     }
 
     ssize_t fileSize = fsGetStreamFileSize(&file);
-    void*   fileData = tf_malloc(fileSize);
+    void*   fileData = malloc(fileSize);
 
     fsReadFromStream(&file, fileData, fileSize);
 
     cgltf_options options = {};
     cgltf_data*   data = NULL;
-    options.memory_alloc = [](void* user, cgltf_size size) { return tf_malloc(size); };
-    options.memory_free = [](void* user, void* ptr) { tf_free(ptr); };
+    options.memory_alloc = [](void* user, cgltf_size size) { return malloc(size); };
+    options.memory_free = [](void* user, void* ptr) { free(ptr); };
     options.rd = resourceDirInput;
     cgltf_result result = cgltf_parse(&options, fileData, fileSize, &data);
     fsCloseStream(&file);
@@ -1376,14 +1379,14 @@ void CheckIfGltfHasAnimations(ResourceDirectory resourceDirInput, const char* gl
     if (cgltf_result_success != result)
     {
         LOGF(eERROR, "Failed to parse gltf file %s with error %u", gltfFileName, (uint32_t)result);
-        tf_free(fileData);
+        free(fileData);
         return;
     }
 
     numAnimationsOut = (uint32_t)data->animations_count;
 
     cgltf_free(data);
-    tf_free(fileData);
+    free(fileData);
 }
 
 void buildMeshlets(const uint* indices, size_t indexCount, const float3* vertexPositions, size_t vertexCount, size_t vertexPositionsStride,
@@ -1391,7 +1394,7 @@ void buildMeshlets(const uint* indices, size_t indexCount, const float3* vertexP
                    Meshlet** meshlets, MeshletData** meshletsData)
 {
     size_t    optimizerScratchSize = 128 * 1024 * 1024;
-    uint32_t* optimizerScratch = (uint32_t*)tf_malloc(optimizerScratchSize);
+    uint32_t* optimizerScratch = (uint32_t*)malloc(optimizerScratchSize);
     meshopt_SetScratchMemory(optimizerScratchSize, optimizerScratch);
 
     uint64_t maxMeshlets = meshopt_buildMeshletsBound(indexCount, maxVertices, maxTriangles);
@@ -1457,8 +1460,8 @@ static void geomOptimize(GeometryData* geomData, MeshOptimizerFlags optimization
     size_t optimizerScratchSize = 128 * 1024 * 1024;
     size_t remapSize = (*vertexCount * sizeof(uint32_t));
 
-    uint32_t* optimizerScratch = (uint32_t*)tf_malloc(optimizerScratchSize);
-    uint32_t* remap = (uint32_t*)tf_malloc(remapSize);
+    uint32_t* optimizerScratch = (uint32_t*)malloc(optimizerScratchSize);
+    uint32_t* remap = (uint32_t*)malloc(remapSize);
 
     meshopt_SetScratchMemory(optimizerScratchSize, optimizerScratch);
 
@@ -1589,7 +1592,7 @@ static void geomOptimize(GeometryData* geomData, MeshOptimizerFlags optimization
 
     *vertexCount = newVertCount;
     meshopt_FreeScratchMemory();
-    tf_free(remap);
+    free(remap);
 }
 
 bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams)
@@ -1658,14 +1661,14 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         }
 
         ssize_t fileSize = fsGetStreamFileSize(&file);
-        void*   fileData = tf_malloc(fileSize);
+        void*   fileData = malloc(fileSize);
 
         fsReadFromStream(&file, fileData, fileSize);
 
         cgltf_options options = {};
         cgltf_data*   data = NULL;
-        options.memory_alloc = [](void* user, cgltf_size size) { return tf_malloc(size); };
-        options.memory_free = [](void* user, void* ptr) { tf_free(ptr); };
+        options.memory_alloc = [](void* user, cgltf_size size) { return malloc(size); };
+        options.memory_free = [](void* user, void* ptr) { free(ptr); };
         options.rd = assetParams->mRDInput;
         cgltf_result result = cgltf_parse(&options, fileData, fileSize, &data);
         fsCloseStream(&file);
@@ -1673,7 +1676,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         if (cgltf_result_success != result)
         {
             LOGF(eERROR, "Failed to parse gltf file %s with error %u", fileName, (uint32_t)result);
-            tf_free(fileData);
+            free(fileData);
             error = true;
             continue;
         }
@@ -1706,7 +1709,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 if (fsOpenStreamFromPath(assetParams->mRDInput, path, FM_READ, &fs))
                 {
                     ASSERT(fsGetStreamFileSize(&fs) >= (ssize_t)data->buffers[i].size);
-                    data->buffers[i].data = tf_malloc(data->buffers[i].size);
+                    data->buffers[i].data = malloc(data->buffers[i].size);
                     fsReadFromStream(&fs, data->buffers[i].data, data->buffers[i].size);
                     fsCloseStream(&fs);
                 }
@@ -1717,7 +1720,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         if (cgltf_result_success != result)
         {
             LOGF(eERROR, "Failed to load buffers from gltf file %s with error %u", fileName, (uint32_t)result);
-            tf_free(fileData);
+            free(fileData);
             continue;
         }
 
@@ -1755,6 +1758,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     ASSERT(semanticIdx < MAX_SEMANTICS);
                     vertexAttribs[semanticIdx] = &prim->attributes[j];
                     vertexAttribCount[semanticIdx] += (uint32_t)prim->attributes[j].data->count;
+                    printf("vertexAttribs for semanticIdx %i updated count %i\n", semanticIdx, vertexAttribCount[semanticIdx]);
                 }
             }
         }
@@ -1770,12 +1774,16 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         for (uint32_t i = 0; i < data->skins_count; ++i)
             jointCount += (uint32_t)data->skins[i].joints_count;
 
+        printf("jointCount updated to %i\n", jointCount);
+        
         // Determine index stride
         // This depends on vertex count rather than the stride specified in gltf
         // since gltf assumes we have index buffer per primitive which is non optimal
         const uint32_t indexStride =
             !glTFParams->mProcessMeshlets ? (vertexCount > UINT16_MAX ? sizeof(uint32_t) : sizeof(uint16_t)) : sizeof(uint32_t);
 
+        printf("chose our own indexStride of %u\n", indexStride);
+        
         uint32_t totalGeomSize = 0;
         totalGeomSize += round_up(sizeof(Geometry), 16);
         totalGeomSize += round_up(drawCount * sizeof(IndirectDrawIndexArguments), 16);
@@ -1786,10 +1794,10 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         totalGeomDataSize += round_up(jointCount * sizeof(uint32_t), 16);
         totalGeomDataSize += round_up(userDataSize, 16);
 
-        Geometry* geom = (Geometry*)tf_calloc(1, totalGeomSize);
+        Geometry* geom = (Geometry*)calloc(1, totalGeomSize);
         ASSERT(geom);
 
-        GeometryData* geomData = (GeometryData*)tf_calloc(1, totalGeomDataSize);
+        GeometryData* geomData = (GeometryData*)calloc(1, totalGeomDataSize);
         ASSERT(geomData);
 
         geom->pDrawArgs = (IndirectDrawIndexArguments*)(geom + 1); //-V1027
@@ -1799,10 +1807,12 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             geomData->pInverseBindPoses = (mat4*)(geomData + 1); // -V1027
             geomData->pJointRemaps =
                 (uint32_t*)((uint8_t*)geomData->pInverseBindPoses + round_up(jointCount * sizeof(*geomData->pInverseBindPoses), 16));
+            printf("joint count > 0, moved some pointers magically...\n");
         }
 
         if (userDataSize > 0)
         {
+            printf("doing user data stuff. joint count affects its behavior and is %i\n", jointCount);
             uint8_t* pUserData = jointCount > 0 ? ((uint8_t*)geomData->pJointRemaps + round_up(jointCount * sizeof(uint32_t), 16))
                                                 : (uint8_t*)(geomData + 1);
             geomData->pUserData = pUserData;
@@ -1889,6 +1899,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     break;
                 }
                 default:
+                    LOGF(eERROR, "Source and dest packing sizes don't match but no packing function was configured for type %i", cgltfAttr->type);
+                    ASSERT(false);
                     break;
                 }
             }
@@ -1897,18 +1909,25 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         uint32_t shadowSize = 0;
         shadowSize += sizeof(GeometryData::ShadowData);
         shadowSize += indexCount * indexStride;
+        printf("increased shadowSize to %i because indexCount %i * %i indexStride\n", shadowSize, indexCount, indexStride);
+        fflush(NULL);
 
         for (uint32_t s = 0; s < MAX_SEMANTICS; ++s)
         {
             // Only copy attribute count if we care about this attribute
-            if (vertexAttrStrides[s] == 0)
+            if (vertexAttrStrides[s] == 0) {
+                printf("skipping over semantic %u because we 'don't care about this attribute'\n", s);
+                fflush(NULL);
                 vertexAttribCount[s] = 0;
+            }
 
             shadowSize += vertexAttrStrides[s] * vertexAttribCount[s];
+            printf("increased shadowSize to %i because vertexCount %i * %i vertexStride for semantic %i\n", shadowSize, vertexAttribCount[s], vertexAttrStrides[s], s);
+            fflush(NULL);
         }
 
         // AP: there's a bug in this enormous thing somewhere doing an array overrun or other memory error from this alloc on at least one GLB file we have for "barbara the bee"
-        geomData->pShadow = (GeometryData::ShadowData*)tf_calloc(1, shadowSize);
+        geomData->pShadow = (GeometryData::ShadowData*)calloc(1, shadowSize);
         geomData->pShadow->pIndices = geomData->pShadow + 1;
 
         // Same strides as the ones used in the GPU
@@ -1916,24 +1935,36 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         {
             geomData->pShadow->mVertexStrides[s] = vertexAttrStrides[s];
             geomData->pShadow->mAttributeCount[s] = vertexAttribCount[s];
+            printf("stride check for semantic %i; count=%i, stride=%i\n", s, vertexAttribCount[s], vertexAttrStrides[s]);
+            fflush(NULL);
         }
 
         geomData->pShadow->pAttributes[SEMANTIC_POSITION] = (uint8_t*)geomData->pShadow->pIndices + (indexCount * indexStride);
+        printf("attr %i size %i at pos %p\n", SEMANTIC_POSITION, (indexCount * indexStride), geomData->pShadow->pIndices);
+        fflush(NULL);
 
-        for (uint32_t s = SEMANTIC_POSITION + 1; s < MAX_SEMANTICS; ++s)
+        for (uint32_t s = SEMANTIC_POSITION + 1; s < MAX_SEMANTICS; ++s) {
             geomData->pShadow->pAttributes[s] = (uint8_t*)geomData->pShadow->pAttributes[s - 1] +
-                                                geomData->pShadow->mVertexStrides[s - 1] * geomData->pShadow->mAttributeCount[s - 1];
+                    geomData->pShadow->mVertexStrides[s - 1] * geomData->pShadow->mAttributeCount[s - 1];
+            printf("attr %i size %i at pos %p\n", s, geomData->pShadow->mVertexStrides[s - 1] * geomData->pShadow->mAttributeCount[s - 1], geomData->pShadow->pAttributes[s - 1]);
+            fflush(NULL);
+        }
 
         ASSERT(((const char*)geomData->pShadow) + shadowSize ==
                ((char*)geomData->pShadow->pAttributes[MAX_SEMANTICS - 1] +
                 geomData->pShadow->mVertexStrides[MAX_SEMANTICS - 1] * geomData->pShadow->mAttributeCount[MAX_SEMANTICS - 1]));
+        printf("past EOF / buffer size check... shadowSize starting from %p with size %i matches final attr at %p size %i\n", geomData->pShadow, shadowSize, geomData->pShadow->pAttributes[MAX_SEMANTICS - 1], geomData->pShadow->mVertexStrides[MAX_SEMANTICS - 1] * geomData->pShadow->mAttributeCount[MAX_SEMANTICS - 1]);
+        fflush(NULL);
 
         COMPILE_ASSERT(TF_ARRAY_COUNT(geomData->pShadow->mVertexStrides) == TF_ARRAY_COUNT(geomData->pShadow->pAttributes));
         for (uint32_t i = 1; i < TF_ARRAY_COUNT(geomData->pShadow->mVertexStrides); ++i)
         {
             // If the attribute is not present in the gltf file we just don't save anything
-            if (geomData->pShadow->mVertexStrides[i] == 0)
+            if (geomData->pShadow->mVertexStrides[i] == 0) {
+                printf("shadow skipping attr %i, setting its attr pointer to null\n", i);
+                fflush(NULL);
                 geomData->pShadow->pAttributes[i] = nullptr;
+            }
         }
 
         geom->mDrawArgCount = drawCount;
@@ -1942,6 +1973,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         indexCount = 0;
         vertexCount = 0;
+        uint32_t attribCount[MAX_SEMANTICS] = {};
         drawCount = 0;
 
         // Load the remap joint indices generated in the offline process
@@ -1952,16 +1984,18 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             uint32_t          extrasSize = (uint32_t)(skin->extras.end_offset - skin->extras.start_offset);
             if (extrasSize)
             {
+                printf("extrasSize = %u from skin %i\n", extrasSize, i);
+                fflush(NULL);
                 const char* jointRemaps = (const char*)data->json + skin->extras.start_offset;
                 jsmn_parser parser = {};
-                jsmntok_t*  tokens = (jsmntok_t*)tf_malloc((skin->joints_count + 1) * sizeof(jsmntok_t));
+                jsmntok_t*  tokens = (jsmntok_t*)malloc((skin->joints_count + 1) * sizeof(jsmntok_t));
                 jsmn_parse(&parser, (const char*)jointRemaps, extrasSize, tokens, skin->joints_count + 1);
                 ASSERT(tokens[0].size == (int)skin->joints_count + 1);
                 cgltf_accessor_unpack_floats(skin->inverse_bind_matrices, (cgltf_float*)geomData->pInverseBindPoses,
                                              skin->joints_count * sizeof(float[16]) / sizeof(float));
                 for (uint32_t r = 0; r < skin->joints_count; ++r)
                     geomData->pJointRemaps[remapCount + r] = atoi(jointRemaps + tokens[1 + r].start);
-                tf_free(tokens);
+                free(tokens);
             }
 
             remapCount += (uint32_t)skin->joints_count;
@@ -1970,6 +2004,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         // Load the tressfx specific data generated in the offline process
         if (stricmp(data->asset.generator, "tressfx") == 0)
         {
+            printf("doing tressfx things?\n");
+            fflush(NULL);
             // { "mVertexCountPerStrand" : "16", "mGuideCountPerStrand" : "3456" }
             uint32_t    extrasSize = (uint32_t)(data->asset.extras.end_offset - data->asset.extras.start_offset);
             const char* json = data->json + data->asset.extras.start_offset;
@@ -1982,6 +2018,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         if (glTFParams->mOptimizationFlags != MESH_OPTIMIZATION_FLAG_OFF)
         {
+            printf("mesh optimizations is not off, setting all semantics attr counts to 0...\n");
+            fflush(NULL);
             for (uint32_t s = 0; s < MAX_SEMANTICS; ++s)
             {
                 geomData->pShadow->mAttributeCount[s] = 0;
@@ -2000,12 +2038,16 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 if (sizeof(uint16_t) == indexStride)
                 {
                     uint16_t* dst = (uint16_t*)geomData->pShadow->pIndices;
+                    printf("primitive %i in mesh %i copying indexes of count %zu * %i stride = %zu size to dest %p\n", p, i, prim->indices->count, indexStride, prim->indices->count * indexStride, dst);
+                    fflush(NULL);
                     for (uint32_t idx = 0; idx < prim->indices->count; ++idx)
                         dst[indexCount + idx] = (uint16_t)cgltf_accessor_read_index(prim->indices, idx);
                 }
                 else
                 {
                     uint32_t* dst = (uint32_t*)geomData->pShadow->pIndices;
+                    printf("primitive %i in mesh %i copying indexes of count %zu * %i stride = %zu size to dest %p\n", p, i, prim->indices->count, indexStride, prim->indices->count * indexStride, dst);
+                    fflush(NULL);
                     for (uint32_t idx = 0; idx < prim->indices->count; ++idx)
                         dst[indexCount + idx] = (uint32_t)cgltf_accessor_read_index(prim->indices, idx);
                 }
@@ -2020,8 +2062,11 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     const uint32_t   semanticIdx = (uint32_t)util_cgltf_attrib_type_to_semantic(attr->type, attr->index);
                     ASSERT(semanticIdx < TF_ARRAY_COUNT(geomData->pShadow->pAttributes));
 
-                    if (semanticIdx == SEMANTIC_POSITION)
+                    if (semanticIdx == SEMANTIC_POSITION) {
+                        printf("found semantic_position at attr %i\n", a);
+                        fflush(NULL);
                         pos_attr = attr;
+                    }
 
                     // TODO: this should probably be an ASSERT, we don't want to loose data when using pShadow
                     if (geomData->pShadow->mVertexStrides[semanticIdx] != 0)
@@ -2030,7 +2075,9 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
                         const uint8_t* src =
                             (uint8_t*)attr->data->buffer_view->buffer->data + attr->data->offset + attr->data->buffer_view->offset;
-                        uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + (uint64_t)vertexCount * stride;
+                        // in the case of assets that have meshes/primitives with different attributes, we have to track vertexCount per attribute
+                        //uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + (uint64_t)vertexCount * stride;
+                        uint8_t* dst = (uint8_t*)geomData->pShadow->pAttributes[semanticIdx] + (uint64_t)attribCount[semanticIdx] * stride;
 
                         // For now we just copy attributes to it's own buffer, in case of interleaved attributes we pack them in the
                         // ResourceLoader during load
@@ -2041,19 +2088,34 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                         //       some data). If we duplicate data would be better to only store pShadow data for the meshes that require it
                         //       rather than all of them, that would require more configuration parameters per mesh while running the
                         //       AssetPipeline.
-                        if (vertexPacking[semanticIdx])
+                        if (vertexPacking[semanticIdx]) {
+                            printf("primitive %i in mesh %i for attr %i doing vertex packing for verts of count %zu * %zu stride with targetstride %u => %zu size to dest %p\n", p, i, a, attr->data->count, attr->data->stride, stride, attr->data->count * stride, dst);
+                            fflush(NULL);
                             vertexPacking[semanticIdx]((uint32_t)attr->data->count, (uint32_t)attr->data->stride, stride, 0, src, dst);
-                        else
+                        }
+                        else {
+                            printf("primitive %i in mesh %i for attr %i copying verts of count %zu * %zu stride = %zu size to dest %p\n", p, i, a, attr->data->count, attr->data->stride, attr->data->count * attr->data->stride, dst);
+                            fflush(NULL);
                             memcpy(dst, src, attr->data->count * attr->data->stride);
+                        }
+                        
+                        // track the data offset within this attribute in the case of multiple meshes/primitives with different attribute subsets
+                        attribCount[semanticIdx] += (uint64_t)attr->data->count;
+                    }
+                    else {
+                        printf("geomData->pShadow->mVertexStrides[semanticIdx] != 0 should probably be an assert GJ forge\n");
                     }
                 }
 
+                printf("before optimize mesh\n");
+                fflush(NULL);
                 /************************************************************************/
                 // Optimize mesh
                 /************************************************************************/
                 uint32_t optimizedVertexCount = (uint32_t)prim->attributes[0].data->count;
                 if (glTFParams->mOptimizationFlags != MESH_OPTIMIZATION_FLAG_OFF)
                 {
+                    // what is vertexCount's role here? it was buggy in the loop above
                     geomOptimize(geomData, MESH_OPTIMIZATION_FLAG_ALL, (IndexType)geom->mIndexType, indexCount,
                                  (uint32_t)(prim->indices->count), vertexCount, &optimizedVertexCount);
 
@@ -2094,6 +2156,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                         break;
                     }
 
+                    // what is vertexCount's role here? should it be updated to the per-attr tracking?
                     float3* positions =
                         (float3*)((uint8_t*)geomData->pShadow->pAttributes[SEMANTIC_POSITION] + vertexCount * pos_attr->data->stride);
 
@@ -2115,6 +2178,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     arrsetlen(geom->meshlets.mVertices, geom->meshlets.mVertexCount + arrlenu(meshletVertices));
                     for (uint64_t index_id = 0; index_id < arrlenu(meshletVertices); ++index_id)
                     {
+                        // again, what vertexCount is this? current attr, I suppose?
                         geom->meshlets.mVertices[geom->meshlets.mVertexCount + index_id] = meshletVertices[index_id] + vertexCount;
                     }
 
@@ -2148,12 +2212,14 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     arrfree(meshletTriangles);
                 }
 
+                // more vertexcount; again, current attr? or is this actually more directly the source of the bug since it will increment indices that were skipped?
                 for (uint32_t idx = 0; idx < prim->indices->count; ++idx)
                     ((uint32_t*)geomData->pShadow->pIndices)[indexCount + idx] += vertexCount;
 
                 indexCount += (uint32_t)(prim->indices->count);
                 vertexCount += optimizedVertexCount;
                 ++drawCount;
+                printf("completed processing a primitive in a mesh, indexCount now %i, vertexCount %i, drawCount %i", indexCount, vertexCount, drawCount);
             }
         }
 
@@ -2169,7 +2235,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 largestSizedAttribute =
                     max(largestSizedAttribute, (size_t)geomData->pShadow->mVertexStrides[s] * geomData->pShadow->mAttributeCount[s]);
             }
-            void* tempStagingBuffer = tf_malloc(largestSizedAttribute);
+            void* tempStagingBuffer = malloc(largestSizedAttribute);
 
             for (uint32_t s = SEMANTIC_POSITION + 1; s < MAX_SEMANTICS; ++s)
             {
@@ -2188,7 +2254,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 }
             }
 
-            tf_free(tempStagingBuffer);
+            free(tempStagingBuffer);
         }
 
         for (uint32_t j = 0; j < TF_ARRAY_COUNT(geom->mVertexStrides); ++j)
@@ -2247,8 +2313,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             }
         }
 
-        tf_free(geomData->pShadow);
-        tf_free(geomData);
+        free(geomData->pShadow);
+        free(geomData);
 
         if (geom->meshlets.mMeshletCount)
         {
@@ -2258,7 +2324,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
             arrfree(geom->meshlets.mTriangles);
         }
 
-        tf_free(geom);
+        free(geom);
 
         data->file_data = fileData;
         cgltf_free(data);
@@ -2293,17 +2359,17 @@ bool WriteZip(AssetPipelineParams* assetParams, WriteZipParams* zipParams)
             const char* fileName = filteredFiles[j];
 
             size_t len = strlen(fileName);
-            char*  str = (char*)tf_malloc(len + 1);
+            char*  str = (char*)malloc(len + 1);
             memcpy(str, fileName, len + 1);
             arrpush(collectibles, str);
         }
 
-        tf_free(filteredFiles);
+        free(filteredFiles);
     }
 
     size_t collectibleCount = arrlenu(collectibles);
 
-    struct BunyArLibEntryCreateDesc* filesDesc = (struct BunyArLibEntryCreateDesc*)tf_malloc(collectibleCount * sizeof *filesDesc);
+    struct BunyArLibEntryCreateDesc* filesDesc = (struct BunyArLibEntryCreateDesc*)malloc(collectibleCount * sizeof *filesDesc);
 
     for (size_t i = 0; i < collectibleCount; ++i)
     {
@@ -2324,10 +2390,10 @@ bool WriteZip(AssetPipelineParams* assetParams, WriteZipParams* zipParams)
 
     bool archiveIsCreated = bunyArLibCreate(assetParams->mRDOutput, zipParams->mZipFileName, &archiveCreateDesc);
 
-    tf_free(filesDesc);
+    free(filesDesc);
 
     for (size_t i = 0; i < collectibleCount; ++i)
-        tf_free(collectibles[i]);
+        free(collectibles[i]);
     arrfree(collectibles);
 
     return !archiveIsCreated;
@@ -2421,14 +2487,14 @@ void OnDiscoverAnimation(ResourceDirectory resourceDir, const char* filename, vo
     }
 
     ssize_t fileSize = fsGetStreamFileSize(&file);
-    void*   fileData = tf_malloc(fileSize);
+    void*   fileData = malloc(fileSize);
 
     fsReadFromStream(&file, fileData, fileSize);
 
     cgltf_options options = {};
     cgltf_data*   data = NULL;
-    options.memory_alloc = [](void* user, cgltf_size size) { return tf_malloc(size); };
-    options.memory_free = [](void* user, void* ptr) { tf_free(ptr); };
+    options.memory_alloc = [](void* user, cgltf_size size) { return malloc(size); };
+    options.memory_free = [](void* user, void* ptr) { free(ptr); };
     options.rd = resourceDir;
     cgltf_result result = cgltf_parse(&options, fileData, fileSize, &data);
     fsCloseStream(&file);
@@ -2436,7 +2502,7 @@ void OnDiscoverAnimation(ResourceDirectory resourceDir, const char* filename, vo
     if (cgltf_result_success != result)
     {
         LOGF(eERROR, "Failed to parse gltf file %s with error %u", filename, (uint32_t)result);
-        tf_free(fileData);
+        free(fileData);
         return;
     }
 
@@ -2457,7 +2523,7 @@ void OnDiscoverAnimation(ResourceDirectory resourceDir, const char* filename, vo
         arrpush(skeletonAndAnims.mAnimations, anim);
     }
 
-    tf_free(fileData);
+    free(fileData);
     cgltf_free(data);
 
     // Need to check if there are extra standalone animation assets
