@@ -212,7 +212,7 @@ cgltf_result cgltf_parse_and_load(ResourceDirectory resourceDir, const char* ske
 
     if (!VERIFYMSG(cgltf_result_success == result, "Failed to parse gltf file %s with error %u", skeletonAsset, (uint32_t)result))
     {
-        free(fileData);
+        tf_free(fileData);
         return result;
     }
 
@@ -1755,7 +1755,6 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                     ASSERT(semanticIdx < MAX_SEMANTICS);
                     vertexAttribs[semanticIdx] = &prim->attributes[j];
                     vertexAttribCount[semanticIdx] += (uint32_t)prim->attributes[j].data->count;
-                    printf("vertexAttribs for semanticIdx %i updated count %i\n", semanticIdx, vertexAttribCount[semanticIdx]);
                 }
             }
         }
@@ -1770,8 +1769,6 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         for (uint32_t i = 0; i < data->skins_count; ++i)
             jointCount += (uint32_t)data->skins[i].joints_count;
-
-        printf("jointCount updated to %i\n", jointCount);
         
         // Determine index stride
         // This depends on vertex count rather than the stride specified in gltf
@@ -1927,7 +1924,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
 
         for (uint32_t s = SEMANTIC_POSITION + 1; s < MAX_SEMANTICS; ++s)
             geomData->pShadow->pAttributes[s] = (uint8_t*)geomData->pShadow->pAttributes[s - 1] +
-                    geomData->pShadow->mVertexStrides[s - 1] * geomData->pShadow->mAttributeCount[s - 1];
+                                                geomData->pShadow->mVertexStrides[s - 1] * geomData->pShadow->mAttributeCount[s - 1];
 
         ASSERT(((const char*)geomData->pShadow) + shadowSize ==
                ((char*)geomData->pShadow->pAttributes[MAX_SEMANTICS - 1] +
@@ -1937,9 +1934,8 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         for (uint32_t i = 1; i < TF_ARRAY_COUNT(geomData->pShadow->mVertexStrides); ++i)
         {
             // If the attribute is not present in the gltf file we just don't save anything
-            if (geomData->pShadow->mVertexStrides[i] == 0) {
+            if (geomData->pShadow->mVertexStrides[i] == 0)
                 geomData->pShadow->pAttributes[i] = nullptr;
-            }
         }
 
         geom->mDrawArgCount = drawCount;
@@ -1977,8 +1973,6 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
         // Load the tressfx specific data generated in the offline process
         if (stricmp(data->asset.generator, "tressfx") == 0)
         {
-            printf("doing tressfx things?\n");
-            fflush(NULL);
             // { "mVertexCountPerStrand" : "16", "mGuideCountPerStrand" : "3456" }
             uint32_t    extrasSize = (uint32_t)(data->asset.extras.end_offset - data->asset.extras.start_offset);
             const char* json = data->json + data->asset.extras.start_offset;
@@ -2067,7 +2061,9 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                 uint32_t optimizedVertexCount = (uint32_t)prim->attributes[0].data->count;
                 if (glTFParams->mOptimizationFlags != MESH_OPTIMIZATION_FLAG_OFF)
                 {
-                    // what is vertexCount's role here? it was buggy in the loop above
+                    // TODO: what was vertexCount's role here? it was buggy in the loop above but could be fine here
+                    //  if so take care that attribCount was updated above near where it changed
+                    //  whereas vertexCount stays at its previous value until the very end of the loop(s)
                     geomOptimize(geomData, MESH_OPTIMIZATION_FLAG_ALL, (IndexType)geom->mIndexType, indexCount,
                                  (uint32_t)(prim->indices->count), vertexCount, &optimizedVertexCount);
 
@@ -2108,7 +2104,7 @@ bool ProcessGLTF(AssetPipelineParams* assetParams, ProcessGLTFParams* glTFParams
                         break;
                     }
 
-                    // what is vertexCount's role here? should it be updated to the per-attr tracking?
+                    // TODO: same as above for mesh optimization - what is vertexCount's role here? should it be updated to the per-attr tracking?
                     float3* positions =
                         (float3*)((uint8_t*)geomData->pShadow->pAttributes[SEMANTIC_POSITION] + vertexCount * pos_attr->data->stride);
 
