@@ -267,7 +267,7 @@ void setupPlatformUI(const IApp::Settings* pSettings)
     uiDesc.mStartPosition = vec2(pSettings->mWidth * 0.7f, pSettings->mHeight * 0.9f);
     uiCreateComponent("Reload Control", &uiDesc, &pReloadShaderComponent);
 
-#if(ENABLE_FORGE_UI)
+#if defined(ENABLE_FORGE_UI)
     platformReloadClientAddReloadShadersButton(pReloadShaderComponent);
 #endif
 

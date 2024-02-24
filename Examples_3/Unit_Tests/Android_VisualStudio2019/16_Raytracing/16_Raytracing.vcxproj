@@ -47,7 +47,7 @@
     <ProjectGuid>{E4E20BF1-2A51-455C-9FE9-EF63EE34C28B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Raytracing</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="..\AGDEVersions.props" />

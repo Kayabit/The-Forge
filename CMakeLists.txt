@@ -6,6 +6,24 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cma
 
 OPTION(GENERATE_DEBUG_SYMBOLS "Always generate dSYM and pdb files, even if making a release build" OFF)
 
+# Created these options a bit "negated" so they're more compatible with
+# Forge's own manually-maintained Config.h
+OPTION(EXCLUDE_FORGE_SCRIPTING "Don't build Forge LUA scripting system" ON)
+if(EXCLUDE_FORGE_SCRIPTING)
+    add_compile_definitions(EXCLUDE_FORGE_SCRIPTING)
+endif()
+
+OPTION(EXCLUDE_FORGE_UI "Don't build Forge imgui UI system" ON)
+if(EXCLUDE_FORGE_UI)
+    add_compile_definitions(EXCLUDE_FORGE_UI)
+endif()
+
+OPTION(EXCLUDE_FORGE_FONTS "Don't build Forge fonts system" ON)
+if(EXCLUDE_FORGE_FONTS)
+    add_compile_definitions(EXCLUDE_FORGE_FONTS)
+endif()
+
+
 # have to do some conan setup that usually happens in the root cmakelists
 include(BuildboxConan)
 setup_conan()
@@ -36,8 +54,6 @@ include(TheForgeUtils)
 
 set(CPP_SRC
     Common_3/Application/CameraController.cpp
-    #Common_3/Application/Fonts/FontSystem.cpp
-    #Common_3/Application/Fonts/stbtt.cpp
     Common_3/Application/InputSystem.cpp
     Common_3/Application/Profiler/GpuProfiler.cpp
     Common_3/Application/Profiler/ProfilerBase.cpp
@@ -71,20 +87,10 @@ set(CPP_SRC
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserSwitchController.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboard.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
-    #Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputPlayer.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecorder.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecording.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/touch/GainputInputDeviceTouch.cpp
-    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui.cpp
-    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_demo.cpp
-    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_draw.cpp
-    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_tables.cpp
-    ##Common_3/Application/ThirdParty/OpenSource/imgui/imgui_widgets.cpp
-    #Common_3/Application/UI/UI.cpp
-    #Common_3/Game/Scripting/LuaManager.cpp
-    #Common_3/Game/Scripting/LuaManagerImpl.cpp
-    #Common_3/Game/Scripting/LuaSystem.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/monotone/soloud_monotone.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/sfxr/soloud_sfxr.cpp
@@ -190,7 +196,6 @@ set(CPP_SRC
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/memory/allocator.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/platform.cc
     Common_3/Resources/ResourceLoader/ResourceLoader.cpp
-    #Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
     Common_3/Tools/ReloadServer/ReloadClient.cpp # requires ENABLE_FORGE_UI or some modifications to respect it
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
     Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
@@ -204,42 +209,34 @@ set(CPP_SRC
     Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
 )
 
+if(NOT EXCLUDE_FORGE_FONTS)
+    list(APPEND CPP_SRC
+        Common_3/Application/Fonts/FontSystem.cpp
+        Common_3/Application/Fonts/stbtt.cpp
+    )
+endif()
+
+if(NOT EXCLUDE_FORGE_UI)
+    list(APPEND CPP_SRC
+        Common_3/Application/ThirdParty/OpenSource/imgui/imgui.cpp
+        Common_3/Application/ThirdParty/OpenSource/imgui/imgui_demo.cpp
+        Common_3/Application/ThirdParty/OpenSource/imgui/imgui_draw.cpp
+        Common_3/Application/ThirdParty/OpenSource/imgui/imgui_tables.cpp
+        #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_widgets.cpp # was commented out?
+        Common_3/Application/UI/UI.cpp
+    )
+endif()
+
+if(NOT EXCLUDE_FORGE_SCRIPTING)
+    list(APPEND CPP_SRC
+        Common_3/Game/Scripting/LuaManager.cpp
+        Common_3/Game/Scripting/LuaManagerImpl.cpp
+        Common_3/Game/Scripting/LuaSystem.cpp
+    )
+endif()
+
 set(C_SRC
     Common_3/Game/ThirdParty/OpenSource/flecs/flecs.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lapi.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lauxlib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbaselib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbitlib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcode.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcorolib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lctype.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldblib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldebug.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldo.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldump.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lfunc.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lgc.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/linit.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/liolib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/llex.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmathlib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmem.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loadlib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lobject.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lopcodes.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loslib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lparser.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstate.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstring.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstrlib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lvm.c
-    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt_dll.c
     Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_freebsd.c
     Common_3/Tools/Network/Network.c
@@ -280,8 +277,46 @@ set(C_SRC
     Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_ddict.c
     Common_3/Utilities/Timer.c
     Common_3/Utilities/Threading/ThreadSystem.c
-    
 )
+
+if(NOT EXCLUDE_FORGE_SCRIPTING)
+    list(APPEND C_SRC
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lapi.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lauxlib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbaselib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbitlib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcode.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcorolib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lctype.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldblib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldebug.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldo.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldump.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lfunc.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lgc.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/linit.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/liolib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/llex.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmathlib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmem.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loadlib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lobject.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lopcodes.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loslib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lparser.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstate.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstring.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstrlib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lvm.c
+        Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
+    )
+endif()
 
 if(WIN32)
     set(FSL_LANGUAGES "DIRECT3D12" "DIRECT3D11" "VULKAN")
@@ -394,7 +429,7 @@ if(APPLE)
 
         set(FSL_LANGUAGES "MACOS")
         set(OBJCPP_SRC
-            #Common_3/Application/Fonts/FontSystem.cpp
+            #
             Common_3/Application/InputSystem.cpp
             Common_3/Application/Profiler/GpuProfiler.cpp
             Common_3/Application/Profiler/ProfilerBase.cpp
@@ -406,8 +441,8 @@ if(APPLE)
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadAppleGCKit.mm
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
-            #Common_3/Application/UI/UI.cpp
-            #Common_3/Game/Scripting/LuaSystem.cpp
+            #
+            #
             Common_3/Graphics/CommonShaderReflection.cpp
             Common_3/Graphics/GPUConfig.cpp
             Common_3/Graphics/PickRenderingAPI.cpp
@@ -430,7 +465,6 @@ if(APPLE)
         list(APPEND CPP_SRC 
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceKeyboardMac.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadMac.cpp 
-            #Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
         )
         list(
             APPEND
@@ -442,6 +476,27 @@ if(APPLE)
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_macos.c
             Common_3/Utilities/FileSystem/UnixFileSystem.c
         )
+
+        if(NOT EXCLUDE_FORGE_FONTS)
+            list(APPEND OBJCPP_SRC
+                Common_3/Application/Fonts/FontSystem.cpp
+            )
+        endif()
+
+        if(NOT EXCLUDE_FORGE_UI)
+            list(APPEND OBJCPP_SRC
+                Common_3/Application/UI/UI.cpp
+            )
+        endif()
+
+        if(NOT EXCLUDE_FORGE_SCRIPTING)
+            list(APPEND OBJCPP_SRC
+                Common_3/Game/Scripting/LuaSystem.cpp
+            )
+        endif()
+
+
+
         # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
         set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
         # Except GainputMac.mm

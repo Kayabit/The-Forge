@@ -43,7 +43,7 @@
     <ProjectGuid>{E531CA97-59D7-42EE-87BB-BC32E9EE8C5D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>EntityComponentSystem</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="..\AGDEVersions.props" />

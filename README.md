@@ -347,7 +347,7 @@ See the release notes from previous releases in the [Release section](https://gi
     * Intel: https://www.intel.com/content/www/us/en/download-center/home.html
     * NVIDIA: https://www.nvidia.com/download/index.aspx
 
-3. Visual Studio 2019 with Windows SDK 10.0.17763.0 (available in the Visual Studio Intaller)
+3. Visual Studio 2019 with Windows SDK 10.0.19041.0 (available in the Visual Studio Intaller)
     * Direct downloads are also available at https://developer.microsoft.com/en-us/windows/downloads/sdk-archive
 
 4. The Forge now includes the Vulkan SDK 1.2.162, and does not require it to be separately installed on the system.

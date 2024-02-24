@@ -46,7 +46,7 @@
     <ProjectGuid>{A37B058E-AF65-4C29-A90A-0D1850D0E3E3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>VariableRateShading</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="..\AGDEVersions.props" />

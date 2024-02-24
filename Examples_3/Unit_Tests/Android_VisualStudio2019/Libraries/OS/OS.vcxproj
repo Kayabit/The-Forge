@@ -177,7 +177,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3062376a-ea3d-4573-9a3f-cefdbe63c3aa}</ProjectGuid>
     <RootNamespace>OS</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Android-arm64-v8a'" Label="Configuration">

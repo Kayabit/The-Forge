@@ -291,17 +291,30 @@ COMPILE_ASSERT(sizeof(ssize_t) == sizeof(int64_t));
 //// General options
 //////////////////////////////////////////////
 // #define ENABLE_MATH_CHECKS // Enables low level math library debug checks like SIMD variable alignment checks
-//#define ENABLE_FORGE_SCRIPTING
-//#define ENABLE_FORGE_UI
+
+// FORGE154 I added these to CMakeLists as options instead of flipping them in here directly
+//  you could probably still comment them directly if you want, for example when working
+//  with only Forge internals that aren't CMake-aware
+//  applies to: ENABLE_FORGE_SCRIPTING, ENABLE_FORGE_UI, ENABLE_FORGE_FONTS
+#ifndef EXCLUDE_FORGE_SCRIPTING
+#define ENABLE_FORGE_SCRIPTING
+#endif
+
+#ifndef EXCLUDE_FORGE_UI
+#define ENABLE_FORGE_UI
+#endif
 // FORGE154; we used to have forge_fonts enabled, but they crash on launch for me now
 //  failing to detect my monitor count for some reason.
 //  I don't think we USE forge fonts for anything, so I've disabled them like forge scripting and UI
-//#define ENABLE_FORGE_FONTS
+#ifndef EXCLUDE_FORGE_FONTS
+#define ENABLE_FORGE_FONTS
+#endif
+
 #define ENABLE_FORGE_INPUT
 #define ENABLE_FORGE_ANIMATION_DEBUG
 // #define ENABLE_FORGE_GPU_ANIMATION_DEBUG
 // FORGE154, it's new, maybe it's cool?
-//#define ENABLE_FORGE_MATERIALS
+#define ENABLE_FORGE_MATERIALS
 #define ENABLE_ZIP_FILESYSTEM
 #define ENABLE_SCREENSHOT
 #define ENABLE_PROFILER

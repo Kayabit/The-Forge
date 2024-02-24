@@ -156,7 +156,10 @@ public:
 protected:
     virtual void ReleaseThis() { delete this; }
 private:
-    D3D12MA_ATOMIC_UINT32 m_RefCount = 1;
+    // FORGE154 fixed a warning (error?) about invoking deleted copy constructor from atomic something something
+    //  by putting braces around this one
+    //  see https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator/blob/master/include/D3D12MemAlloc.h
+    D3D12MA_ATOMIC_UINT32 m_RefCount = {1};
 };
 } // namespace D3D12MA
 

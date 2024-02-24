@@ -68,7 +68,7 @@
     <ProjectGuid>{a4c073ab-608b-4e1c-b24a-9e3919235f0c}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>gainputstatic</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <VCProjectVersion>15.0</VCProjectVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

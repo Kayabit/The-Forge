@@ -22,9 +22,13 @@
  * under the License.
  */
 
+#include <iostream>
 #include "../GraphicsConfig.h"
 
 #ifdef DIRECT3D12
+
+// FORGE154 test debug
+//#define DISABLE_PIPELINE_LIBRARY
 
 #define RENDERER_IMPLEMENTATION
 
@@ -5262,6 +5266,120 @@ void d3d12_cmdBindDescriptorSetWithRootCbvs(Cmd* pCmd, uint32_t index, Descripto
 /************************************************************************/
 // Pipeline State Functions
 /************************************************************************/
+
+// Helper Functions
+
+void LogShaderBytecode(const D3D12_SHADER_BYTECODE& shaderBytecode) {
+    LOGF(eINFO, "  Bytecode Length: %p of length %u", shaderBytecode, shaderBytecode.BytecodeLength);
+    // Note: Actual bytecode content is not logged due to potential size and complexity
+}
+
+void LogStreamOutputDesc(const D3D12_STREAM_OUTPUT_DESC& streamOutput) {
+    LOGF(eINFO, "  Stream Output Desc is not detailed in this example");
+    // Additional detailed logging can be implemented as needed
+}
+
+void LogBlendDesc(const D3D12_BLEND_DESC& blendDesc) {
+    LOGF(eINFO, "  Alpha To Coverage Enable: %u", blendDesc.AlphaToCoverageEnable);
+    LOGF(eINFO, "  Independent Blend Enable: %u", blendDesc.IndependentBlendEnable);
+    // Log other blend state details as needed
+}
+
+void LogRasterizerDesc(const D3D12_RASTERIZER_DESC& rasterizerDesc) {
+    LOGF(eINFO, "  Fill Mode: %u", rasterizerDesc.FillMode);
+    LOGF(eINFO, "  Cull Mode: %u", rasterizerDesc.CullMode);
+    // Log other rasterizer state details as needed
+}
+
+void LogDepthStencilDesc(const D3D12_DEPTH_STENCIL_DESC& depthStencilDesc) {
+    LOGF(eINFO, "  Depth Enable: %u", depthStencilDesc.DepthEnable);
+    // Log other depth stencil state details as needed
+}
+
+void LogInputLayoutDesc(const D3D12_INPUT_LAYOUT_DESC& inputLayout) {
+    LOGF(eINFO, "  Number of Input Layout Elements: %u", inputLayout.NumElements);
+    // Log more details about input layout elements if needed
+}
+
+void LogFormatArray(const DXGI_FORMAT* formats, UINT count) {
+    for (UINT i = 0; i < count; ++i) {
+        LOGF(eINFO, "  Format[%u]: %u", i, formats[i]);
+    }
+}
+
+void LogCachedPSO(const D3D12_CACHED_PIPELINE_STATE& cachedPso) {
+    //LOGF(eINFO, "  Cached Pipeline State is not detailed in this example");
+    LOGF(eINFO, "  Cached Pipeline State pointer %p to size %u", cachedPso.pCachedBlob, cachedPso.CachedBlobSizeInBytes);
+    // Additional detailed logging can be implemented as needed
+}
+
+// Main Logging Function
+
+void LogGraphicsPipelineStateDesc(const D3D12_GRAPHICS_PIPELINE_STATE_DESC& desc) {
+    LOGF(eINFO, "Root Signature: %s", desc.pRootSignature);
+
+    LOGF(eINFO, "Vertex Shader:");
+    LogShaderBytecode(desc.VS);
+
+    LOGF(eINFO, "Pixel Shader:");
+    LogShaderBytecode(desc.PS);
+
+    LOGF(eINFO, "Domain Shader:");
+    LogShaderBytecode(desc.DS);
+
+    LOGF(eINFO, "Hull Shader:");
+    LogShaderBytecode(desc.HS);
+
+    LOGF(eINFO, "Geometry Shader:");
+    LogShaderBytecode(desc.GS);
+
+    LOGF(eINFO, "Stream Output:");
+    LogStreamOutputDesc(desc.StreamOutput);
+
+    LOGF(eINFO, "Blend State:");
+    LogBlendDesc(desc.BlendState);
+
+    LOGF(eINFO, "Sample Mask: %u", desc.SampleMask);
+    if(desc.SampleMask != 4294967295) {
+        LOGF(eWARNING, "whoa, sample mask isn't 4294967295");
+    }
+
+    LOGF(eINFO, "Rasterizer State:");
+    LogRasterizerDesc(desc.RasterizerState);
+
+    LOGF(eINFO, "Depth Stencil State:");
+    LogDepthStencilDesc(desc.DepthStencilState);
+
+    LOGF(eINFO, "Input Layout:");
+    LogInputLayoutDesc(desc.InputLayout);
+
+    LOGF(eINFO, "Index Buffer Strip Cut Value: %u", desc.IBStripCutValue);
+    if(desc.IBStripCutValue != 0) {
+        LOGF(eWARNING, "whoa, index buffer strip cut value isn't 0");
+    }
+
+    LOGF(eINFO, "Primitive Topology Type: %u", desc.PrimitiveTopologyType);
+
+    LOGF(eINFO, "Number of Render Targets: %u", desc.NumRenderTargets);
+    LogFormatArray(desc.RTVFormats, desc.NumRenderTargets);
+
+    LOGF(eINFO, "Depth-Stencil View Format: %u", desc.DSVFormat);
+
+    LOGF(eINFO, "Sample Description:");
+    LOGF(eINFO, "  Count: %u", desc.SampleDesc.Count);
+    LOGF(eINFO, "  Quality: %u", desc.SampleDesc.Quality);
+
+    LOGF(eINFO, "Node Mask: %u", desc.NodeMask);
+
+    LOGF(eINFO, "Cached Pipeline State Object:");
+    LogCachedPSO(desc.CachedPSO);
+
+    LOGF(eINFO, "Pipeline State Flags: %x", desc.Flags);
+}
+
+
+
+
 void addGraphicsPipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pipeline** ppPipeline)
 {
     ASSERT(pRenderer);
@@ -5485,6 +5603,9 @@ void addGraphicsPipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pip
     DECLARE_ZERO(DXGI_SAMPLE_DESC, sample_desc);
     sample_desc.Count = (UINT)(pDesc->mSampleCount);
     sample_desc.Quality = (UINT)(pDesc->mSampleQuality);
+    if(sample_desc.Quality != 0) {
+        LOGF(eWARNING, "whoa, a sample_desc Quality that isn't 0");
+    }
 
     DECLARE_ZERO(D3D12_CACHED_PIPELINE_STATE, cached_pso_desc);
     cached_pso_desc.pCachedBlob = NULL;
@@ -5497,6 +5618,9 @@ void addGraphicsPipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pip
     pipeline_state_desc.DS = DS;
     pipeline_state_desc.HS = HS;
     pipeline_state_desc.GS = GS;
+    if(GS.pShaderBytecode) {
+        LOGF(eWARNING, "whoa, a geometry shader pointer? %p", GS.pShaderBytecode);
+    }
     pipeline_state_desc.StreamOutput = stream_output_desc;
     pipeline_state_desc.BlendState = pDesc->pBlendState ? util_to_blend_desc(pDesc->pBlendState) : gDefaultBlendDesc;
     pipeline_state_desc.SampleMask = UINT_MAX;
@@ -5549,6 +5673,8 @@ void addGraphicsPipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pip
         psoRenderHash = tf_mem_hash<uint8_t>((uint8_t*)&pipeline_state_desc.NodeMask, sizeof(UINT), psoRenderHash);
 
         swprintf(pipelineName, L"%S_S%zuR%zu", (pMainDesc->pName ? pMainDesc->pName : "GRAPHICSPSO"), psoShaderHash, psoRenderHash);
+        LOGF(eINFO, "searching a pso with name %S", pipelineName);
+        LogGraphicsPipelineStateDesc(pipeline_state_desc);
         result = psoCache->LoadGraphicsPipeline(pipelineName, &pipeline_state_desc, IID_ARGS(&pPipeline->mDx.pPipelineState));
     }
 #endif
@@ -5561,6 +5687,7 @@ void addGraphicsPipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pip
 #ifndef DISABLE_PIPELINE_LIBRARY
         if (psoCache)
         {
+            LOGF(eINFO, "storing a pso with name %S", pipelineName);
             CHECK_HRESULT(psoCache->StorePipeline(pipelineName, pPipeline->mDx.pPipelineState));
         }
 #endif
@@ -5653,6 +5780,7 @@ void addComputePipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pipe
         psoShaderHash = tf_mem_hash<uint8_t>((uint8_t*)CS.pShaderBytecode, CS.BytecodeLength, psoShaderHash);
 
         swprintf(pipelineName, L"%S_S%zu", (pMainDesc->pName ? pMainDesc->pName : "COMPUTEPSO"), psoShaderHash);
+        LOGF(eINFO, "searching a compute pso with name %S", pipelineName);
         result = psoCache->LoadComputePipeline(pipelineName, &pipeline_state_desc, IID_ARGS(&pPipeline->mDx.pPipelineState));
     }
 #endif
@@ -5665,6 +5793,7 @@ void addComputePipeline(Renderer* pRenderer, const PipelineDesc* pMainDesc, Pipe
 #ifndef DISABLE_PIPELINE_LIBRARY
         if (psoCache)
         {
+            LOGF(eINFO, "storing a compute pso with name %S", pipelineName);
             CHECK_HRESULT(psoCache->StorePipeline(pipelineName, pPipeline->mDx.pPipelineState));
         }
 #endif
@@ -5694,6 +5823,14 @@ void d3d12_addPipeline(Renderer* pRenderer, const PipelineDesc* pDesc, Pipeline*
         break;
     }
     }
+}
+
+void total_nonsense_function() {
+    int a = 0;
+    int b = 0;
+    int c = a + b;
+    LOGF(eINFO, "c: %i", c);
+    return;
 }
 
 void d3d12_removePipeline(Renderer* pRenderer, Pipeline* pPipeline)
