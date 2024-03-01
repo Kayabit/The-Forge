@@ -755,7 +755,22 @@ void d3d11_cmdUpdateBuffer(Cmd* pCmd, Buffer* pBuffer, uint64_t dstOffset, Buffe
     ID3D11DeviceContext* pContext = pRenderer->mDx11.pContext;
 
     D3D11_MAPPED_SUBRESOURCE sub = {};
-    D3D11_BOX                dstBox = { (UINT)dstOffset, 0, 0, (UINT)(dstOffset + size), 1, 1 };
+
+    // FORGE154 Buildbox check if buffer is constant; d3d11 doesn't allow dstBox on constant buffer
+    //  very unsure if this is a good idea / correct / fix
+    D3D11_BUFFER_DESC bufDesc;
+    ID3D11Buffer *buffResource = pBuffer->mDx11.pResource;
+    buffResource->GetDesc(&bufDesc);
+
+    D3D11_BOX* pDstBox = nullptr;
+    if (!(bufDesc.BindFlags & D3D11_BIND_CONSTANT_BUFFER))
+    {
+        // Only define dstBox for non-constant buffers
+        D3D11_BOX dstBox = { (UINT)dstOffset, 0, 0, (UINT)(dstOffset + size), 1, 1 };
+        pDstBox = &dstBox;
+    }
+
+    //D3D11_BOX                dstBox = { (UINT)dstOffset, 0, 0, (UINT)(dstOffset + size), 1, 1 };
 
     // Not persistently mapped buffer.
     if (!pSrcBuffer->pCpuMappedAddress)
@@ -767,7 +782,7 @@ void d3d11_cmdUpdateBuffer(Cmd* pCmd, Buffer* pBuffer, uint64_t dstOffset, Buffe
         sub = { pSrcBuffer->pCpuMappedAddress, 0, 0 };
     }
 
-    pContext->UpdateSubresource(pBuffer->mDx11.pResource, 0, &dstBox, (uint8_t*)sub.pData + srcOffset, (UINT)size, 0);
+    pContext->UpdateSubresource(pBuffer->mDx11.pResource, 0, pDstBox, (uint8_t*)sub.pData + srcOffset, (UINT)size, 0);
 
     if (!pSrcBuffer->pCpuMappedAddress)
     {
@@ -3055,7 +3070,8 @@ void addGraphicsPipeline(Renderer* pRenderer, const GraphicsPipelineDesc* pDesc,
     {
         DECLARE_ZERO(char, semantic_names[MAX_VERTEX_ATTRIBS][MAX_SEMANTIC_NAME_LENGTH]);
 
-        ASSERT(pVertexLayout->mAttribCount && pVertexLayout->mBindingCount);
+        // FORGE154 Buildbox uses 'resolve' shaders that have no attributes or bindings so this assert is unhelpful
+        //ASSERT(pVertexLayout->mAttribCount && pVertexLayout->mBindingCount);
 
         for (uint32_t attrib_index = 0; attrib_index < pVertexLayout->mAttribCount; ++attrib_index)
         {
@@ -3365,6 +3381,12 @@ void d3d11_addDescriptorSet(Renderer* pRenderer, const DescriptorSetDesc* pDesc,
     for (uint32_t i = 0; i < pDesc->mMaxSets; ++i)
     {
         pDescriptorSet->mDx11.pHandles[i].pSRVs = (DescriptorHandle*)mem;
+        DescriptorHandle *ref = pDescriptorSet->mDx11.pHandles[i].pSRVs;
+        // AP: never hit. we're calloc'd and not overrunning or anything as best I can tell
+        if(ref->pHandle != NULL) {
+            LOGF(eINFO, "well hello, adding descriptor set and there's some garbage in memory perhaps");
+            ref->pHandle = NULL;
+        }
         mem += pRootSignature->mDx11.mSrvCounts[updateFreq] * sizeof(DescriptorHandle);
 
         pDescriptorSet->mDx11.pHandles[i].pUAVs = (DescriptorHandle*)mem;
@@ -3380,7 +3402,9 @@ void d3d11_addDescriptorSet(Renderer* pRenderer, const DescriptorSetDesc* pDesc,
     *ppDescriptorSet = pDescriptorSet;
 }
 
-void d3d11_removeDescriptorSet(Renderer* pRenderer, DescriptorSet* pDescriptorSet) { SAFE_FREE(pDescriptorSet); }
+void d3d11_removeDescriptorSet(Renderer* pRenderer, DescriptorSet* pDescriptorSet) { 
+    SAFE_FREE(pDescriptorSet); 
+}
 
 #if defined(ENABLE_GRAPHICS_DEBUG) || defined(PVS_STUDIO)
 #define VALIDATE_DESCRIPTOR(descriptor, msgFmt, ...)                           \
@@ -3449,10 +3473,9 @@ void d3d11_updateDescriptorSet(Renderer* pRenderer, uint32_t index, DescriptorSe
             for (uint32_t arr = 0; arr < arrayCount; ++arr)
             {
                 VALIDATE_DESCRIPTOR(pParam->ppTextures[arr], "NULL Texture (%s [%u] )", pDesc->pName, arr);
-
-                pDescriptorSet->mDx11.pHandles[index].pSRVs[paramIndex + arrayStart + arr] =
-                    (DescriptorHandle{ pParam->ppTextures[arr]->mDx11.pSRVDescriptor, (ShaderStage)pDesc->mDx11.mUsedStages,
-                                       pDesc->mDx11.mReg + arrayStart + arr });
+                DescriptorHandle hnd = (DescriptorHandle{ pParam->ppTextures[arr]->mDx11.pSRVDescriptor, (ShaderStage)pDesc->mDx11.mUsedStages,
+                                                                               pDesc->mDx11.mReg + arrayStart + arr });
+                pDescriptorSet->mDx11.pHandles[index].pSRVs[paramIndex + arrayStart + arr] = hnd;
             }
             break;
         }
@@ -3482,10 +3505,9 @@ void d3d11_updateDescriptorSet(Renderer* pRenderer, uint32_t index, DescriptorSe
             for (uint32_t arr = 0; arr < arrayCount; ++arr)
             {
                 VALIDATE_DESCRIPTOR(pParam->ppBuffers[arr], "NULL Buffer (%s [%u] )", pDesc->pName, arr);
-
-                pDescriptorSet->mDx11.pHandles[index].pSRVs[paramIndex + arrayStart + arr] =
-                    (DescriptorHandle{ pParam->ppBuffers[arr]->mDx11.pSrvHandle, (ShaderStage)pDesc->mDx11.mUsedStages,
-                                       pDesc->mDx11.mReg + arrayStart + arr });
+                DescriptorHandle hnd = (DescriptorHandle{ pParam->ppBuffers[arr]->mDx11.pSrvHandle, (ShaderStage)pDesc->mDx11.mUsedStages,
+                                                                              pDesc->mDx11.mReg + arrayStart + arr });
+                pDescriptorSet->mDx11.pHandles[index].pSRVs[paramIndex + arrayStart + arr] = hnd;
             }
             break;
         }
@@ -3879,8 +3901,15 @@ void d3d11_cmdBindDescriptorSet(Cmd* pCmd, uint32_t index, DescriptorSet* pDescr
     for (uint32_t i = 0; i < pRootSignature->mDx11.mSrvCounts[updateFreq]; ++i)
     {
         DescriptorHandle* pHandle = &pDescriptorSet->mDx11.pHandles[index].pSRVs[i];
-        if (pHandle->pHandle)
+        if (pHandle->pHandle) {
+            // if(pHandle->mBinding > 100) {
+            //     LOGF(eWARNING, "dumb skip bandaid idea for suspicious handle");
+            // }
+            // else {
+            //     set_shader_resources(pContext, pHandle->mStage, pHandle->mBinding, 1, (ID3D11ShaderResourceView**)&pHandle->pHandle);
+            // }
             set_shader_resources(pContext, pHandle->mStage, pHandle->mBinding, 1, (ID3D11ShaderResourceView**)&pHandle->pHandle);
+        }
     }
 
     // UAVs
@@ -4260,7 +4289,7 @@ static inline FORGE_CONSTEXPR uint32_t ToQueryWidth(QueryType type)
     switch (type)
     {
     case QUERY_TYPE_PIPELINE_STATISTICS:
-        return sizeof(D3D12_QUERY_DATA_PIPELINE_STATISTICS);
+        return sizeof(D3D11_QUERY_DATA_PIPELINE_STATISTICS);
     default:
         return sizeof(uint64_t);
     }

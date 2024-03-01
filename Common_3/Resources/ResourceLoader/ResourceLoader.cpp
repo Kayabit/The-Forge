@@ -760,7 +760,7 @@ static void* alignMemory(void* ptr, uint64_t alignment)
 #if !defined(PROSPERO)
 static void* allocShaderByteCode(ShaderByteCodeBuffer* pShaderByteCodeBuffer, uint32_t alignment, uint32_t size, const char* filename)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pShaderByteCodeBuffer && pShaderByteCodeBuffer->pStackMemory);
     ASSERT(alignment > 0);
 
@@ -787,7 +787,7 @@ static void* allocShaderByteCode(ShaderByteCodeBuffer* pShaderByteCodeBuffer, ui
 
 static void freeShaderByteCode(ShaderByteCodeBuffer* pShaderByteCodeBuffer, BinaryShaderDesc* pBinaryShaderDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pShaderByteCodeBuffer && pBinaryShaderDesc);
 
     // Free bytecode if it's not allocated on the buffer
@@ -816,7 +816,7 @@ static void freeShaderByteCode(ShaderByteCodeBuffer*, BinaryShaderDesc*) {}
 /// Return a new staging buffer
 static MappedMemoryRange allocateUploadMemory(Renderer* pRenderer, uint64_t memoryRequirement, uint32_t alignment)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     Buffer* buffer;
 #if defined(DIRECT3D11)
     if (gPlatformParameters.mSelectedRendererApi == RENDERER_API_D3D11)
@@ -860,7 +860,7 @@ static MappedMemoryRange allocateUploadMemory(Renderer* pRenderer, uint64_t memo
 
 static void setupCopyEngine(Renderer* pRenderer, CopyEngineDesc* pDesc, CopyEngine* pCopyEngine)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     QueueDesc desc = { pDesc->mQueueType, QUEUE_FLAG_NONE, QUEUE_PRIORITY_NORMAL, pDesc->mNodeIndex, pDesc->pQueueName };
     addQueue(pRenderer, &desc, &pCopyEngine->pQueue);
 
@@ -906,7 +906,7 @@ static void setupCopyEngine(Renderer* pRenderer, CopyEngineDesc* pDesc, CopyEngi
 
 static void cleanupCopyEngine(Renderer* pRenderer, CopyEngine* pCopyEngine)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     for (uint32_t i = 0; i < pCopyEngine->bufferCount; ++i)
     {
         CopyResourceSet& resourceSet = pCopyEngine->resourceSets[i];
@@ -947,7 +947,7 @@ static void cleanupCopyEngine(Renderer* pRenderer, CopyEngine* pCopyEngine)
 
 static void waitCopyEngineSet(Renderer* pRenderer, CopyEngine* pCopyEngine)
 {
-LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+//LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
 #if defined(DIRECT3D11)
     if (RENDERER_API_D3D11 == gPlatformParameters.mSelectedRendererApi)
     {
@@ -979,7 +979,7 @@ LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
 
 static void resetCopyEngineSet(Renderer* pRenderer, CopyEngine* pCopyEngine)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(!pCopyEngine->isRecording);
     pCopyEngine->resourceSets[pCopyEngine->activeSet].mAllocatedSpace = 0;
     pCopyEngine->isRecording = false;
@@ -995,7 +995,7 @@ static void resetCopyEngineSet(Renderer* pRenderer, CopyEngine* pCopyEngine)
 
 static Cmd* acquireCmd(CopyEngine* pCopyEngine)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     CopyResourceSet& resourceSet = pCopyEngine->resourceSets[pCopyEngine->activeSet];
     if (!pCopyEngine->isRecording)
     {
@@ -1014,7 +1014,7 @@ static Cmd* acquireCmd(CopyEngine* pCopyEngine)
 
 static Cmd* acquirePostCopyBarrierCmd(CopyEngine* pCopyEngine)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (!StrictQueueTypeBarriers() || pCopyEngine->pQueue->mType != QUEUE_TYPE_TRANSFER)
     {
         return acquireCmd(pCopyEngine);
@@ -1035,7 +1035,7 @@ static Cmd* acquirePostCopyBarrierCmd(CopyEngine* pCopyEngine)
 
 static void streamerFlush(CopyEngine* pCopyEngine)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (pCopyEngine->isRecording)
     {
         CopyResourceSet& resourceSet = pCopyEngine->resourceSets[pCopyEngine->activeSet];
@@ -1079,7 +1079,7 @@ static void streamerFlush(CopyEngine* pCopyEngine)
 /// Return memory from pre-allocated staging buffer or create a temporary buffer if the streamer ran out of memory
 static MappedMemoryRange allocateStagingMemory(CopyEngine* pCopyEngine, uint64_t memoryRequirement, uint32_t alignment, uint32_t nodeIndex)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     // #NOTE: Call to make sure we dont reset copy engine after staging memory was already allocated
     acquireCmd(pCopyEngine);
 
@@ -1123,7 +1123,7 @@ static MappedMemoryRange allocateStagingMemory(CopyEngine* pCopyEngine, uint64_t
 
 static UploadFunctionResult updateBuffer(Renderer* pRenderer, CopyEngine* pCopyEngine, const BufferUpdateDesc& bufUpdateDesc)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     Buffer* pBuffer = bufUpdateDesc.pBuffer;
     ASSERT(pCopyEngine->pQueue->mNodeIndex == pBuffer->mNodeIndex);
     ASSERT(RESOURCE_MEMORY_USAGE_GPU_ONLY == pBuffer->mMemoryUsage);
@@ -1151,7 +1151,7 @@ static UploadFunctionResult updateBuffer(Renderer* pRenderer, CopyEngine* pCopyE
 
 static UploadFunctionResult loadBuffer(Renderer* pRenderer, CopyEngine* pCopyEngine, const UpdateRequest& updateRequest)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     const BufferLoadDescInternal& loadDesc = updateRequest.bufLoadDesc;
     BufferUpdateDesc              updateDesc = { loadDesc.pBuffer };
     updateDesc.mCurrentState = RESOURCE_STATE_COPY_DEST;
@@ -1217,7 +1217,7 @@ static UploadFunctionResult loadBuffer(Renderer* pRenderer, CopyEngine* pCopyEng
 
 static UploadFunctionResult updateTexture(Renderer* pRenderer, CopyEngine* pCopyEngine, const TextureUpdateDescInternal& texUpdateDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     // When this call comes from updateResource, staging buffer data is already filled
     // All that is left to do is record and execute the Copy commands
     bool                  dataAlreadyFilled = texUpdateDesc.mRange.pBuffer ? true : false;
@@ -1361,7 +1361,7 @@ static UploadFunctionResult updateTexture(Renderer* pRenderer, CopyEngine* pCopy
 
 static UploadFunctionResult loadTexture(Renderer* pRenderer, CopyEngine* pCopyEngine, const UpdateRequest& pTextureUpdate)
 {
-    LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pTextureUpdate.texLoadDesc.pFileName);
+   //LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pTextureUpdate.texLoadDesc.pFileName);
     const TextureLoadDescInternal* pTextureDesc = &pTextureUpdate.texLoadDesc;
 
     if (pTextureDesc->mForceReset)
@@ -1583,7 +1583,7 @@ static void fillGeometryUpdateDesc(Renderer* pRenderer, CopyEngine* pCopyEngine,
                                    uint32_t* indexStride, BufferUpdateDesc vertexUpdateDesc[MAX_VERTEX_BINDINGS],
                                    BufferUpdateDesc indexUpdateDesc[1])
 {
-    LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pDesc->pFileName);
+   //LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pDesc->pFileName);
     bool     structuredBuffers = (pDesc->mFlags & GEOMETRY_LOAD_FLAG_STRUCTURED_BUFFERS) > 0;
     uint32_t indexBufferSize = *indexStride * geom->mIndexCount;
 
@@ -1695,7 +1695,7 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
                                                          BufferUpdateDesc vertexUpdateDesc[MAX_VERTEX_BINDINGS],
                                                          BufferUpdateDesc indexUpdateDesc[1])
 {
-    LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pDesc->pFileName);
+   //LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pDesc->pFileName);
     FileStream file = {};
     if (!fsOpenStreamFromPath(RD_MESHES, pDesc->pFileName, FM_READ, &file))
     {
@@ -1983,10 +1983,10 @@ static UploadFunctionResult loadGeometryCustomMeshFormat(Renderer* pRenderer, Co
 static UploadFunctionResult loadGeometry(Renderer* pRenderer, CopyEngine* pCopyEngine, UpdateRequest& pGeometryLoad)
 {
     if(pGeometryLoad.geomLoadDesc.pFileName) {
-        LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pGeometryLoad.geomLoadDesc.pFileName);
+       //LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, pGeometryLoad.geomLoadDesc.pFileName);
     }
     else {
-        LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+        //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     }
     GeometryLoadDesc* pDesc = &pGeometryLoad.geomLoadDesc;
 
@@ -2052,7 +2052,7 @@ static UploadFunctionResult loadGeometry(Renderer* pRenderer, CopyEngine* pCopyE
 
 static UploadFunctionResult copyTexture(Renderer* pRenderer, CopyEngine* pCopyEngine, TextureCopyDesc& pTextureCopy)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     Texture*              texture = pTextureCopy.pTexture;
     const TinyImageFormat fmt = (TinyImageFormat)texture->mFormat;
 
@@ -2141,7 +2141,7 @@ static bool areTasksAvailable(ResourceLoader* pLoader)
 
 static void streamerThreadFunc(void* pThreadData)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ResourceLoader* pLoader = (ResourceLoader*)pThreadData;
     ASSERT(pLoader);
 
@@ -2319,7 +2319,7 @@ static void streamerThreadFunc(void* pThreadData)
 
 static void CopyEngineFlush(CopyEngine* pCopyEngine)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     streamerFlush(pCopyEngine);
     acquireMutex(&pResourceLoader->mSemaphoreMutex);
     pCopyEngine->pLastSubmittedSemaphore = pCopyEngine->resourceSets[pCopyEngine->activeSet].pSemaphore;
@@ -2341,7 +2341,7 @@ static void CopyEngineFlush(CopyEngine* pCopyEngine)
 
 static void initResourceLoader(Renderer** ppRenderers, uint32_t rendererCount, ResourceLoaderDesc* pDesc, ResourceLoader** ppLoader)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(rendererCount > 0);
     ASSERT(rendererCount <= MAX_MULTIPLE_GPUS);
 
@@ -2455,7 +2455,7 @@ static void initResourceLoader(Renderer** ppRenderers, uint32_t rendererCount, R
 
 static void exitResourceLoader(ResourceLoader* pLoader)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     pLoader->mRun = false; //-V601
 
     if (pLoader->mDesc.mSingleThreaded)
@@ -2498,7 +2498,7 @@ static void exitResourceLoader(ResourceLoader* pLoader)
 
 static void queueBufferLoad(ResourceLoader* pLoader, BufferLoadDescInternal* pBufferLoad, SyncToken* token)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     uint32_t nodeIndex = pBufferLoad->pBuffer->mNodeIndex;
     acquireMutex(&pLoader->mQueueMutex);
 
@@ -2522,7 +2522,7 @@ static void queueBufferLoad(ResourceLoader* pLoader, BufferLoadDescInternal* pBu
 
 static void queueTextureLoad(ResourceLoader* pLoader, TextureLoadDescInternal* pTextureLoad, SyncToken* token)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     uint32_t nodeIndex = pTextureLoad->mNodeIndex;
     acquireMutex(&pLoader->mQueueMutex);
 
@@ -2546,7 +2546,7 @@ static void queueTextureLoad(ResourceLoader* pLoader, TextureLoadDescInternal* p
 
 static void queueGeometryLoad(ResourceLoader* pLoader, GeometryLoadDesc* pGeometryLoad, SyncToken* token)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     uint32_t nodeIndex = pGeometryLoad->mNodeIndex;
     acquireMutex(&pLoader->mQueueMutex);
 
@@ -2570,7 +2570,7 @@ static void queueGeometryLoad(ResourceLoader* pLoader, GeometryLoadDesc* pGeomet
 
 static void queueTextureBarrier(ResourceLoader* pLoader, Texture* pTexture, ResourceState state, SyncToken* token)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     uint32_t nodeIndex = pTexture->mNodeIndex;
     acquireMutex(&pLoader->mQueueMutex);
 
@@ -2594,7 +2594,7 @@ static void queueTextureBarrier(ResourceLoader* pLoader, Texture* pTexture, Reso
 
 static void queueTextureCopy(ResourceLoader* pLoader, TextureCopyDesc* pTextureCopy, SyncToken* token)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pTextureCopy->pTexture->mNodeIndex == pTextureCopy->pBuffer->mNodeIndex);
     uint32_t nodeIndex = pTextureCopy->pTexture->mNodeIndex;
     acquireMutex(&pLoader->mQueueMutex);
@@ -2619,7 +2619,7 @@ static void queueTextureCopy(ResourceLoader* pLoader, TextureCopyDesc* pTextureC
 
 static void waitForToken(ResourceLoader* pLoader, const SyncToken* token)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (pLoader->mDesc.mSingleThreaded)
     {
         return;
@@ -2634,7 +2634,7 @@ static void waitForToken(ResourceLoader* pLoader, const SyncToken* token)
 
 static void waitForTokenSubmitted(ResourceLoader* pLoader, const SyncToken* token)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (pLoader->mDesc.mSingleThreaded)
     {
         return;
@@ -2652,7 +2652,7 @@ static void waitForTokenSubmitted(ResourceLoader* pLoader, const SyncToken* toke
 /************************************************************************/
 void initResourceLoaderInterface(Renderer* pRenderer, ResourceLoaderDesc* pDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     initResourceLoader(&pRenderer, 1, pDesc, &pResourceLoader);
 
 #ifdef ENABLE_FORGE_MATERIALS
@@ -2702,7 +2702,7 @@ void initResourceLoaderInterface(Renderer* pRenderer, ResourceLoaderDesc* pDesc)
 
 void exitResourceLoaderInterface(Renderer* pRenderer)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
 #ifdef ENABLE_FORGE_MATERIALS
     if (pMaterialLibrary)
     {
@@ -2731,7 +2731,7 @@ void exitResourceLoaderInterface(Renderer* pRenderer)
 
 void initResourceLoaderInterface(Renderer** ppRenderers, uint32_t rendererCount, ResourceLoaderDesc* pDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     initResourceLoader(ppRenderers, rendererCount, pDesc, &pResourceLoader);
 }
 
@@ -3503,7 +3503,7 @@ void removeResource(GeometryData* pGeom)
 
 void removeGeometryShadowData(GeometryData* pGeom)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (pGeom->pShadow)
     {
         tf_free(pGeom->pShadow);
@@ -3519,7 +3519,7 @@ typedef struct BufferChunkAllocatorDesc
 
 static void addBufferChunkAllocator(BufferChunkAllocatorDesc* pDesc, BufferChunkAllocator* pOut)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pDesc);
     ASSERT(pOut);
 
@@ -3532,7 +3532,7 @@ static void addBufferChunkAllocator(BufferChunkAllocatorDesc* pDesc, BufferChunk
 
 static void removeBufferChunkAllocator(BufferChunkAllocator* pBuffer)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pBuffer);
     ASSERT(pBuffer->mUsedChunkCount == 0 && "Expecting all parts to be released at this point");
 
@@ -3565,7 +3565,7 @@ static void removeBufferChunkAllocator(BufferChunkAllocator* pBuffer)
 
 void addGeometryBuffer(GeometryBufferLoadDesc* pDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     DescriptorType flags = DESCRIPTOR_TYPE_BUFFER_RAW | DESCRIPTOR_TYPE_RW_BUFFER_RAW;
 
     GeometryBuffer* pBuffer = (GeometryBuffer*)tf_calloc(1, sizeof *pBuffer);
@@ -3618,7 +3618,7 @@ void addGeometryBuffer(GeometryBufferLoadDesc* pDesc)
 
 void removeGeometryBuffer(GeometryBuffer* pGeomBuffer)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (!pGeomBuffer)
         return;
 
@@ -3639,7 +3639,7 @@ void removeGeometryBuffer(GeometryBuffer* pGeomBuffer)
 void addGeometryBufferPart(BufferChunkAllocator* pBuffer, uint32_t size, uint32_t alignment, BufferChunk* pOut,
                            BufferChunk* pRequestedChunk)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     if (size == 0)
         return;
     if (size > pBuffer->mSize)
@@ -3757,7 +3757,7 @@ void addGeometryBufferPart(BufferChunkAllocator* pBuffer, uint32_t size, uint32_
 
 void removeGeometryBufferPart(BufferChunkAllocator* pBuffer, BufferChunk* pChunk)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pChunk->mSize ? pBuffer != NULL : true);
     if (!pBuffer || pChunk->mSize == 0)
         return;
@@ -3804,7 +3804,7 @@ void removeGeometryBufferPart(BufferChunkAllocator* pBuffer, BufferChunk* pChunk
 
 void beginUpdateResource(BufferUpdateDesc* pBufferUpdate)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     Buffer*   pBuffer = pBufferUpdate->pBuffer;
     Renderer* pRenderer = pResourceLoader->ppRenderers[pBuffer->mNodeIndex];
     ASSERT(pBuffer);
@@ -3859,7 +3859,7 @@ void beginUpdateResource(BufferUpdateDesc* pBufferUpdate)
 
 void endUpdateResource(BufferUpdateDesc* pBufferUpdate)
 {
-    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    ////LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     const uint32_t nodeIndex = pBufferUpdate->pBuffer->mNodeIndex;
     if (pBufferUpdate->mInternal.mMappedRange.mFlags & MAPPED_RANGE_FLAG_UNMAP_BUFFER)
     {
@@ -3881,7 +3881,7 @@ void endUpdateResource(BufferUpdateDesc* pBufferUpdate)
 
 TextureSubresourceUpdate TextureUpdateDesc::getSubresourceUpdateDesc(uint32_t mip, uint32_t layer)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     TextureSubresourceUpdate ret = {};
     Texture*                 texture = pTexture;
     const TinyImageFormat    fmt = (TinyImageFormat)texture->mFormat;
@@ -3917,7 +3917,7 @@ TextureSubresourceUpdate TextureUpdateDesc::getSubresourceUpdateDesc(uint32_t mi
 
 void beginUpdateResource(TextureUpdateDesc* pTextureUpdate)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     const Texture*        texture = pTextureUpdate->pTexture;
     const TinyImageFormat fmt = (TinyImageFormat)texture->mFormat;
     Renderer*             pRenderer = pResourceLoader->ppRenderers[texture->mNodeIndex];
@@ -3963,7 +3963,7 @@ void beginUpdateResource(TextureUpdateDesc* pTextureUpdate)
 
 void endUpdateResource(TextureUpdateDesc* pTextureUpdate)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     TextureUpdateDescInternal desc = {};
     desc.pTexture = pTextureUpdate->pTexture;
     desc.mRange = pTextureUpdate->mInternal.mMappedRange;
@@ -3986,7 +3986,7 @@ void copyResource(TextureCopyDesc* pTextureDesc, SyncToken* token) { queueTextur
 
 void flushResourceUpdates(FlushResourceUpdateDesc* pDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     MutexLock lock(pResourceLoader->mUploadEngineMutex);
 
     static FlushResourceUpdateDesc dummyDesc = {};
@@ -4024,28 +4024,28 @@ void waitForTokenSubmitted(const SyncToken* token) { waitForTokenSubmitted(pReso
 
 bool allResourceLoadsCompleted()
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     SyncToken token = tfrg_atomic64_load_relaxed(&pResourceLoader->mTokenCounter);
     return token <= tfrg_atomic64_load_acquire(&pResourceLoader->mTokenCompleted);
 }
 
 void waitForAllResourceLoads()
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     SyncToken token = tfrg_atomic64_load_relaxed(&pResourceLoader->mTokenCounter);
     waitForToken(pResourceLoader, &token);
 }
 
 bool isResourceLoaderSingleThreaded()
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     ASSERT(pResourceLoader);
     return pResourceLoader->mDesc.mSingleThreaded;
 }
 
 Semaphore* getLastSemaphoreSubmitted(uint32_t nodeIndex)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     acquireMutex(&pResourceLoader->mSemaphoreMutex);
     Semaphore* sem = pResourceLoader->pCopyEngines[nodeIndex].pLastSubmittedSemaphore;
     releaseMutex(&pResourceLoader->mSemaphoreMutex);
@@ -4058,7 +4058,7 @@ Semaphore* getLastSemaphoreSubmitted(uint32_t nodeIndex)
 static bool load_shader_stage_byte_code(Renderer* pRenderer, const char* name, ShaderStage stage, BinaryShaderStageDesc* pOut,
                                         ShaderByteCodeBuffer* pShaderByteCodeBuffer, FSLMetadata* pOutMetadata)
 {
-    LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, name);
+   //LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, name);
     char binaryShaderPath[FS_MAX_PATH];
 
     {
@@ -4210,7 +4210,7 @@ static bool load_shader_stage_byte_code(Renderer* pRenderer, const char* name, S
 
 const char* getShaderPlatformName()
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
     switch (gPlatformParameters.mSelectedRendererApi)
     {
 #if defined(DIRECT3D12)
@@ -4288,7 +4288,7 @@ const char* getShaderPlatformName()
 
 static bool find_shader_stage(const char* extension, BinaryShaderDesc* pBinaryDesc, BinaryShaderStageDesc** pOutStage, ShaderStage* pStage)
 {
-    LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, extension);
+   //LOGF(eWARNING, "%s %s %i %s", __FILE__, __FUNCTION__, __LINE__, extension);
     if (stricmp(extension, "vert") == 0)
     {
         *pOutStage = &pBinaryDesc->mVert;
@@ -4358,8 +4358,12 @@ void addShader(Renderer* pRenderer, const ShaderLoadDesc* pDesc, Shader** ppShad
             BinaryShaderStageDesc* pStage = NULL;
             char                   ext[FS_MAX_PATH] = { 0 };
             fsGetPathExtension(pDesc->mStages[i].pFileName, ext);
-            if (find_shader_stage(ext, &binaryDesc, &pStage, &stage))
+            if (find_shader_stage(ext, &binaryDesc, &pStage, &stage)) {
                 stages |= stage;
+            }
+            if(stages == SHADER_STAGE_NONE) {
+                LOGF(eWARNING, "shader stage none for %s", pDesc->mStages[i].pFileName[0]);
+            }
         }
     }
     for (uint32_t i = 0; i < SHADER_STAGE_COUNT; ++i)
@@ -4382,6 +4386,10 @@ void addShader(Renderer* pRenderer, const ShaderLoadDesc* pDesc, Shader** ppShad
         {
             freeShaderByteCode(&shaderByteCodeBuffer, &binaryDesc);
             return;
+        }
+
+        if(stage == SHADER_STAGE_NONE) {
+            LOGF(eWARNING, "shader stage none for %s", fileName);
         }
 
         binaryDesc.mStages |= stage;
@@ -4453,7 +4461,7 @@ void addShader(Renderer* pRenderer, const ShaderLoadDesc* pDesc, Shader** ppShad
 /************************************************************************/
 void loadPipelineCache(Renderer* pRenderer, const PipelineCacheLoadDesc* pDesc, PipelineCache** ppPipelineCache)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
 #if defined(DIRECT3D12) || defined(VULKAN)
 
     char rendererApi[FS_MAX_PATH] = {};
@@ -4510,7 +4518,7 @@ void loadPipelineCache(Renderer* pRenderer, const PipelineCacheLoadDesc* pDesc, 
 
 void savePipelineCache(Renderer* pRenderer, PipelineCache* pPipelineCache, PipelineCacheSaveDesc* pDesc)
 {
-    LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
+    //LOGF(eWARNING, "%s %s %i", __FILE__, __FUNCTION__, __LINE__);
 #if defined(DIRECT3D12) || defined(VULKAN)
 
     char rendererApi[FS_MAX_PATH] = {};
