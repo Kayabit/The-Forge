@@ -533,7 +533,6 @@ target_include_directories(The-Forge PUBLIC $<$<PLATFORM_ID:Windows>:$ENV{VULKAN
 target_link_libraries(
     The-Forge
     PUBLIC # Windows-specific libraries
-           $<$<PLATFORM_ID:Windows>:$ENV{VULKAN_SDK}/Lib/vulkan-1.lib>
            $<$<PLATFORM_ID:Windows>:Xinput>
            $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/DirectXShaderCompiler/lib/x64/dxcompiler.lib>
            $<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Graphics/ThirdParty/OpenSource/ags/ags_lib/lib/amd_ags_x64.lib>
@@ -544,6 +543,7 @@ target_link_libraries(
            $<$<PLATFORM_ID:Linux>:${LIBUDEV_LIBRARIES}>
            $<$<PLATFORM_ID:Linux>:${X11_LIBRARIES}>
            $<$<PLATFORM_ID:Linux>:${XRANDR_LIBRARIES}>
+           $<$<PLATFORM_ID:Linux>:$ENV{VULKAN_SDK}/Lib/vulkan-1.lib>
            # macOS-specific libraries (excluding iOS)
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${APPKIT_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREFOUNDATION_LIBRARY}>
