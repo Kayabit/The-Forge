@@ -324,14 +324,7 @@ set(C_SRC
 )
 
 if(WIN32)
-    set(FSL_LANGUAGES "DIRECT3D12" "DIRECT3D11" "VULKAN")
-    if(NOT DEFINED ENV{VULKAN_SDK})
-        message(FATAL_ERROR "Please install Vulkan SDK!")
-    endif()
-
-    # need to find vulkan headers
-    message(STATUS "Vulkan SDK found at $ENV{VULKAN_SDK}, adding include directories... $ENV{VULKAN_SDK}/include")
-    include_directories($ENV{VULKAN_SDK}/include)
+    set(FSL_LANGUAGES "DIRECT3D12" "DIRECT3D11")
 
     list(
         APPEND
