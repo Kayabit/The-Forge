@@ -414,6 +414,8 @@ if(APPLE)
         )
         set(OBJC_SRC Common_3/OS/Darwin/iOSAppDelegate.m)
         list(APPEND C_SRC Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c)
+        # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
+        set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
     else() # MACOS
         find_library(APPKIT_LIBRARY AppKit)
         find_library(COREFOUNDATION_LIBRARY CoreFoundation)
@@ -469,12 +471,12 @@ if(APPLE)
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_macos.c
         )
+        # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
+        set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
         # Except GainputMac.mm
         set_source_files_properties(Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputMac.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
         set_source_files_properties(Common_3/Utilities/ThirdParty/OpenSource/rmem/3rd/lz4-r191/lz4.c PROPERTIES COMPILE_FLAGS "-Wno-implicit-function-declaration")
     endif()
-    # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
-    set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
 endif()
 
 if(ANDROID)
