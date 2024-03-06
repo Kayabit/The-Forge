@@ -253,8 +253,6 @@ set(CPP_SRC
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/lodepng.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/basisu_transcoder.cpp
     Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_os.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
     Common_3/Utilities/Threading/ThreadSystem.cpp
     Middleware_3/PaniniProjection/Panini.cpp
     Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
@@ -348,6 +346,8 @@ if(WIN32)
         Common_3/Utilities/ThirdParty/OpenSource/basis_universal/contrib/previewers/win/helpers.cpp
         Common_3/Utilities/ThirdParty/OpenSource/basis_universal/contrib/previewers/win/previewers.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
     )
     list(
         APPEND
@@ -383,6 +383,8 @@ if(LINUX)
         Common_3/OS/Linux/LinuxWindow.cpp
         Common_3/Utilities/FileSystem/UnixFileSystem.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
     )
     list(
         APPEND
@@ -460,9 +462,15 @@ if(APPLE)
             Middleware_3/PaniniProjection/Panini.cpp
             Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
         )
-        list(APPEND CPP_SRC Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboardMac.cpp
-             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp Common_3/Utilities/FileSystem/UnixFileSystem.cpp
-             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
+        list(
+            APPEND
+            CPP_SRC
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboardMac.cpp
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp
+            Common_3/Utilities/FileSystem/UnixFileSystem.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
         )
         list(
             APPEND
