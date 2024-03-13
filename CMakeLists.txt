@@ -233,10 +233,6 @@ set(CPP_SRC
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/red_black_tree.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/string.cpp
     Common_3/Utilities/ThirdParty/OpenSource/EASTL/thread_support.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTThreadContext.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_astc_decomp.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_backend.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_basis_file.cpp
@@ -348,6 +344,10 @@ if(WIN32)
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTThreadContext.cpp
     )
     list(
         APPEND
@@ -385,6 +385,10 @@ if(LINUX)
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTThreadContext.cpp
     )
     list(
         APPEND
@@ -438,7 +442,15 @@ if(APPLE)
         )
         set(OBJC_SRC Common_3/OS/Darwin/iOSAppDelegate.m)
         list(APPEND C_SRC Common_3/OS/Darwin/DarwinThread.c Common_3/OS/Darwin/DarwinLog.c Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c)
-        list(APPEND CPP_SRC Common_3/Utilities/FileSystem/UnixFileSystem.cpp)
+        list(
+            APPEND
+            CPP_SRC
+            Common_3/Utilities/FileSystem/UnixFileSystem.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTThreadContext.cpp
+        )
         # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
         set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
         set_source_files_properties(${OBJC_SRC} PROPERTIES COMPILE_FLAGS "-fobjc-arc")
@@ -499,6 +511,10 @@ if(APPLE)
             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
+            Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTThreadContext.cpp
         )
         list(
             APPEND
@@ -531,11 +547,16 @@ if(ANDROID)
         Common_3/OS/Android/AndroidToolsFileSystem.cpp
         Common_3/OS/Android/AndroidWindow.cpp
         Common_3/OS/Android/android_native_app_glue.c
-        Common_3/OS/Quest/VrApi.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
-        Common_3/Utilities/ThirdParty/OpenSource/ModifiedSonyMath/scalar/vectormath.hpp
+        Common_3/Utilities/ThirdParty/OpenSource/ModifiedSonyMath/scalar/vector.hpp
+        Common_3/Utilities/FileSystem/UnixFileSystem.cpp
+        Common_3/Graphics/OpenGLES/GLES.cpp
+        Common_3/Graphics/OpenGLES/EGLContextCreator.cpp
+        Common_3/Graphics/OpenGLES/GLESShaderReflection.cpp
     )
-    list(APPEND C_SRC Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_linux_or_android.c Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_linux_or_android.c)
+    list(APPEND C_SRC Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_linux_or_android.c Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_linux_or_android.c
+         Common_3/OS/ThirdParty/OpenSource/cpu_features/src/hwcaps.c
+    )
 endif()
 
 set(SRC ${CPP_SRC} ${C_SRC} ${OBJCPP_SRC} ${OBJC_SRC})

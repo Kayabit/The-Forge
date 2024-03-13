@@ -253,6 +253,9 @@ public:
     //
     static inline const Vector3 zAxis();
 
+    static inline const Vector3 zero();
+
+    static inline const Vector3 one();
 } VECTORMATH_ALIGNED_TYPE_POST;
 
 // Multiply a 3-D vector by a scalar
@@ -379,10 +382,6 @@ inline const Vector3 xorPerElem(const Vector3& a, const float b);
 // Tests if the components x, y and z of _v forms a normalized vector.
 //
 inline bool isNormalizedEst(const Vector3& v);
-
-inline const Vector3 zero();
-
-inline const Vector3 one();
 
 #ifdef VECTORMATH_DEBUG
 
