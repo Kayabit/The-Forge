@@ -50,7 +50,7 @@ set(CPP_SRC
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/gestures/GainputRotateGesture.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/gestures/GainputSimultaneouslyDownGesture.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/gestures/GainputTapGesture.cpp
-    Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHID.cpp
+    # Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHID.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHIDWhitelist.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserPS4Controller.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserPS5Controller.cpp
@@ -405,20 +405,48 @@ endif()
 if(APPLE)
     if(IOS)
         set(FSL_LANGUAGES "IOS")
+        find_library(IOKIT_LIBRARY IOKit)
+        find_library(MPS_LIBRARY MetalPerformanceShaders)
+        find_library(CORE_HAPTICS_LIBRARY CoreHaptics)
         set(OBJCPP_SRC
+            Common_3/Application/Profiler/GpuProfiler.cpp
+            Common_3/Application/Profiler/ProfilerBase.cpp
+            Common_3/Application/Screenshot.cpp
+            Common_3/Application/InputSystem.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputIos.mm
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/builtin/GainputInputDeviceBuiltInIos.mm
+            # Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/builtin/GainputInputDeviceBuiltInIos.mm
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadIos.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/touch/GainputInputDeviceTouch.cpp
+            Common_3/Application/UI/UI.cpp
+            Common_3/Application/Fonts/FontSystem.cpp
+            Common_3/Game/Scripting/LuaSystem.cpp
+            Common_3/Graphics/Metal/MetalRaytracing.mm
+            Common_3/Graphics/Metal/MetalRenderer.mm
+            Common_3/Graphics/Metal/MetalShaderReflection.mm
+            Common_3/Graphics/GPUConfig.cpp
+            Common_3/Graphics/Graphics.cpp
+            Common_3/Graphics/CommonShaderReflection.cpp
+            Common_3/Graphics/DependencyTracking.cpp
             Common_3/OS/Darwin/iOSBase.mm
             Common_3/OS/Darwin/iOSToolsFileSystem.mm
             Common_3/OS/Darwin/iOSWindow.mm
+            Common_3/OS/Darwin/CocoaFileSystem.mm
+            Common_3/Resources/AnimationSystem/Animation/SkeletonBatcher.cpp
+            Common_3/Resources/ResourceLoader/ResourceLoader.cpp
             Middleware_3/PaniniProjection/Panini.cpp
             Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
         )
         set(OBJC_SRC Common_3/OS/Darwin/iOSAppDelegate.m)
-        list(APPEND C_SRC Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c)
+        list(APPEND C_SRC Common_3/OS/Darwin/DarwinThread.c Common_3/OS/Darwin/DarwinLog.c Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c)
+        list(APPEND CPP_SRC Common_3/Utilities/FileSystem/UnixFileSystem.cpp)
         # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
         set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
+        set_source_files_properties(${OBJC_SRC} PROPERTIES COMPILE_FLAGS "-fobjc-arc")
+        set_source_files_properties(Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadIos.mm PROPERTIES COMPILE_FLAGS "-fno-objc-arc")
+        set_source_files_properties(
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/builtin/GainputInputDeviceBuiltInIos.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputIos.mm PROPERTIES COMPILE_FLAGS "-fno-objc-arc"
+        )
     else() # MACOS
         find_library(APPKIT_LIBRARY AppKit)
         find_library(COREFOUNDATION_LIBRARY CoreFoundation)
@@ -505,6 +533,7 @@ if(ANDROID)
         Common_3/OS/Android/android_native_app_glue.c
         Common_3/OS/Quest/VrApi.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
+        Common_3/Utilities/ThirdParty/OpenSource/ModifiedSonyMath/scalar/vectormath.hpp
     )
     list(APPEND C_SRC Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_linux_or_android.c Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_linux_or_android.c)
 endif()
@@ -539,10 +568,9 @@ target_include_directories(
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Include/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/
+           $<$<PLATFORM_ID:Android>:${ANDROID_NDK}/sources/android/native_app_glue/>
+           $<$<PLATFORM_ID:Linux>:${GTK3_INCLUDE_DIRS}>
 )
-
-# Common include directories
-target_include_directories(The-Forge PUBLIC $<$<PLATFORM_ID:Windows>:$ENV{VULKAN_SDK}/Include> $<$<PLATFORM_ID:Linux>:${GTK3_INCLUDE_DIRS}>)
 
 # Link libraries for Windows, Linux, and macOS
 target_link_libraries(
@@ -564,10 +592,12 @@ target_link_libraries(
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREFOUNDATION_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREGRAPHICS_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREVIDEO_LIBRARY}>
-           $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${IOKIT_LIBRARY}>
+           $<$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:iOS>>:${IOKIT_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${METAL_LIBRARY}>
-           $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${MPS_LIBRARY}>
+           $<$<OR:$<PLATFORM_ID:Darwin>,$<PLATFORM_ID:iOS>>:${MPS_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${QUARTZCORE_LIBRARY}>
+           # iOS-specific libraries
+           $<$<PLATFORM_ID:iOS>:${CORE_HAPTICS_LIBRARY}>
 )
 
 if(BUILD_EXAMPLES)

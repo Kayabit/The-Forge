@@ -1196,7 +1196,7 @@ withConfig:(gainput::GestureConfig&)gestureConfig
 	self.pHapticEngine.isMutedForAudio = true;
 	self.pHapticEngine.playsHapticsOnly = true;
 
-	__weak IOSHapticMotor* weakSelf = self;
+        __unsafe_unretained IOSHapticMotor* weakSelf = self;
 	self.pHapticEngine.stoppedHandler = ^(CHHapticEngineStoppedReason stoppedReason) {
 		IOSHapticMotor *_this = weakSelf;
 		if (_this == nil) {
