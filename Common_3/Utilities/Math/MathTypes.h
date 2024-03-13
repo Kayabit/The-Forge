@@ -39,7 +39,10 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wstrict-aliasing"
 #endif
+#ifdef __ANDROID__
 #include "../ThirdParty/OpenSource/ModifiedSonyMath/neon/vectormath.hpp"
+using FloatInVec = Vectormath::Neon::FloatInVec;
+#endif
 #include "../ThirdParty/OpenSource/ModifiedSonyMath/vectormath.hpp"
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop

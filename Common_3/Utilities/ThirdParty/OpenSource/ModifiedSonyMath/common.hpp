@@ -2442,10 +2442,10 @@ inline void decomposeMatrix(const Matrix4& matrix, Vector3& translation, Vector4
 		}
 	}
 	// Based on http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/christian.htm
-        rotation.setW(sqrt((Neon::FloatInVec)max(0.0f, 1 + matrix[0][0] + matrix[1][1] + matrix[2][2])) / 2);
-        rotation.setX(sqrt((Neon::FloatInVec)max(0.0f, 1 + matrix[0][0] - matrix[1][1] - matrix[2][2])) / 2);
-        rotation.setY(sqrt((Neon::FloatInVec)max(0.0f, 1 - matrix[0][0] + matrix[1][1] - matrix[2][2])) / 2);
-        rotation.setZ(sqrt((Neon::FloatInVec)max(0.0f, 1 - matrix[0][0] - matrix[1][1] + matrix[2][2])) / 2);
+        rotation.setW(sqrt((FloatInVec)max(0.0f, 1 + matrix[0][0] + matrix[1][1] + matrix[2][2])) / 2);
+        rotation.setX(sqrt((FloatInVec)max(0.0f, 1 + matrix[0][0] - matrix[1][1] - matrix[2][2])) / 2);
+        rotation.setY(sqrt((FloatInVec)max(0.0f, 1 - matrix[0][0] + matrix[1][1] - matrix[2][2])) / 2);
+        rotation.setZ(sqrt((FloatInVec)max(0.0f, 1 - matrix[0][0] - matrix[1][1] + matrix[2][2])) / 2);
 }
 
 inline const Vector3 eulerAngles(const Matrix3& rotationMatrix)
