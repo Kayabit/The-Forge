@@ -321,6 +321,7 @@ if(WIN32)
     list(
         APPEND
         CPP_SRC
+        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHID.cpp
         Common_3/Graphics/Direct3D11/Direct3D11.cpp
         Common_3/Graphics/Direct3D11/Direct3D11Raytracing.cpp
         Common_3/Graphics/Direct3D11/Direct3D11ShaderReflection.cpp
