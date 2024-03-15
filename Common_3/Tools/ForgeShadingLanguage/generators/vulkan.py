@@ -1,7 +1,7 @@
 """ GLSL shader generation """
 
-from utils import Stages, getHeader, getMacro, Platforms, getShader, getMacroName, get_whitespace
-from utils import isArray, getArrayLen, StageFlags, getArrayBaseName, fsl_assert, ShaderBinary
+from utils import Stages, getHeader, getMacro, genFnCall, getShader, getMacroName, get_whitespace
+from utils import isArray, getArrayLen, resolveName, getArrayBaseName, fsl_assert
 from utils import is_input_struct, get_input_struct_var, getArrayLenFlat, is_groupshared_decl
 import os, sys, re
 from shutil import copyfile
@@ -147,31 +147,13 @@ def declare_rw_texture(fsl_declaration):
         access, ' uniform ', tex_type, ' ', tex_name, ';\n'
     ]
 
-def quest(*args):
-    return glsl(Platforms.QUEST, *args)
+def vulkan(fsl, dst):
 
-def vulkan(*args):
-    return glsl(Platforms.VULKAN, *args)
+    shader = getShader(fsl, dst)
 
-def switch(*args):
-    return glsl(Platforms.SWITCH, *args)
-
-def android(*args):
-    return glsl(Platforms.ANDROID, *args)
-
-def glsl(platform: Platforms, debug, binary: ShaderBinary, dst):
-
-    binary.derivatives[platform] = [['VK_EXT_DESCRIPTOR_INDEXING_ENABLED=0', 'VK_FEATURE_TEXTURE_ARRAY_DYNAMIC_INDEXING_ENABLED=0']]
-
-    shader = getShader(platform, binary.fsl_filepath, binary.preprocessed_srcs[platform], dst)
-
-    shader_src = getHeader(binary.preprocessed_srcs[platform])
+    shader_src = getHeader(fsl)
     shader_src += [ '#version 450 core\n', '#extension GL_GOOGLE_include_directive : require\nprecision highp float;\nprecision highp int;\n\n']
     shader_src += ['#define STAGE_', shader.stage.name, '\n']
-    if Platforms.QUEST == platform:
-        shader_src += ['#define TARGET_QUEST\n']
-        if StageFlags.VR_MULTIVIEW in binary.flags:
-            shader_src += ['#define VR_MULTIVIEW_ENABLED 1\n']
 
     if shader.enable_waveops:
         shader_src += ['#define ENABLE_WAVEOPS()\n']
@@ -241,6 +223,7 @@ def glsl(platform: Platforms, debug, binary: ShaderBinary, dst):
     input_assignments = []
     return_assignments = []
 
+    shader_src += ['#line 1 \"'+fsl.replace(os.sep, '/')+'\"\n']
     line_index = 0
 
     for line in shader.lines:
@@ -256,10 +239,6 @@ def glsl(platform: Platforms, debug, binary: ShaderBinary, dst):
         # dont process commented lines
         if line.strip().startswith('//'):
             shader_src += [line]
-            continue
-        
-        if '@fsl_extension' in line:
-            shader_src += [line.replace('@fsl_extension', '#extension')]
             continue
 
         # TODO: handle this differently
@@ -504,7 +483,7 @@ def glsl(platform: Platforms, debug, binary: ShaderBinary, dst):
         resource_decl = None
         if line.strip().startswith('RES('):
             resource_decl = getMacro(line)
-            fsl_assert(len(resource_decl) == 5, binary.fsl_filepath, message='invalid Res declaration: \''+line+'\'')
+            fsl_assert(len(resource_decl) == 5, fsl, message='invalid Res declaration: \''+line+'\'')
             basename = getArrayBaseName(resource_decl[1])
             shader_src += ['#define _Get' + basename + ' ' + basename + '\n']
         
@@ -526,17 +505,13 @@ def glsl(platform: Platforms, debug, binary: ShaderBinary, dst):
             index, max_index = getMacro(line), None
             assert index != [], 'No index provided for {}'.format(line)
             if type(index) == list:
-                max_index = ''.join( [c for c in index[1].strip() if c.isdigit()] )
+                max_index = index[1]
                 index = index[0]
             nonuniformresourceindex = index
+            # if type(max_index) is str:
             if max_index and not max_index.isnumeric():
                 max_index = ''.join(c for c in shader.defines[max_index] if c.isdigit())
             shader_src += BeginNonUniformResourceIndex(nonuniformresourceindex, max_index)
-            binary.derivatives[platform] += [
-                ['VK_EXT_DESCRIPTOR_INDEXING_ENABLED=0', 'VK_FEATURE_TEXTURE_ARRAY_DYNAMIC_INDEXING_ENABLED=1'],
-                ['VK_EXT_DESCRIPTOR_INDEXING_ENABLED=1', 'VK_FEATURE_TEXTURE_ARRAY_DYNAMIC_INDEXING_ENABLED=0'],
-                ['VK_EXT_DESCRIPTOR_INDEXING_ENABLED=1', 'VK_FEATURE_TEXTURE_ARRAY_DYNAMIC_INDEXING_ENABLED=1'],
-            ]
             continue
         if 'EndNonUniformResourceIndex()' in line:
             assert nonuniformresourceindex, 'EndNonUniformResourceIndex: BeginNonUniformResourceIndex not called/found'
@@ -674,4 +649,4 @@ def glsl(platform: Platforms, debug, binary: ShaderBinary, dst):
         shader_src += [line]
 
     open(dst, 'w').writelines(shader_src)
-    return 0, []
+    return 0

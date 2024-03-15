@@ -1,9 +1,9 @@
 """ metal shader generation """
 
 from utils import Stages, getHeader, getShader, getMacro, genFnCall, getMacroName, isBaseType
-from utils import isArray, getArrayLen , getArrayBaseName, resolveName, DescriptorSets, dictAppendList, ShaderTarget
-from utils import is_input_struct, get_input_struct_var, fsl_assert, get_whitespace, get_array_dims, Platforms, ShaderBinary
-from utils import get_array_decl, visibility_from_stage, get_fn_table, is_groupshared_decl, collect_shader_decl
+from utils import isArray, getArrayLen , getArrayBaseName, resolveName, DescriptorSets, dictAppendList
+from utils import is_input_struct, get_input_struct_var, fsl_assert, get_whitespace, get_array_dims
+from utils import get_array_decl, visibility_from_stage, get_fn_table, is_groupshared_decl
 import os, sys, re
 from shutil import copyfile
 
@@ -31,28 +31,13 @@ def get_mtl_patch_type(tessellation_layout):
     fsl_assert(domain in mtl_patch_types, message='Cannot map domain to mtl patch type: ' + domain)
     return mtl_patch_types[domain]
 
-def ios(*args):
-    return metal(Platforms.IOS, *args)
+def metal(fsl, dst):
 
-def macos(*args):
-    return metal(Platforms.MACOS, *args)
-
-class Opts:
-    def __init__(self, debug):
-        self.incremental = False
-        self.debug = debug
-        self.includes = None
-
-def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
-
-    fsl = binary.preprocessed_srcs[platform]
-
-    shader = getShader(platform, binary.fsl_filepath, fsl, dst)
+    shader = getShader(fsl, dst)
     msl_target = targetToMslEntry[shader.stage]
 
     shader_src = getHeader(fsl)
     shader_src += ['#define METAL\n']
-    shader_src += [f'#define TARGET_{platform.name}\n']    
 
     if shader.enable_waveops:
         shader_src += ['#define ENABLE_WAVEOPS()\n']
@@ -65,7 +50,9 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
     #     copyfile(incPath, dstInc)
         
     # directly embed metal header in shader
-    shader_src += ['#include "includes/metal.h"\n']
+    header_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'includes', 'metal.h')
+    header_lines = open(header_path).readlines()
+    shader_src += header_lines + ['\n']
 
     def getMetalResourceID(dtype: str, reg: str) -> str:
         S_OFFSET, U_OFFSET, B_OFFSET = 1024, 1024*2, 1024*3
@@ -112,13 +99,8 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
 
     # transform VS entry into callable fn
     if shader.stage == Stages.TESC:
-        vsb = ShaderBinary()
-        vsb.stage = Stages.VERT
-        vsb.filename = shader.vs_reference
-        o = Opts(debug)
-        vertex_shader_decl, _ = collect_shader_decl(o, shader.vs_reference, [platform], None, None, [ vsb ])
-        vertex_shader_source = vertex_shader_decl[0].preprocessed_srcs[platform]
-        vertex_shader = getShader(platform, shader.vs_reference, vertex_shader_source, dst)
+
+        vertex_shader = getShader(shader.vs_reference)
         vs_main, vs_parsing_main = [], -2
 
         struct = None
@@ -280,17 +262,24 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
             if not elements: continue
 
             # make AB declaration only active if any member is defined
+            resource_conditions = ' || '.join('defined('+macro+')' for macro, elem in elements)
+            ab_decl += ['#if ', resource_conditions , '\n']
             ab_macro = get_uid(argBufType)
+            ab_decl += ['\t#define ', ab_macro, '\n']
             space = 'constant'
             mainArgs += [(ab_macro, [space, ' struct ', argBufType, '& ', argBufType, '[[buffer({})]]'.format(freq)])]
 
             ab_decl += ['\tstruct ', argBufType, '\n\t{\n']
             for macro, elem in elements:
+                ab_decl += ['\t\t#ifdef ', macro, '\n']
                 ab_decl += ['\t\t', *elem, ';\n']
+                ab_decl += ['\t\t#endif\n']
 
             ab_decl += ['\t};\n']
+            ab_decl += ['#endif // End of Resource Declaration: ', argBufType, '\n']
         return ab_decl
 
+    shader_src += ['#line 1 \"'+fsl.replace(os.sep, '/')+'\"\n']
     line_index = 0
     
     last_res_decl = 0
@@ -347,6 +336,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
                 sem = sem.upper()
                 base_name = getArrayBaseName(name)
                 macro = get_uid(base_name)
+                shader_src += ['#define ', macro, '\n']
 
                 output_semantic = ''
                 if 'SV_POSITION' in sem:
@@ -373,6 +363,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
                 dtype, name, sem = getMacro(line)
                 sem = sem.upper()
                 macro = get_uid(getArrayBaseName(name))
+                shader_src += ['#define ', macro, '\n']
                 # for vertex shaders, use the semantic as attribute name (for name-based reflection)
                 n2 = sem if shader.stage == Stages.VERT else getArrayBaseName(name)
                 if isArray(name):
@@ -417,6 +408,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
             dt, name, sem = getMacro(line)
             element_basename = getArrayBaseName(name)
             macro = get_uid(element_basename)
+            shader_src += ['#define ', macro, '\n']
 
             if parsing_cbuffer:
                 elemen_path = parsing_cbuffer[0] + '.' + element_basename
@@ -443,6 +435,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
             shader_src += ['\n\t// Metal GroupShared Declaration: ', basename, '\n']
 
             macro = get_uid(basename)
+            shader_src += ['#define ', macro, '\n']
             entry_declarations += [(macro, ['threadgroup {} {};'.format(dtype, dname)])]
 
             array_decl = get_array_decl(dname)
@@ -459,6 +452,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
         if 'PUSH_CONSTANT' in line:
             parsing_pushconstant = tuple(getMacro(line))
             struct_uid = get_uid(parsing_pushconstant[0])
+            shader_src += ['#define ', struct_uid, '\n']
 
         if '};' in line and parsing_pushconstant:
 
@@ -481,6 +475,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
             parsing_cbuffer = tuple(getMacro(line))
             cbuffer_decl = parsing_cbuffer
             struct_uid = get_uid(cbuffer_decl[0])
+            shader_src += ['#define ', struct_uid, '\n']
 
         if '};' in line and parsing_cbuffer:
             shader_src += [line]
@@ -517,6 +512,7 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
             resType, resName, freq, dxreg = resource[:4]
             baseName = getArrayBaseName(resName)
             macro = get_uid(baseName)
+            shader_src += ['#define ', macro, '\n']
 
             is_embedded = freq in ab_elements and freq != 'UPDATE_FREQ_USER'
 
@@ -660,8 +656,10 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
                 prefix = '\t,'
 
             for macro, arg in mainArgs:
+                shader_src += ['#ifdef ', macro, '\n']
                 shader_src += [prefix, *arg, '\n']
                 prefix = '\t,'
+                shader_src += ['#endif\n']
 
             shader_src += [')\n']
             shader_src += ['#line {}\n'.format(line_index)]
@@ -670,7 +668,9 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
         if 'INIT_MAIN' in line:
 
             for macro, entry_declaration in entry_declarations:
+                shader_src += ['#ifdef ', macro,'\n']
                 shader_src += ['\t', *entry_declaration, '\n']
+                shader_src += ['#endif\n']
 
             if shader.stage == Stages.TESC:
                 # fetch VS data, call VS main
@@ -794,4 +794,5 @@ def metal(platform: Platforms, debug, binary: ShaderBinary, dst):
                 shader_src[i] = line
 
     open(dst, 'w').writelines(shader_src)
-    return 0, []
+    # sys.exit(0)
+    return 0

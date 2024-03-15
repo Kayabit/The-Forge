@@ -1,7 +1,7 @@
 """ GLSL shader generation """
 
-from utils import Platforms, Stages, getHeader, getMacro, genFnCall, getShader, getMacroName, get_whitespace
-from utils import isArray, getArrayLen, resolveName, getArrayBaseName, fsl_assert, ShaderBinary
+from utils import Stages, getHeader, getMacro, genFnCall, getShader, getMacroName, get_whitespace
+from utils import isArray, getArrayLen, resolveName, getArrayBaseName, fsl_assert
 from utils import is_input_struct, get_input_struct_var, getArrayLenFlat, is_groupshared_decl
 import os, sys, re, math
 from shutil import copyfile
@@ -243,11 +243,9 @@ def setUBOConversion(elem_dtype, ubo_name, float_offset, float_stride, is_array,
     out += ')'
     return out
 
-def gles(debug, binary: ShaderBinary, dst):
+def gles(fsl, dst):
 
-    fsl = binary.preprocessed_srcs[Platforms.GLES]
-
-    shader = getShader(Platforms.GLES, binary.fsl_filepath, fsl, dst, line_directives=False)
+    shader = getShader(fsl, dst, line_directives=False)
 
     #Only vertex and fragment shaders are valid for OpenGL ES 2.0
     if shader.stage != Stages.VERT and shader.stage != Stages.FRAG:
@@ -260,9 +258,6 @@ def gles(debug, binary: ShaderBinary, dst):
     shader_src += ['#define GLES\n']
 
     header_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'includes', 'gles.h')
-    gles_includes = {header_path: 0}
-
-    shader_src += [f'#line 0 {gles_includes[header_path]} //{header_path}\n']
     header_lines = open(header_path).readlines()
     shader_src += header_lines + ['\n']
 
@@ -347,23 +342,7 @@ def gles(debug, binary: ShaderBinary, dst):
         result += 'uniform float4 {}[{}];\n'.format(name, str(default_max_buffer_size))
         return result
 
-    line_index = 0
-    current_src = binary.fsl_filepath
-
     for line in shader.lines:
-
-        line_index += 1
-        shader_src_len = len(shader_src)
-
-        if line.startswith('#line'):
-            l, s = line.split(maxsplit=2)[1:]
-            if s not in gles_includes:
-                gles_includes[s] = len(gles_includes)
-            include_index = gles_includes[s]
-            shader_src += [f'#line {l} {include_index} //{s}']
-            line_index = int(l) - 1
-            current_src = s
-            continue
 
         def get_uid(name):
             return '_' + name + '_' + str(len(shader_src))
@@ -406,7 +385,6 @@ def gles(debug, binary: ShaderBinary, dst):
                 shader_src += ['#ifdef ', macro, '\n']
                 shader_src += [*struct_declaration, '\n']
                 shader_src += ['#endif\n']
-            shader_src += [f'#line {line_index} {gles_includes[current_src]} //{current_src}\n']
             struct_declarations = []
 
             parsing_struct = None
@@ -623,7 +601,6 @@ def gles(debug, binary: ShaderBinary, dst):
                 #shader_src += ['layout(vertices = ', patch_size, ') out;\n']
 
             shader_src += ['void main()\n']
-            shader_src += [f'#line {line_index} {gles_includes[current_src]} //{current_src}\n']
             parsed_entry = True
             continue
 
@@ -646,7 +623,6 @@ def gles(debug, binary: ShaderBinary, dst):
                 
             output_statement += [ws+'}\n']
             shader_src += output_statement
-            shader_src += [f'#line {line_index} {gles_includes[current_src]} //{current_src}\n']
             continue
 
         if 'INIT_MAIN' in line:
@@ -673,7 +649,6 @@ def gles(debug, binary: ShaderBinary, dst):
                 innertype = getMacro(dtype)
                 semtype = getMacroName(dtype)
                 shader_src += ['\t'+innertype+' '+dvar+' = '+innertype+'('+semtype.upper()+');\n']
-            shader_src += [f'#line {line_index} {gles_includes[current_src]} //{current_src}\n']
 
             ''' generate a statement for each vertex attribute
                 this should not be necessary, but it influences
@@ -702,10 +677,7 @@ def gles(debug, binary: ShaderBinary, dst):
                 return matchReg.group(0)[:2] + '0'
             return matchReg.group(0)[0]
 
-        if shader_src_len != len(shader_src):
-            shader_src += [f'#line {line_index} {gles_includes[current_src]} //{current_src}\n']
-
         shader_src += [re.sub('\d\.?f', replacef, updatedline)]
 
     open(dst, 'w').writelines(shader_src)
-    return 0, []
+    return 0
