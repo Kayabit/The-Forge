@@ -104,7 +104,7 @@ enum
 
 // Enable graphics debug if general debug is turned on
 #ifdef FORGE_DEBUG
-#define ENABLE_GRAPHICS_DEBUG
+//#define ENABLE_GRAPHICS_DEBUG
 #endif
 
 #ifdef NSIGHT_AFTERMATH_AVAILABLE
