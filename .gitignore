@@ -62,3 +62,4 @@ Tools/ShaderBuildCommand/packages/
 Common_3/Tools/ForgeShadingLanguage/*/*.pyc
 Common_3/Tools/ForgeShadingLanguage/*/*/*.pyc
 Examples_3/Unit_Tests/UnitTestResources
+__pycache__/
