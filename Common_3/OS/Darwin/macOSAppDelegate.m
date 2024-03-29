@@ -43,6 +43,17 @@ static IOPMAssertionID systemSleepAssertionID, displaySleepAssertionID;
     void (^drawBlock)(void);
 }
 
+// AP: probable fix for 'WARNING: Secure coding is automatically enabled for restorable state! 
+//  However, not on all supported macOS versions of this application. Opt-in to secure coding 
+//  explicitly by implementing NSApplicationDelegate.applicationSupportsSecureRestorableState:.'
+// https://stackoverflow.com/questions/77283578/sonoma-and-nsapplicationdelegate-applicationsupportssecurerestorablestate
+// will apply for macosx 12.0+
+// https://developer.apple.com/documentation/appkit/nsapplicationdelegate/3762521-applicationsupportssecurerestora
+// I don't think we need any fancy @if() conditional check; I think on macos < 12 it just doesn't get called/used
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
+    return YES;
+}
+
 -(void) drawFunc
 {
     [myController draw];

@@ -39,6 +39,10 @@
 
 @implementation AppDelegate
 
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
+    return YES;
+}
+
 -(void) drawFunc
 {
     [myController draw];
