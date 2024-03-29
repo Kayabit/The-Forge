@@ -18,9 +18,6 @@ class BuildboxForgeConanfile(ConanFile):
     settings = "os", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}    
-    # see notes in Potion conanfile.py about this
-    #options = {"mac_universal": [True, False], "shared": [True, False]}
-    #default_options = {"mac_universal": False, "shared": False}
 
     def configure(self):
         pass
@@ -34,9 +31,6 @@ class BuildboxForgeConanfile(ConanFile):
             deps = CMakeDeps(self)
             deps.generate()
             tc = CMakeToolchain(self)
-            #if self.settings.os == 'Macos' and self.options.mac_universal:
-            #    # NB: apparently conan doesn't respect well the CMAKE_OSX_ARCHITECTURES setting, so you have to use this 'feature'
-            #    tc.blocks["apple_system"].values["cmake_osx_architectures"] = "x86_64;arm64"
             tc.generate()
         except Exception as e:
             print(f"Error in forge conanfile generate(): {e}")
