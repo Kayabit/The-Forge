@@ -7,6 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cma
 OPTION(GENERATE_DEBUG_SYMBOLS "Always generate dSYM and pdb files, even if making a release build" OFF)
 
 # have to do some conan setup that usually happens in the root cmakelists
+message(STATUS "Setting up Conan for The-Forge cmakeosx arch ${CMAKE_OSX_ARCHITECTURES}")
 include(BuildboxConan)
 setup_conan()
 
@@ -14,6 +15,8 @@ setup_conan()
 include_conan()
 
 project(The-Forge LANGUAGES CXX C)
+
+message(STATUS "After project() for The-Forge cmakeosx arch ${CMAKE_OSX_ARCHITECTURES}")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
