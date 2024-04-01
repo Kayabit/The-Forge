@@ -3524,9 +3524,10 @@ bool load_shader_stage_byte_code(
 
     // Makarand, Feb24: commented out the if(macroCount == 0) block of code. (Else compiled
     // shaders i.e. .bin files having macroCount == 0 wont form.)
-	/* // If there are no macros specified there's no change to the shader source, we can use the binary compiled by FSL offline.
+		// AP, Mar24: reinstated for offline shader gen approach
 	if (macroCount == 0)
 	{
+		LOGF(eINFO, "Using prebuilt shader: %s -> '%s' macroCount=%u", getRendererAPIName(), loadDesc.pFileName, macroCount);
 #if defined(GLES)
 		if (gSelectedRendererApi != RENDERER_API_GLES)
 #endif
@@ -3535,7 +3536,7 @@ bool load_shader_stage_byte_code(
 			cleanup();
 			return true;
 		}
-	}*/
+	}
 
 	LOGF(eINFO, "Compiling shader in runtime: %s -> '%s' macroCount=%u", getRendererAPIName(), loadDesc.pFileName, macroCount);
 	
