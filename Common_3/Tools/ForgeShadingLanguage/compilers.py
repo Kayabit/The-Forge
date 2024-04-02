@@ -9,17 +9,17 @@ fsl_basepath = os.path.dirname(__file__)
 _config = {
     Platforms.DIRECT3D11: ('FSL_COMPILER_FXC', 'fxc.exe'),
     Platforms.DIRECT3D12: ('FSL_COMPILER_DXC', 'dxc.exe'),
-    Platforms.VULKAN:     ('VULKAN_SDK', 'Bin/glslangValidator.exe'),
-    Platforms.ANDROID:    ('VULKAN_SDK', 'Bin/glslangValidator.exe'),
-    Platforms.SWITCH:     ('VULKAN_SDK', 'Bin/glslangValidator.exe'),
-    Platforms.QUEST:      ('VULKAN_SDK', 'Bin/glslangValidator.exe'),
+    Platforms.VULKAN:     ('VULKAN_SDK', os.path.join('Bin', 'glslangValidator.exe')),
+    Platforms.ANDROID:    ('VULKAN_SDK', os.path.join('Bin', 'glslangValidator.exe')),
+    Platforms.SWITCH:     ('VULKAN_SDK', os.path.join('Bin', 'glslangValidator.exe')),
+    Platforms.QUEST:      ('VULKAN_SDK', os.path.join('Bin', 'glslangValidator.exe')),
     Platforms.MACOS:      ('FSL_COMPILER_MACOS', 'metal.exe'),
     Platforms.IOS:        ('FSL_COMPILER_IOS', 'metal.exe'),
     Platforms.ORBIS:      ('SCE_ORBIS_SDK_DIR', 'host_tools/bin/orbis-wave-psslc.exe'),
     Platforms.PROSPERO:   ('SCE_PROSPERO_SDK_DIR', 'host_tools/bin/prospero-wave-psslc.exe'),
     Platforms.XBOX:       ('GXDKLATEST', 'bin/XboxOne/dxc.exe'),
     Platforms.SCARLETT:   ('GXDKLATEST', 'bin/Scarlett/dxc.exe'),
-    Platforms.GLES:       ('VULKAN_SDK', 'Bin/glslangValidator.exe'),
+    Platforms.GLES:       ('VULKAN_SDK', os.path.join('Bin', 'glslangValidator.exe')),
 }
 
 def get_available_compilers():
@@ -38,6 +38,7 @@ def get_status(bin, params):
         return subprocess.getstatusoutput([bin] + params)
 
 def get_compiler_from_env(varname, subpath = None, _assert=True):
+    print(f"get_compiler_from_env({varname}, {subpath}, {_assert})")
 
     if os.name == 'posix' and 'metal.exe' in subpath:
         return 'xcrun'
