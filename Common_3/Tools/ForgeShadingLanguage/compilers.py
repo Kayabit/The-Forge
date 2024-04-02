@@ -53,7 +53,7 @@ def get_compiler_from_env(varname, subpath = None, _assert=True):
     compiler = os.environ[varname]
     if subpath: compiler = os.path.join(compiler, subpath)
     if not os.path.exists(compiler):
-        print('WARN: {} doesn\'t exist'.format(compiler))
+        print(f"WARN: {compiler} doesn\'t exist", file=sys.stderr)
         if _assert: assert False
         return None
     return os.path.abspath(compiler)
