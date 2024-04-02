@@ -42,7 +42,7 @@ def get_compiler_from_env(varname, subpath = None, _assert=True):
     if os.name == 'posix' and 'metal.exe' in subpath:
         return 'xcrun'
 
-    if sys.platform == "linux" and 'VULKAN_SDK' in varname:
+    if (sys.platform == "linux" or sys.platform =="darwin") and 'VULKAN_SDK' in varname:
         return "glslangValidator"
 
     if not varname in os.environ:

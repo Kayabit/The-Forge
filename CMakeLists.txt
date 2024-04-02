@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cma
 OPTION(GENERATE_DEBUG_SYMBOLS "Always generate dSYM and pdb files, even if making a release build" OFF)
 
 # have to do some conan setup that usually happens in the root cmakelists
-message(STATUS "Setting up Conan for The-Forge cmakeosx arch ${CMAKE_OSX_ARCHITECTURES}")
+message(STATUS "Setting up Conan for The-Forge cmakeosx arch '${CMAKE_OSX_ARCHITECTURES}' apple='${APPLE}' win32='${WIN32}' android='${ANDROID}' cmakesystemname(place code will run)='${CMAKE_SYSTEM_NAME}' cmakehostsystemname(place code will build, sigh)='${CMAKE_HOST_SYSTEM_NAME}'")
 include(BuildboxConan)
 setup_conan()
 
@@ -598,13 +598,28 @@ endif()
 apply_conan_toolchain(${PROJECT_NAME})
 
 # Suppress compiler warnings
-target_compile_options(
-    The-Forge
-    PUBLIC
-        "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread;>"
-        "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-deprecated-declarations;-Wno-deprecated-builtins;-Wno-unqualified-std-cast-call;-Wno-int-to-pointer-cast;>"
-        "$<$<CXX_COMPILER_ID:MSVC>:/wd4005;/wd4244;/D_CRT_SECURE_NO_WARNINGS>"
-)
+if(ANDROID)
+    # NDK clang acts differently than other clangs it seems
+    target_compile_options(
+        The-Forge
+        PUBLIC
+        -Wno-deprecated-declarations
+#        -Wno-deprecated-builtins
+#        -Wno-unqualified-std-cast-call
+        -Wno-int-to-pointer-cast
+    )
+else()
+    target_compile_options(
+        The-Forge
+        PUBLIC
+            "$<$<CXX_COMPILER_ID:GNU>:-Wno-multichar;-Wno-stringop-overflow;-Wno-builtin-declaration-mismatch;-Wno-int-to-pointer-cast;-Wno-stringop-overread;>"
+            "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-deprecated-declarations;-Wno-deprecated-builtins;-Wno-unqualified-std-cast-call;-Wno-int-to-pointer-cast;>"
+            "$<$<CXX_COMPILER_ID:MSVC>:/wd4005;/wd4244;/D_CRT_SECURE_NO_WARNINGS>"
+    )
+endif()
+
+
+
 if(LINUX)
     set_property(SOURCE ${C_SRC} ${OBJC_SRC} PROPERTY COMPILE_OPTIONS -Wno-implicit-function-declaration)
 endif()

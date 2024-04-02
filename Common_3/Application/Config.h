@@ -215,7 +215,9 @@ COMPILE_ASSERT(sizeof(ssize_t) == sizeof(int64_t));
 	#endif
 
 #elif defined(__ANDROID__)
+#ifndef ANDROID // CMake may have already defined ANDROID=1
 	#define ANDROID
+#endif
 	#define API_EXPORT
 
 #elif defined(__ORBIS__)
