@@ -567,9 +567,12 @@ if(ANDROID)
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
         Common_3/Utilities/ThirdParty/OpenSource/ModifiedSonyMath/scalar/vector.hpp
         Common_3/Utilities/FileSystem/UnixFileSystem.cpp
-        Common_3/Graphics/OpenGLES/GLES.cpp
-        Common_3/Graphics/OpenGLES/EGLContextCreator.cpp
-        Common_3/Graphics/OpenGLES/GLESShaderReflection.cpp
+        #Common_3/Graphics/OpenGLES/GLES.cpp
+        #Common_3/Graphics/OpenGLES/EGLContextCreator.cpp
+        #Common_3/Graphics/OpenGLES/GLESShaderReflection.cpp
+        Common_3/Graphics/Vulkan/Vulkan.cpp
+        Common_3/Graphics/Vulkan/VulkanRaytracing.cpp
+        Common_3/Graphics/Vulkan/VulkanShaderReflection.cpp        
     )
     list(APPEND C_SRC Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_linux_or_android.c Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_linux_or_android.c
          Common_3/OS/ThirdParty/OpenSource/cpu_features/src/hwcaps.c
@@ -595,7 +598,7 @@ endif()
 # if we ever migrate the Forge dependencies into conan that should work too but would take a lot of typing
 # to update apply_conan()
 # since each dependency has to be individually handled in BuildboxConan.cmake as of writing
-apply_conan_toolchain(${PROJECT_NAME})
+apply_conan_theforge(${PROJECT_NAME})
 
 # Suppress compiler warnings
 if(ANDROID)
@@ -656,7 +659,7 @@ target_link_libraries(
            $<$<PLATFORM_ID:Linux>:${LIBUDEV_LIBRARIES}>
            $<$<PLATFORM_ID:Linux>:${X11_LIBRARIES}>
            $<$<PLATFORM_ID:Linux>:${XRANDR_LIBRARIES}>
-           $<$<PLATFORM_ID:Linux>:$ENV{VULKAN_SDK}/Lib/vulkan-1.lib>
+           $<$<PLATFORM_ID:Linux>:$ENV{VULKAN_SDK}/lib/vulkan-1.lib>
            # macOS-specific libraries (excluding iOS)
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${APPKIT_LIBRARY}>
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${COREFOUNDATION_LIBRARY}>
@@ -668,6 +671,8 @@ target_link_libraries(
            $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${QUARTZCORE_LIBRARY}>
            # iOS-specific libraries
            $<$<PLATFORM_ID:iOS>:${CORE_HAPTICS_LIBRARY}>
+           # Android-specific libraries
+           #$<$<PLATFORM_ID:Android>:$ENV{VULKAN_SDK}/lib/libvulkan.1.dylib>
 )
 
 if(BUILD_EXAMPLES)

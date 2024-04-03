@@ -48,11 +48,13 @@
 #elif defined(__APPLE__)
 #include "Metal/MetalConfig.h"
 #elif defined(__ANDROID__)
-#ifndef QUEST_VR
-#include "OpenGLES/GLESConfig.h"
-#endif
+// #ifndef QUEST_VR
+// #include "OpenGLES/GLESConfig.h"
+// #endif
 #ifdef ARCH_ARM64
 #include "Vulkan/VulkanConfig.h"
+#else
+#error "Vulkan is only supported on Android ARM64"
 #endif
 #elif defined(NX64)
 #include "Vulkan/VulkanConfig.h"
