@@ -38,7 +38,6 @@ def get_status(bin, params):
         return subprocess.getstatusoutput([bin] + params)
 
 def get_compiler_from_env(varname, subpath = None, _assert=True):
-    print(f"get_compiler_from_env({varname}, {subpath}, {_assert})")
 
     if os.name == 'posix' and 'metal.exe' in subpath:
         return 'xcrun'
