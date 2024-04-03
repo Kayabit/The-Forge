@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.5)
-#set (CMAKE_OSX_DEPLOYMENT_TARGET, "11.0")
 
 # extra ../../cmake in case we're run from a build subdir under The-Forge folder
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cmake" ${CMAKE_MODULE_PATH})
@@ -10,9 +9,6 @@ OPTION(GENERATE_DEBUG_SYMBOLS "Always generate dSYM and pdb files, even if makin
 message(STATUS "Setting up Conan for The-Forge cmakeosx arch '${CMAKE_OSX_ARCHITECTURES}' apple='${APPLE}' win32='${WIN32}' android='${ANDROID}' cmakesystemname(place code will run)='${CMAKE_SYSTEM_NAME}' cmakehostsystemname(place code will build, sigh)='${CMAKE_HOST_SYSTEM_NAME}'")
 include(BuildboxConan)
 setup_conan()
-
-# we want conan here so we can have standardized configurations; it's not used for its usual dependency management purposes
-include_conan()
 
 project(The-Forge LANGUAGES CXX C)
 
