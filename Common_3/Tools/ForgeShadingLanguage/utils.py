@@ -769,7 +769,7 @@ def collect_shader_decl(args, filepath: str, platforms, regen, dependencies, bin
 
             # glslangValidator doesn't seem to understand these empty directives that cc preprocessor adds (empty directive, just a hashtag)
             # We replace it with #line that it's understood
-            if sys.platform == 'linux':
+            if sys.platform == 'linux' or sys.platform == 'darwin':
                 correctLines = []
                 for line in shaderSource.split(b'\n'):
                     if line.count(b'# ') == 0: correctLines += [line]; continue
