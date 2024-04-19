@@ -35,11 +35,12 @@ include(TheForgeUtils)
 
 set(CPP_SRC
     Common_3/Application/CameraController.cpp
-    Common_3/Application/Fonts/FontSystem.cpp
-    Common_3/Application/Fonts/stbtt.cpp
+    #Common_3/Application/Fonts/FontSystem.cpp
+    #Common_3/Application/Fonts/stbtt.cpp
     Common_3/Application/InputSystem.cpp
     Common_3/Application/Profiler/GpuProfiler.cpp
     Common_3/Application/Profiler/ProfilerBase.cpp
+    Common_3/Application/RemoteControl.cpp
     Common_3/Application/Screenshot.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputAllocator.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputInputDeltaState.cpp
@@ -65,22 +66,23 @@ set(CPP_SRC
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHIDWhitelist.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserPS4Controller.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserPS5Controller.cpp
+    Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/hidparsers/HIDParserSwitchController.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboard.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
-    Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
+    #Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputPlayer.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecorder.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/recorder/GainputInputRecording.cpp
     Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/touch/GainputInputDeviceTouch.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_demo.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_draw.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_tables.cpp
-    Common_3/Application/ThirdParty/OpenSource/imgui/imgui_widgets.cpp
-    Common_3/Application/UI/UI.cpp
-    Common_3/Game/Scripting/LuaManager.cpp
-    Common_3/Game/Scripting/LuaManagerImpl.cpp
-    Common_3/Game/Scripting/LuaSystem.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_demo.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_draw.cpp
+    #Common_3/Application/ThirdParty/OpenSource/imgui/imgui_tables.cpp
+    ##Common_3/Application/ThirdParty/OpenSource/imgui/imgui_widgets.cpp
+    #Common_3/Application/UI/UI.cpp
+    #Common_3/Game/Scripting/LuaManager.cpp
+    #Common_3/Game/Scripting/LuaManagerImpl.cpp
+    #Common_3/Game/Scripting/LuaSystem.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/monotone/soloud_monotone.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/sfxr/soloud_sfxr.cpp
@@ -131,9 +133,8 @@ set(CPP_SRC
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/filter/soloud_robotizefilter.cpp
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/filter/soloud_waveshaperfilter.cpp
     Common_3/Graphics/CommonShaderReflection.cpp
-    Common_3/Graphics/DependencyTracking.cpp
     Common_3/Graphics/GPUConfig.cpp
-    Common_3/Graphics/Graphics.cpp
+    Common_3/Graphics/PickRenderingAPI.cpp
     Common_3/Graphics/Quest/VrApiHooks.cpp
     Common_3/Graphics/ThirdParty/OpenSource/SPIRV_Cross/SpirvTools.cpp
     Common_3/Graphics/ThirdParty/OpenSource/SPIRV_Cross/spirv_cfg.cpp
@@ -187,124 +188,124 @@ set(CPP_SRC
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/memory/allocator.cc
     Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/base/platform.cc
     Common_3/Resources/ResourceLoader/ResourceLoader.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_averages_and_directions.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_block_sizes.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_color_quantize.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_color_unquantize.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_compress_symbolic.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_compute_variance.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_decompress_symbolic.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_diagnostic_trace.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_entry.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_find_best_partitioning.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_ideal_endpoints_and_weights.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_image.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_integer_sequence.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_mathlib.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_mathlib_softfloat.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_partition_tables.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_percentile_tables.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_pick_best_endpoint_format.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_platform_isa_detection.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_quantization.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_symbolic_physical.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_weight_align.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_weight_quant_xfer_tables.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_error_metrics.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image_load_store.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_platform_dependents.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_toplevel_help.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/allocator.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/clusterizer.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/indexcodec.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/indexgenerator.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/overdrawanalyzer.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/overdrawoptimizer.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/simplifier.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/spatialorder.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/stripifier.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vcacheanalyzer.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vcacheoptimizer.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vertexcodec.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vertexfilter.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vfetchanalyzer.cpp
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vfetchoptimizer.cpp
-    Common_3/Utilities/FileSystem/FileSystem.cpp
-    Common_3/Utilities/FileSystem/SystemRun.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/EAStdC/EAMemory.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/EAStdC/EASprintf.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/allocator_eastl.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/allocator_forge.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/assert.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/fixed_pool.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/hashtable.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/intrusive_list.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/numeric_limits.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/red_black_tree.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/string.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/EASTL/thread_support.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_astc_decomp.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_backend.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_basis_file.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_comp.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_enc.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_etc.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_frontend.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_global_selector_palette_helpers.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_gpu_texture.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_pvrtc1_4.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_resample_filters.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_resampler.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_ssim.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/lodepng.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_averages_and_directions.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_block_sizes.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_color_quantize.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_color_unquantize.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_compress_symbolic.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_compute_variance.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_decompress_symbolic.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_diagnostic_trace.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_entry.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_find_best_partitioning.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_ideal_endpoints_and_weights.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_image.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_integer_sequence.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_mathlib.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_mathlib_softfloat.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_partition_tables.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_percentile_tables.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_pick_best_endpoint_format.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_platform_isa_detection.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_quantization.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_symbolic_physical.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_weight_align.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenc_weight_quant_xfer_tables.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_error_metrics.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_image_load_store.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_platform_dependents.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/astcenccli_toplevel_help.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/allocator.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/clusterizer.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/indexcodec.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/indexgenerator.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/overdrawanalyzer.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/overdrawoptimizer.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/simplifier.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/spatialorder.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/stripifier.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vcacheanalyzer.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vcacheoptimizer.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vertexcodec.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vertexfilter.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vfetchanalyzer.cpp
+    # Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/meshoptimizer/src/vfetchoptimizer.cpp
+
+    # these all seem to be gone, only basisu_transcoder.cpp remains?
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_astc_decomp.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_backend.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_basis_file.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_comp.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_enc.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_etc.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_frontend.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_global_selector_palette_helpers.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_gpu_texture.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_pvrtc1_4.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_resample_filters.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_resampler.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_ssim.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/basis_universal/lodepng.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/basisu_transcoder.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_os.cpp
-    Common_3/Utilities/Threading/ThreadSystem.cpp
+    #Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_os.cpp
+    #Common_3/Utilities/Threading/ThreadSystem.cpp
+    #Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
+    Common_3/Tools/ReloadServer/ReloadClient.cpp # requires ENABLE_FORGE_UI or some modifications to respect it
+    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTDefaultAppInterop.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTFiberContext.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTScheduler.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Source/MTThreadContext.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/basisu_transcoder.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
+    Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
     Middleware_3/PaniniProjection/Panini.cpp
     Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
 )
 
 set(C_SRC
     Common_3/Game/ThirdParty/OpenSource/flecs/flecs.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lapi.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lauxlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbaselib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbitlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcode.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcorolib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lctype.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldblib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldebug.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldo.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldump.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lfunc.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lgc.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/linit.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/liolib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/llex.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmathlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmem.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loadlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lobject.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lopcodes.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loslib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lparser.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstate.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstring.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstrlib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lvm.c
-    Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lapi.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lauxlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbaselib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lbitlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcode.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lcorolib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lctype.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldblib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldebug.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldo.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ldump.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lfunc.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lgc.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/linit.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/liolib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/llex.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmathlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lmem.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loadlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lobject.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lopcodes.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/loslib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lparser.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstate.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstring.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lstrlib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltable.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltablib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/ltm.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/luac.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lundump.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lutf8lib.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lvm.c
+    #Common_3/Game/ThirdParty/OpenSource/lua-5.3.5/src/lzio.c
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt_dll.c
     Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_freebsd.c
-    Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/wuffs-v0.3.c
-    Common_3/Utilities/FileSystem/ZipFileSystem.c
+    Common_3/Tools/Network/Network.c
+    Common_3/Utilities/FileSystem/FileSystem.c
+    Common_3/Utilities/FileSystem/SystemRun.c
+    Common_3/Utilities/FileSystem/ToolFileSystem.c
     Common_3/Utilities/Log/Log.c
     Common_3/Utilities/Math/Algorithms.c
     Common_3/Utilities/Math/StbDs.c
@@ -312,19 +313,34 @@ set(C_SRC
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.c
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/utf8util.c
     Common_3/Utilities/ThirdParty/OpenSource/cJSON/cJSON.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aescrypt.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aeskey.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aestab.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/hmac.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/sha1.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/sha2.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_crypt.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_crypt_brg.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_raw.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_wzaes.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_zlib.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_zip.c
+    Common_3/Utilities/ThirdParty/OpenSource/lz4/lz4.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/debug.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/entropy_common.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/error_private.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/fse_decompress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/pool.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/threading.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/xxhash.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/common/zstd_common.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/fse_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/huf_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress_literals.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress_sequences.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_compress_superblock.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_double_fast.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_fast.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_lazy.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_ldm.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstd_opt.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/compress/zstdmt_compress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/huf_decompress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_decompress.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_decompress_block.c
+    Common_3/Utilities/ThirdParty/OpenSource/zstd/decompress/zstd_ddict.c
     Common_3/Utilities/Timer.c
+    Common_3/Utilities/Threading/ThreadSystem.c
+    
 )
 
 if(WIN32)
@@ -334,8 +350,12 @@ if(WIN32)
         APPEND
         CPP_SRC
         Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHID.cpp
+        # FORGE154 MERGETODO feels like these gainput guys probably already were somewhere else in this file
+        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
+        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputInputManager.cpp
         Common_3/Graphics/Direct3D11/Direct3D11.cpp
-        Common_3/Graphics/Direct3D11/Direct3D11Raytracing.cpp
+        # FORGE154 D3D11 raytracing seemingly no longer exists, hope that's ok
+        #Common_3/Graphics/Direct3D11/Direct3D11Raytracing.cpp
         Common_3/Graphics/Direct3D11/Direct3D11ShaderReflection.cpp
         Common_3/Graphics/Direct3D12/Direct3D12.cpp
         Common_3/Graphics/Direct3D12/Direct3D12Hooks.cpp
@@ -390,8 +410,6 @@ if(LINUX)
         Common_3/Graphics/Vulkan/VulkanRaytracing.cpp
         Common_3/Graphics/Vulkan/VulkanShaderReflection.cpp
         Common_3/OS/Linux/LinuxBase.cpp
-        Common_3/OS/Linux/LinuxFileSystem.cpp
-        Common_3/OS/Linux/LinuxToolsFileSystem.cpp
         Common_3/OS/Linux/LinuxWindow.cpp
         Common_3/Utilities/FileSystem/UnixFileSystem.cpp
         Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
@@ -409,12 +427,15 @@ if(LINUX)
         Common_3/Application/ThirdParty/OpenSource/Fontstash/example/example.c
         Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/hidapi/linux/hid.c
         Common_3/Graphics/ThirdParty/OpenSource/volk/volk.c
+        Common_3/OS/Linux/LinuxFileSystem.c
         Common_3/OS/Linux/LinuxLog.c
         Common_3/OS/Linux/LinuxThread.c
         Common_3/OS/Linux/LinuxTime.c
+        Common_3/OS/Linux/LinuxToolsFileSystem.c
         Common_3/OS/ThirdParty/OpenSource/cpu_features/src/hwcaps.c
         Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_linux_or_android.c
         Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_linux_or_android.c
+        Common_3/Utilities/FileSystem/UnixFileSystem.c
     )
 endif()
 
@@ -480,24 +501,28 @@ if(APPLE)
         find_library(METAL_LIBRARY Metal)
         find_library(MPS_LIBRARY MetalPerformanceShaders)
         find_library(QUARTZCORE_LIBRARY QuartzCore)
+        find_library(GAMEKIT_LIBRARY GameKit)
+        find_library(GAMECONTROLLER_LIBRARY GameController)
 
         set(FSL_LANGUAGES "MACOS")
         set(OBJCPP_SRC
-            Common_3/Application/Fonts/FontSystem.cpp
+            #Common_3/Application/Fonts/FontSystem.cpp
             Common_3/Application/InputSystem.cpp
             Common_3/Application/Profiler/GpuProfiler.cpp
             Common_3/Application/Profiler/ProfilerBase.cpp
+            Common_3/Application/RemoteControl.cpp
             Common_3/Application/Screenshot.cpp
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputMac.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputMac.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceMouseMac.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceMouseMacRaw.mm
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadAppleGCKit.mm
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouse.cpp
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouseMac.mm
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/mouse/GainputInputDeviceMouseMacRaw.mm
-            Common_3/Application/UI/UI.cpp
-            Common_3/Game/Scripting/LuaSystem.cpp
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePad.cpp
+            #Common_3/Application/UI/UI.cpp
+            #Common_3/Game/Scripting/LuaSystem.cpp
             Common_3/Graphics/CommonShaderReflection.cpp
-            Common_3/Graphics/DependencyTracking.cpp
             Common_3/Graphics/GPUConfig.cpp
-            Common_3/Graphics/Graphics.cpp
+            Common_3/Graphics/PickRenderingAPI.cpp
             Common_3/Graphics/Metal/MetalRaytracing.mm
             Common_3/Graphics/Metal/MetalRenderer.mm
             Common_3/Graphics/Metal/MetalShaderReflection.mm
@@ -510,17 +535,17 @@ if(APPLE)
             Common_3/OS/Darwin/macOSWindow.mm
             Common_3/Resources/AnimationSystem/Animation/SkeletonBatcher.cpp
             Common_3/Resources/ResourceLoader/ResourceLoader.cpp
-            Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
+            #Common_3/Tools/AssetPipeline/src/AssetPipeline.cpp
             Middleware_3/PaniniProjection/Panini.cpp
             Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
         )
         list(
             APPEND
             CPP_SRC
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/keyboard/GainputInputDeviceKeyboardMac.cpp
-            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/pad/GainputInputDevicePadMac.cpp
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDeviceKeyboardMac.cpp
+            Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputInputDevicePadMac.cpp
             Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/hid/GainputHID.cpp
-            Common_3/Utilities/FileSystem/UnixFileSystem.cpp
+            #Common_3/Utilities/FileSystem/UnixFileSystem.cpp
             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_lib.cpp
             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_get_module_info.cpp
             Common_3/Utilities/ThirdParty/OpenSource/rmem/src/rmem_hook.cpp
@@ -537,11 +562,12 @@ if(APPLE)
             Common_3/OS/Darwin/DarwinThread.c
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_aarch64_iOS.c
             Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_macos.c
+            Common_3/Utilities/FileSystem/UnixFileSystem.c
         )
         # All The-Forge's Objective-C++ code should be compiled with Automatic Reference Count (arc)
         set_source_files_properties(${OBJCPP_SRC} PROPERTIES COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
         # Except GainputMac.mm
-        set_source_files_properties(Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/GainputMac.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+        set_source_files_properties(Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/apple/GainputMac.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
         set_source_files_properties(Common_3/Utilities/ThirdParty/OpenSource/rmem/3rd/lz4-r191/lz4.c PROPERTIES COMPILE_FLAGS "-Wno-implicit-function-declaration")
     endif()
 endif()
@@ -551,7 +577,7 @@ if(ANDROID)
     list(
         APPEND
         CPP_SRC
-        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/touch/GainputInputDeviceGestureDetectorAndroid.cpp
+        Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/gainput/android/GainputInputDeviceGestureDetectorAndroid.cpp
         Common_3/OS/Android/AndroidBase.cpp
         Common_3/OS/Android/AndroidFileSystem.cpp
         Common_3/OS/Android/AndroidLog.c
@@ -626,14 +652,13 @@ endif()
 target_include_directories(
     The-Forge
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/
-           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/Fontstash/src/
+           #${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/Fontstash/src/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/include/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Application/ThirdParty/OpenSource/gainput/lib/source/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Game/ThirdParty/OpenSource/soloud20181119/include/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/include/ozz/geometry/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Resources/AnimationSystem/ThirdParty/OpenSource/ozz-animation/src/
-           ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/TaskScheduler/Scheduler/Include/
            ${CMAKE_CURRENT_SOURCE_DIR}/Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/
@@ -669,6 +694,8 @@ target_link_libraries(
            $<$<PLATFORM_ID:iOS>:${CORE_HAPTICS_LIBRARY}>
            # Android-specific libraries
            #$<$<PLATFORM_ID:Android>:$ENV{VULKAN_SDK}/lib/libvulkan.1.dylib>
+           $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${GAMEKIT_LIBRARY}>
+           $<$<AND:$<PLATFORM_ID:Darwin>,$<NOT:$<PLATFORM_ID:iOS>>>:${GAMECONTROLLER_LIBRARY}>
 )
 
 if(BUILD_EXAMPLES)
