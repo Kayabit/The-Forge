@@ -259,7 +259,7 @@ set(CPP_SRC
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/basisu_ssim.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/lodepng.cpp
     Common_3/Utilities/ThirdParty/OpenSource/basis_universal/transcoder/basisu_transcoder.cpp
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_os.cpp
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_os.cpp
     Common_3/Utilities/Threading/ThreadSystem.cpp
     Middleware_3/PaniniProjection/Panini.cpp
     Middleware_3/ParallelPrimitives/ParallelPrimitives.cpp
@@ -312,18 +312,18 @@ set(C_SRC
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/bstrlib.c
     Common_3/Utilities/ThirdParty/OpenSource/bstrlib/utf8util.c
     Common_3/Utilities/ThirdParty/OpenSource/cJSON/cJSON.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aescrypt.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aeskey.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aestab.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/hmac.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/sha1.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/sha2.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_crypt.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_crypt_brg.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_raw.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_wzaes.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_zlib.c
-    Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_zip.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aescrypt.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aeskey.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/aestab.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/hmac.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/sha1.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/lib/brg/sha2.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_crypt.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_crypt_brg.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_raw.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_wzaes.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_strm_zlib.c
+    # Common_3/Utilities/ThirdParty/OpenSource/minizip/mz_zip.c
     Common_3/Utilities/Timer.c
 )
 
