@@ -304,7 +304,7 @@ set(C_SRC
     Common_3/Game/ThirdParty/OpenSource/soloud20181119/src/audiosource/openmpt/soloud_openmpt_dll.c
     Common_3/OS/ThirdParty/OpenSource/cpu_features/src/impl_x86_freebsd.c
     Common_3/Resources/ResourceLoader/ThirdParty/OpenSource/astc-encoder/Source/wuffs-v0.3.c
-    Common_3/Utilities/FileSystem/ZipFileSystem.c
+    # Common_3/Utilities/FileSystem/ZipFileSystem.c
     Common_3/Utilities/Log/Log.c
     Common_3/Utilities/Math/Algorithms.c
     Common_3/Utilities/Math/StbDs.c

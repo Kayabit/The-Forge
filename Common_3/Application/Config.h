@@ -248,7 +248,7 @@ COMPILE_ASSERT(sizeof(ssize_t) == sizeof(int64_t));
 //#define ENABLE_FORGE_FONTS
 #define ENABLE_FORGE_INPUT
 #define ENABLE_FORGE_ANIMATION_DEBUG
-#define ENABLE_ZIP_FILESYSTEM
+//#define ENABLE_ZIP_FILESYSTEM // AP: carries the risk of tainting Buildbox minizip with Forge's mutant version
 #define ENABLE_SCREENSHOT
 #define ENABLE_PROFILER
 #define ENABLE_MESHOPTIMIZER
