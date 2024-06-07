@@ -873,3 +873,7 @@ void HIDPromptForDeviceStateReports(gainput::InputDeltaState * state)
     //   events from the same devices
     HIDDetectDevices();
 }
+
+void ResetDevicesChanged() {
+    gDevicesChanged = true;
+}

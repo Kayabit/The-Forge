@@ -47,4 +47,6 @@ void HIDSetLights(uint8_t devID, uint8_t r, uint8_t g, uint8_t b);
 void HIDDoRumble(uint8_t devID, float left, float right, uint32_t durationMS);
 
 void HIDSetDeviceChangeCallback(void (*deviceChange)(const char*, bool, int));
+
+void ResetDevicesChanged();
 #endif

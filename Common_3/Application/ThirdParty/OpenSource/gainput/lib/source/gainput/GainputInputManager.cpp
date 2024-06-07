@@ -706,3 +706,7 @@ Java_de_johanneskuhlmann_gainput_Gainput_nativeOnDeviceChanged(JNIEnv * /*env*/,
 }
 }
 #endif
+
+void gainput::InputManager::ForceResetDevicesChanged() {
+    ResetDevicesChanged();
+}

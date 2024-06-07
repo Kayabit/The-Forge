@@ -730,3 +730,7 @@ FORGE_API bool setRumbleEffect(int gamePadIndex, float left_motor, float right_m
 FORGE_API const char* getGamePadName(int gamePadIndex);
 FORGE_API bool 		gamePadConnected(int gamePadIndex);
 FORGE_API void 		setOnDeviceChangeCallBack(void (*onDeviceChnageCallBack)(const char* name, bool added, int gamePadIndex));
+
+// Buildbox Fixes
+
+FORGE_API void passthroughMessage(void* msg);

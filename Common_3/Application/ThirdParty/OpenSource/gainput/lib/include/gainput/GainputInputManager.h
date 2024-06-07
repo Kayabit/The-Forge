@@ -218,6 +218,9 @@ public:
 	//getter/setter for window Instance window instance 
 	void SetWindowsInstance(void* instance) { pWindowInstance = instance; }
 	void* GetWindowsInstance() { return pWindowInstance; }
+
+    void ForceResetDevicesChanged();
+
 private:
     Allocator& mAllocator;
 

@@ -2085,6 +2085,12 @@ int32_t InputSystemHandleMessage(WindowDesc* pWindow, void* msg)
 	return 0;
 }
 
+void passthroughMessage(void* msg)
+{
+//    InputSystemHandleMessage(nullptr, msg);
+    pInputSystem->pInputManager->ForceResetDevicesChanged();
+}
+
 bool initInputSystem(InputSystemDesc* pDesc)
 {
 	ASSERT(pDesc);
